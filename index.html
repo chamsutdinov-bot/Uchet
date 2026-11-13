@@ -4,20 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Interstone</title>
-<script>
-/* iOS после «свернул → открыл» оставляет окно короче экрана (полоса внизу). Протягивание вниз его исправляет, поэтому при возврате заставляем систему пересчитать размер сама. */
-(function(){
-  var m=document.querySelector('meta[name=viewport]');if(!m)return;
-  var base=m.getAttribute("content")||"";
-  function fix(){try{
-    m.setAttribute("content",base.replace(/,?\s*viewport-fit=cover/,""));
-    requestAnimationFrame(function(){m.setAttribute("content",base);window.dispatchEvent(new Event("resize"))});
-  }catch(e){}}
-  function run(){fix();setTimeout(fix,200);setTimeout(fix,700)}
-  document.addEventListener("visibilitychange",function(){if(!document.hidden)run()});
-  window.addEventListener("pageshow",run);window.addEventListener("focus",run);
-})();
-</script>
 <script>try{if(navigator.standalone||matchMedia("(display-mode:standalone)").matches)document.documentElement.classList.add("sa")}catch(e){}</script>
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="icon-192.png">
@@ -32,7 +18,7 @@
 :root{--logo-f:invert(1);--bg:#f4f1ec;--surface:#fff;--text:#1f1f1f;--muted:#6b6b6b;--line:#ddd6cc;--accent:#8a5a2b;--accent-t:#fff;--danger:#b3261e;--font:system-ui,-apple-system,"Segoe UI",sans-serif;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--logo-f:none;--surface:#25221f;--text:#f1ece5;--muted:#a69f95;--line:#3d3833;--accent:#d6a36a;--accent-t:#1b1713;--danger:#f2a39e}}
 *{box-sizing:border-box}
-html,body{margin:0;overscroll-behavior-y:contain}
+html,body{margin:0}html{background:var(--bg);min-height:100%}body{min-height:calc(100vh + 1px);min-height:calc(100dvh + 1px);box-sizing:border-box}
 #ptr{position:fixed;top:calc(env(safe-area-inset-top,0px) + 4px);left:50%;transform:translate(-50%,-70px);opacity:0;background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:20px;padding:7px 14px;font-size:13px;z-index:30;pointer-events:none;transition:transform .2s,opacity .2s;box-shadow:0 4px 14px rgba(0,0,0,.2);white-space:nowrap}
 body{background:var(--bg);color:var(--text);font-family:var(--font);padding:12px 12px 40px;max-width:1000px;margin:0 auto}
 html.sa body{max-width:none;margin:0;padding-left:12px;padding-right:12px}@media (min-width:700px){html.sa header,html.sa .bar{padding-right:82px}}
