@@ -4,6 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Interstone</title>
+<script>
+/* iOS после «свернул → открыл» оставляет окно короче экрана (полоса внизу). Протягивание вниз его исправляет, поэтому при возврате заставляем систему пересчитать размер сама. */
+(function(){
+  var m=document.querySelector('meta[name=viewport]');if(!m)return;
+  var base=m.getAttribute("content")||"";
+  function fix(){try{
+    m.setAttribute("content",base.replace(/,?\s*viewport-fit=cover/,""));
+    requestAnimationFrame(function(){m.setAttribute("content",base);window.dispatchEvent(new Event("resize"))});
+  }catch(e){}}
+  function run(){fix();setTimeout(fix,200);setTimeout(fix,700)}
+  document.addEventListener("visibilitychange",function(){if(!document.hidden)run()});
+  window.addEventListener("pageshow",run);window.addEventListener("focus",run);
+})();
+</script>
 <script>try{if(navigator.standalone||matchMedia("(display-mode:standalone)").matches)document.documentElement.classList.add("sa")}catch(e){}</script>
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="icon-192.png">
