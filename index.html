@@ -20,6 +20,7 @@
 html,body{margin:0;overscroll-behavior-y:contain}
 #ptr{position:fixed;top:calc(env(safe-area-inset-top,0px) + 4px);left:50%;transform:translate(-50%,-70px);opacity:0;background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:20px;padding:7px 14px;font-size:13px;z-index:30;pointer-events:none;transition:transform .2s,opacity .2s;box-shadow:0 4px 14px rgba(0,0,0,.2);white-space:nowrap}
 body{background:var(--bg);color:var(--text);font-family:var(--font);padding:12px 12px 40px;max-width:1000px;margin:0 auto}
+@media (display-mode:standalone) and (min-width:700px){:root{padding-top:max(env(safe-area-inset-top,0px),44px)}body{padding-right:calc(12px + max(env(safe-area-inset-right,0px),72px))}}
 header{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
 .logo{height:46px;width:auto;max-width:60%;margin-right:auto;display:block;filter:var(--logo-f)}
 h1{font-size:19px;margin:0;flex:1;min-width:150px}
