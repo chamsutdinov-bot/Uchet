@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Настройка входа</title>
+<style>
+body{font-family:system-ui,-apple-system,sans-serif;background:#f4f1ec;color:#1f1f1f;margin:0;padding:16px}
+main{max-width:520px;margin:0 auto;background:#fff;border-radius:16px;padding:18px;box-shadow:0 4px 24px rgba(0,0,0,.12)}
+h1{font-size:19px;margin:0 0 6px}p,li{font-size:14px;color:#555;line-height:1.45}
+label{display:block;font-size:13px;margin:12px 0 4px;color:#555}
+input,textarea{width:100%;box-sizing:border-box;font-size:16px;padding:11px;border:1px solid #ddd6cc;border-radius:10px;font-family:inherit}
+textarea{height:130px;font-family:monospace;font-size:12px}
+button{margin-top:14px;width:100%;font-size:16px;padding:13px;border:0;border-radius:10px;background:#2e9e5b;color:#fff}
+#err{color:#b3261e;font-size:13px;margin-top:8px}
+</style></head><body><main>
+<h1>Настройка входа в приложение</h1>
+<p>Эта страница работает только в вашем браузере, ничего никуда не отправляет. Она превращает ключ GitHub в зашифрованный файл <b>access.json</b>, который открывается вашим паролем.</p>
+<label>Ключ GitHub (github_pat_…)</label><input id="tok" type="password" autocomplete="off">
+<label>Новый пароль для входа (минимум 8 символов)</label><input id="p1" type="password" autocomplete="off">
+<label>Повторите пароль</label><input id="p2" type="password" autocomplete="off">
+<button id="go">Создать access.json</button>
+<div id="err"></div>
+<div id="out" style="display:none">
+<label>Скопируйте весь этот текст</label><textarea id="res" readonly></textarea>
+<button id="cp">Скопировать</button>
+<ol><li>В репозитории <b>uchet</b> нажмите Add file → Create new file.</li><li>Имя файла: <b>access.json</b></li><li>Вставьте скопированный текст и нажмите Commit changes.</li></ol>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const b64=u=>btoa(String.fromCharCode(...u));
+$("go").onclick=async()=>{
+  const t=$("tok").value.trim(),a=$("p1").value,b=$("p2").value;$("err").textContent="";
+  if(!t)return $("err").textContent="Вставьте ключ GitHub";
+  if(a.length<8)return $("err").textContent="Пароль слишком короткий: минимум 8 символов";
+  if(a!==b)return $("err").textContent="Пароли не совпадают";
+  const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12)),it=300000;
+  const km=await crypto.subtle.importKey("raw",new TextEncoder().encode(a),"PBKDF2",false,["deriveKey"]);
+  const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:it,hash:"SHA-256"},km,{name:"AES-GCM",length:256},false,["encrypt"]);
+  const ct=new Uint8Array(await crypto.subtle.encrypt({name:"AES-GCM",iv},key,new TextEncoder().encode(t)));
+  $("res").value=JSON.stringify({s:b64(salt),v:b64(iv),i:it,c:b64(ct)});
+  $("out").style.display="block";
+};
+$("cp").onclick=()=>{$("res").select();try{navigator.clipboard.writeText($("res").value)}catch(e){document.execCommand("copy")}$("cp").textContent="Скопировано"};
+</script></main></body></html>

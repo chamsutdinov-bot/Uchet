@@ -238,11 +238,11 @@ body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 
 <div class="modal" id="mLogin"><div class="sheet">
   <h2>Вход</h2>
-  <label>Ключ доступа</label>
-  <input id="lgKey" type="password" placeholder="Вставьте ключ" autocomplete="off" autocapitalize="off" autocorrect="off">
+  <label>Пароль</label>
+  <input id="lgKey" type="password" placeholder="Введите пароль" autocomplete="off" autocapitalize="off" autocorrect="off">
   <div class="note" id="lgErr" style="color:#c0392b"></div>
   <div class="acts"><button class="p" id="lgGo">Войти</button></div>
-  <div class="note">Ключ вводится один раз на этом устройстве. Его выдаёт владелец.</div>
+  <div class="note">Пароль вводится один раз на этом устройстве. Его выдаёт владелец.</div>
 </div></div>
 
 <div class="modal" id="mF"><div class="sheet">
@@ -253,7 +253,7 @@ body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
     <button id="bDedupe">Убрать повторы</button>
     <button class="d" id="bWipe">Удалить все данные</button>
     <div id="wipeBox" style="display:none;gap:8px"><input id="wipeIn" placeholder="Введите слово УДАЛИТЬ" autocomplete="off"><button class="d" id="wipeGo">Удалить все заказы навсегда</button></div>
-    <button id="bLogout">Выйти (забыть ключ на этом устройстве)</button>
+    <button id="bLogout">Выйти (забыть вход на этом устройстве)</button>
     <button class="g" id="fGo" style="display:none"></button>
     <div class="note" id="fMsg" style="margin:0"></div>
     <button id="bFclose">Закрыть</button>
@@ -323,6 +323,14 @@ function remoteDb(){
    Данные лежат в закрытом репозитории GH_REPO (папка data/). Доступ даёт «ключ доступа» (токен), его вводят один раз на устройстве. */
 const GH_REPO="chamsutdinov-bot/uchet-data";
 const ghKey=()=>{try{return localStorage.getItem("uchet_gh")||""}catch(e){return""}};
+async function openAccess(A,pw){
+  try{
+    const b=x=>Uint8Array.from(atob(x),c=>c.charCodeAt(0));
+    const km=await crypto.subtle.importKey("raw",new TextEncoder().encode(pw),"PBKDF2",false,["deriveKey"]);
+    const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt:b(A.s),iterations:A.i||300000,hash:"SHA-256"},km,{name:"AES-GCM",length:256},false,["decrypt"]);
+    return new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:b(A.v)},key,b(A.c)));
+  }catch(e){return null}
+}
 let _keyWait=null;
 function needKey(msg){
   if(ghKey()&&!msg)return Promise.resolve();
@@ -331,12 +339,21 @@ function needKey(msg){
     const m=document.getElementById("mLogin"),inp=document.getElementById("lgKey"),go=document.getElementById("lgGo"),er=document.getElementById("lgErr");
     er.textContent=msg||"";m.classList.add("on");
     const submit=async()=>{
-      const k=inp.value.trim();if(!k){er.textContent="Вставьте ключ";return}
+      const k=inp.value.trim();if(!k){er.textContent="Введите пароль";return}
       go.disabled=true;er.textContent="Проверяю…";
+      let tok=k;
       try{
-        const r=await fetch("https://api.github.com/repos/"+GH_REPO,{headers:{Authorization:"Bearer "+k,Accept:"application/vnd.github+json"},cache:"no-store"});
-        if(r.ok){try{localStorage.setItem("uchet_gh",k)}catch(e){}m.classList.remove("on");inp.value="";go.disabled=false;_keyWait=null;go.onclick=null;res();return}
-        er.textContent=r.status===401?"Ключ не подходит или закончился срок":"Нет доступа к базе (код "+r.status+")";
+        const ar=await fetch("access.json",{cache:"no-store"});
+        if(ar.ok){
+          const t=await openAccess(await ar.json(),k);
+          if(!t){er.textContent="Неверный пароль";go.disabled=false;return}
+          tok=t;
+        }
+      }catch(e){}
+      try{
+        const r=await fetch("https://api.github.com/repos/"+GH_REPO,{headers:{Authorization:"Bearer "+tok,Accept:"application/vnd.github+json"},cache:"no-store"});
+        if(r.ok){try{localStorage.setItem("uchet_gh",tok)}catch(e){}m.classList.remove("on");inp.value="";go.disabled=false;_keyWait=null;go.onclick=null;res();return}
+        er.textContent=r.status===401?"Неверный пароль или закончился срок доступа":"Нет доступа к базе (код "+r.status+")";
       }catch(e){er.textContent="Нет связи с GitHub. Проверьте интернет"}
       go.disabled=false;
     };
@@ -358,7 +375,7 @@ function ghDb(){
     const r=await fetch(API+encodeURIComponent(c)+".json",{headers:h,cache:"no-store"});
     if(r.status===304)return{...cur,changed:false};
     if(r.status===404){const e={obj:{},sha:null,etag:null};const ch=!cur||Object.keys(cur.obj).length>0;cache[c]=e;return{...e,changed:ch}}
-    if(r.status===401){try{localStorage.removeItem("uchet_gh")}catch(e){}await needKey("Ключ не подходит или закончился срок");return load(c,true)}
+    if(r.status===401){try{localStorage.removeItem("uchet_gh")}catch(e){}await needKey("Войдите снова");return load(c,true)}
     if(!r.ok)throw new Error("HTTP "+r.status);
     const j=await r.json();let txt;
     if(j.content&&j.encoding==="base64")txt=b64d(j.content);
@@ -381,7 +398,7 @@ function ghDb(){
         if(r.ok){const j=await r.json();cache[c]={obj,sha:j.content.sha,etag:null};emit(c);return}
         lastErr=new Error("HTTP "+r.status);
         if(r.status===409||r.status===422){await new Promise(z=>setTimeout(z,300+Math.random()*500));continue}
-        if(r.status===401){try{localStorage.removeItem("uchet_gh")}catch(e){}await needKey("Ключ не подходит или закончился срок");continue}
+        if(r.status===401){try{localStorage.removeItem("uchet_gh")}catch(e){}await needKey("Войдите снова");continue}
         break;
       }
       throw lastErr||new Error("Не удалось сохранить");
