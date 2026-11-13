@@ -331,13 +331,24 @@ async function openAccess(A,pw){
     return new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:b(A.v)},key,b(A.c)));
   }catch(e){return null}
 }
+async function autoOpen(){
+  try{
+    const ar=await fetch("access.json",{cache:"no-store"});if(!ar.ok)return false;
+    const A=await ar.json();if(!A.o)return false;
+    const t=await openAccess(A,"open");if(!t)return false;
+    const r=await fetch("https://api.github.com/repos/"+GH_REPO,{headers:{Authorization:"Bearer "+t,Accept:"application/vnd.github+json"},cache:"no-store"});
+    if(!r.ok)return false;
+    try{localStorage.setItem("uchet_gh",t)}catch(e){}
+    return true;
+  }catch(e){return false}
+}
 let _keyWait=null;
 function needKey(msg){
   if(ghKey()&&!msg)return Promise.resolve();
   if(_keyWait)return _keyWait;
   _keyWait=new Promise(res=>{
     const m=document.getElementById("mLogin"),inp=document.getElementById("lgKey"),go=document.getElementById("lgGo"),er=document.getElementById("lgErr");
-    er.textContent=msg||"";m.classList.add("on");
+    er.textContent=msg||"";autoOpen().then(ok=>{if(ok){_keyWait=null;res()}else m.classList.add("on")});
     const submit=async()=>{
       const k=inp.value.trim();if(!k){er.textContent="Введите пароль";return}
       go.disabled=true;er.textContent="Проверяю…";
