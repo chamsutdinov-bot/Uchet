@@ -312,7 +312,7 @@ function remoteDb(){
 
 /* ====== ОБЩАЯ БАЗА НА GITHUB ======
    Данные лежат в закрытом репозитории GH_REPO (папка data/). Доступ даёт «ключ доступа» (токен), его вводят один раз на устройстве. */
-const GH_REPO="chamsutdinov-bot/interstone-data";
+const GH_REPO="chamsutdinov-bot/uchet-data";
 const ghKey=()=>{try{return localStorage.getItem("uchet_gh")||""}catch(e){return""}};
 let _keyWait=null;
 function needKey(msg){
