@@ -785,7 +785,7 @@ $("wipeGo").onclick=async()=>{
 };
 $("bLogout").onclick=()=>{try{localStorage.removeItem(W.key)}catch(e){}location.reload()};
 $("bFiles").onclick=()=>$("mF").classList.add("on");
-function applyRole(){isAdmin=canAdmin&&mode!=="manager";$("bDedupe").style.display=isAdmin?"":"none";$("bLogout").style.display=(typeof GH_REPO!=="undefined"&&GH_REPO&&SRV)?"":"none";$("bWipe").style.display=isAdmin?"":"none";$("bKalc").style.display="flex";$("bFin").style.display=W.fin?"flex":"none";$("kGear").style.display=(isAdmin||LOCAL)?"flex":"none";render()}
+function applyRole(){isAdmin=canAdmin&&mode!=="manager";$("bDedupe").style.display=isAdmin?"":"none";$("bLogout").style.display=(typeof GH_REPO!=="undefined"&&GH_REPO&&SRV)?"":"none";$("bWipe").style.display=isAdmin?"":"none";$("bKalc").style.display="none";$("bFin").style.display=W.fin?"flex":"none";$("kGear").style.display=(isAdmin||LOCAL)?"flex":"none";render()}
 [$("mF")].forEach(m=>m.onclick=e=>{if(e.target===m)m.classList.remove("on")});
 $("bFclose").onclick=()=>$("mF").classList.remove("on");
 $("fFile").onchange=e=>{const f=e.target.files[0];e.target.value="";if(f)importFile(f)};
@@ -1046,7 +1046,7 @@ function chooseWs(){return new Promise(res=>{const m=$("mWs");m.classList.add("o
   db.collection("orders").onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>
-<script>var BUILD="20261114210604";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
+<script>var BUILD="20261114210848";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
 document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()});window.addEventListener("load",function(){setTimeout(chk,1200)})})();</script>
 </body>
 </html>
