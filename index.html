@@ -141,26 +141,26 @@ body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 #bg3d{display:none}
 .note{font-size:12px;color:var(--muted);margin-top:10px}
 
-#mFin .sheet{display:flex;flex-direction:column;height:min(700px,100%);overflow:hidden;padding:0;max-width:460px}
-.fhd{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 8px;flex-shrink:0}.fhd h2{margin:0;font-size:18px}
-#fBody{flex:1;overflow:auto;padding:4px 14px 14px;-webkit-overflow-scrolling:touch}
-#fTabs{display:flex;gap:4px;padding:8px;margin:0 10px calc(10px + env(safe-area-inset-bottom,0px));background:var(--surface);border:1px solid var(--line);border-radius:999px;flex-shrink:0}
-#fTabs button{flex:1;border:0;background:transparent;border-radius:999px;padding:8px 2px;font-size:12px;color:var(--muted)}
+#mFin{align-items:center}#mFin .sheet{display:flex;flex-direction:column;height:min(520px,82dvh);width:min(100%,400px);overflow:hidden;padding:0;overscroll-behavior:contain}
+.fhd{display:flex;align-items:center;justify-content:space-between;padding:10px 12px 4px;flex-shrink:0}.fhd h2{margin:0;font-size:16px}.fhd button{padding:4px 10px}
+#fBody{flex:1;min-height:0;overflow:auto;padding:2px 12px 10px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+#fTabs{display:flex;gap:4px;padding:3px;margin:0 10px 10px;background:var(--surface);border:1px solid var(--line);border-radius:999px;flex-shrink:0}
+#fTabs button{flex:1;border:0;background:transparent;border-radius:999px;padding:6px 2px;font-size:12px;color:var(--muted)}
 #fTabs button.on{background:var(--accent);color:var(--accent-t)}
-.fseg{display:flex;gap:6px;margin-bottom:12px}.fseg button{flex:1}.fseg button.on{background:var(--accent);color:var(--accent-t);border-color:var(--accent)}
-.famt{width:100%;text-align:center;font-size:34px;font-weight:600;border:0;border-bottom:1px solid var(--line);background:transparent;padding:14px 4px;margin-bottom:10px}
+.fseg{display:flex;gap:6px;margin-bottom:6px}.fseg button{padding:6px}.fseg button{flex:1}.fseg button.on{background:var(--accent);color:var(--accent-t);border-color:var(--accent)}
+.famt{width:100%;text-align:center;font-size:28px;font-weight:600;border:0;border-bottom:1px solid var(--line);background:transparent;padding:6px 4px;margin-bottom:8px}
 .famt.e{color:#c0392b}.famt.i{color:#2e9e5b}
-.frows{display:grid;gap:8px;margin-bottom:12px}.frows label,.fcard label{display:grid;gap:3px;font-size:12px;color:var(--muted)}
-.frows select,.frows input,.fcard select,.fcard input{font-size:15px;color:var(--text)}
-.fcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:12px;overflow:hidden}
-.fr{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border-bottom:1px solid var(--line);font-size:14px;gap:8px}.fr:last-child{border-bottom:0}
+.frows{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}.frows label:nth-child(3),.frows label:nth-child(4){grid-column:span 1}.frows label,.fcard label{display:grid;gap:3px;font-size:12px;color:var(--muted)}
+.frows select,.frows input,.fcard select,.fcard input{font-size:14px;padding:6px 8px;color:var(--text);min-width:0;width:100%}
+.fcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:8px;overflow:hidden}
+.fr{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid var(--line);font-size:14px;gap:8px}.fr:last-child{border-bottom:0}
 .fr.nav{cursor:pointer}.fr.nav:after{content:"›";color:var(--muted);font-size:18px}
 .fr .e,.frow .e,.fgh .e{color:#c0392b}.fr .i,.frow .i{color:#2e9e5b}
 .fr.sub{padding-left:28px;font-size:13px;color:var(--muted)}
-.fgh{font-size:12px;color:var(--muted);padding:12px 2px 4px}
-.frow{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;background:var(--surface);border:1px solid var(--line);border-radius:10px;margin-bottom:6px;cursor:pointer;font-size:14px}.frow span{white-space:nowrap;font-weight:600}
+.fgh{font-size:12px;color:var(--muted);padding:8px 2px 3px}
+.frow{display:flex;justify-content:space-between;gap:10px;padding:7px 10px;background:var(--surface);border:1px solid var(--line);border-radius:10px;margin-bottom:6px;cursor:pointer;font-size:14px}.frow span{white-space:nowrap;font-weight:600}
 .fbar{height:5px;border-radius:3px;background:var(--line);margin:0 14px 8px;overflow:hidden}.fbar i{display:block;height:100%}
-.fdn{width:190px;height:190px;display:block;margin:6px auto;transform:rotate(0deg)}
+.fdn{width:130px;height:130px;display:block;margin:6px auto;transform:rotate(0deg)}
 .fleg{display:flex;flex-wrap:wrap;gap:4px 12px;justify-content:center;font-size:12px;color:var(--muted);margin-bottom:8px}.fleg i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px}
 .fset{display:flex;gap:6px;padding:10px 12px;flex-wrap:wrap}.fset>*{flex:1;min-width:110px}
 .fchip{display:inline-flex;align-items:center;gap:4px;padding:3px 4px 3px 10px;border:1px solid var(--line);border-radius:999px;font-size:12px;margin:2px}.fchip button{border:0;background:transparent;padding:0 6px;color:var(--muted)}
@@ -979,7 +979,7 @@ render();
   db.collection("orders").onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>
-<script>var BUILD="20261114134244";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
+<script>var BUILD="20261114134335";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
 document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()});window.addEventListener("load",function(){setTimeout(chk,1200)})})();</script>
 </body>
 </html>
