@@ -239,6 +239,12 @@ body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
   <div class="acts"><button class="p" id="cSave">Сохранить</button><button id="cCancel">Отмена</button><button class="d" id="cDel" style="margin-left:auto;display:none">Удалить</button></div>
 </div></div>
 
+<div class="modal" id="mPw" style="z-index:40"><div class="sheet" style="max-width:360px">
+  <h2>Введите пароль</h2>
+  <input id="pwIn" type="password" inputmode="numeric" placeholder="Пароль" autocomplete="off" autocapitalize="off" autocorrect="off">
+  <div class="note" id="pwErr" style="color:#c0392b"></div>
+  <div class="acts"><button class="p" id="pwGo">Подтвердить</button><button id="pwNo">Отмена</button></div>
+</div></div>
 <div class="modal" id="mLogin"><div class="sheet">
   <h2>Вход</h2>
   <label>Пароль</label>
@@ -515,6 +521,12 @@ function updateStrip(){
 const MN=["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"];
 function ym(o){const d=String(o.date||"");let m=d.match(/^(\d{4})-(\d{2})/);if(m)return[+m[1],+m[2]];m=d.match(/(\d{1,2})[.\/](\d{1,2})[.\/](\d{2,4})/);if(m){let y=+m[3];if(y<100)y+=2000;return[y,+m[2]]}return[0,0]}
 const STEPS=[["av","Аванс"],["zm","Замер"],["us","Установка"],["os","Остаток"]];
+const PWH="cd6aa1c275efecb9e53bb05033ae7717496e2f60f57b2e512065eba7da1eef6e";
+async function sha(t){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+function askPw(){return new Promise(res=>{const m=$("mPw"),i=$("pwIn"),e=$("pwErr");i.value="";e.textContent="";m.classList.add("on");setTimeout(()=>i.focus(),50);
+  const done=v=>{m.classList.remove("on");$("pwGo").onclick=$("pwNo").onclick=i.onkeydown=null;res(v)};
+  const go=async()=>{let ok=false;try{ok=(await sha(i.value.trim()))===PWH}catch(x){}if(ok)done(true);else{e.textContent="Неверный пароль";i.value="";i.focus()}};
+  $("pwGo").onclick=go;$("pwNo").onclick=()=>done(false);i.onkeydown=ev=>{if(ev.key==="Enter")go()}})}
 function cardHtml(o){return `<div class="card"><div class="cw"><div class="cl"><div class="row"><b>№${esc(o.no)} · ${esc(o.fn)} ${esc(o.ln)}</b><span class="m">${esc(o.date)}</span></div>
   ${o.tp==="w"&&!(tab==="w"&&curCl)?`<div class="m"><span class="tag">Опт · ${esc(cn(o.cl))}</span></div>`:""}
   <div class="m">📞 ${o.ph?`<a href="tel:${esc(o.ph)}">${esc(o.ph)}</a>`:"—"} · 📍 ${esc(o.ad)||"—"}</div>
@@ -600,11 +612,11 @@ $("list").onclick=async e=>{
   const b=e.target.closest("button");if(!b)return;
   if(b.dataset.c){curCl=b.dataset.c;render();return}
   if(b.dataset.back){curCl=null;render();return}
-  if(b.dataset.ec){openClient(b.dataset.ec);return}
+  if(b.dataset.ec){if(await askPw())openClient(b.dataset.ec);return}
   if(b.dataset.ac){openClient(null);return}
-  if(b.dataset.e)openForm(b.dataset.e);
+  if(b.dataset.e){if(await askPw())openForm(b.dataset.e);return}
   if(b.dataset.t&&db){const o=orders.find(x=>x.id===b.dataset.t),k=b.dataset.k;if(o){o[k]=!o[k];render();try{await db.doc("orders/"+o.id).update({[k]:o[k]})}catch(x){o[k]=!o[k];render()}}}
-  if(b.dataset.d&&isAdmin){if(b.dataset.arm!=="1"){b.dataset.arm="1";b.textContent="Точно удалить?";return}try{await db.doc("orders/"+b.dataset.d).delete()}catch(x){}}
+  if(b.dataset.d&&isAdmin){if(!(await askPw()))return;try{await db.doc("orders/"+b.dataset.d).delete()}catch(x){}}
 };
 $("bAdd").onclick=()=>openForm(null);
 $("oSave").onclick=save;$("oCancel").onclick=()=>$("mO").classList.remove("on");
@@ -663,6 +675,7 @@ const norm=v=>String(v??"").toLowerCase().replace(/\s+/g," ").trim();
 const keyOf=o=>o.no?("n:"+norm(o.no)):["f",o.fn,o.ln,o.ph,o.ad,o.date,+o.sl||0,+o.s||0].map(norm).join("|");
 async function dedupe(){
   if(!db||!isAdmin){say("Убирать повторы может только учредитель");return}
+  if(!(await askPw()))return;
   const seen=new Set(),del=[];
   [...orders].sort((a,b)=>(a.ts||0)-(b.ts||0)).forEach(o=>{const k=keyOf(o);if(seen.has(k))del.push(o.id);else seen.add(k)});
   if(!del.length){say("Повторов нет");return}
@@ -687,7 +700,7 @@ $("cSave").onclick=async()=>{
 $("cCancel").onclick=()=>$("mC").classList.remove("on");
 $("cDel").onclick=async()=>{
   if(!isAdmin||!editCl||!db)return;
-  if($("cDel").dataset.arm!=="1"){$("cDel").dataset.arm="1";$("cDel").textContent="Точно удалить?";return}
+  if(!(await askPw()))return;
   try{await db.doc("clients/"+editCl).delete()}catch(e){}
   $("mC").classList.remove("on");curCl=null;render();
 };
@@ -698,6 +711,7 @@ $("bWipe").onclick=()=>{if(!isAdmin)return;$("wipeIn").value="";$("wipeBox").sty
 $("wipeGo").onclick=async()=>{
   if(!isAdmin||!db)return;
   if($("wipeIn").value.trim().toUpperCase()!=="УДАЛИТЬ"){say("Чтобы удалить, введите слово УДАЛИТЬ");return}
+  if(!(await askPw()))return;
   const g=$("wipeGo");g.disabled=true;let n=0;
   try{const snap=await db.collection("orders").get();const ids=snap.docs.map(d=>d.id);
     for(const id of ids){await db.doc("orders/"+id).delete();n++;g.textContent="Удаляю "+n+" / "+ids.length}
@@ -767,7 +781,7 @@ function swEnd(){if(!sw)return;const c=sw.c;c.style.transition="";if(sw.m){const
 addEventListener("pointerup",swEnd);addEventListener("pointercancel",swEnd);
 $("kSetList").onclick=async e=>{
   const d=e.target.closest(".swd");
-  if(d){try{await db.doc("stones/"+d.dataset.del).delete()}catch(x){}return}
+  if(d){if(!(await askPw()))return;try{await db.doc("stones/"+d.dataset.del).delete()}catch(x){}return}
   if(lastMoved){lastMoved=false}
 };
 const ptr=$("ptr");let ty=null,pull=0,busy=false;
@@ -812,7 +826,7 @@ render();
   db.collection("orders").onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>
-<script>var BUILD="20261114131851";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
+<script>var BUILD="20261114132838";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
 document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()});window.addEventListener("load",function(){setTimeout(chk,1200)})})();</script>
 </body>
 </html>
