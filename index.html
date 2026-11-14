@@ -141,29 +141,33 @@ body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 #bg3d{display:none}
 .note{font-size:12px;color:var(--muted);margin-top:10px}
 
-#mFin{align-items:center}#mFin .sheet{display:flex;flex-direction:column;height:min(520px,82dvh);width:min(100%,400px);overflow:hidden;padding:0;overscroll-behavior:contain}
-.fhd{display:flex;align-items:center;justify-content:space-between;padding:10px 12px 4px;flex-shrink:0}.fhd h2{margin:0;font-size:16px}.fhd button{padding:4px 10px}
-#fBody{flex:1;min-height:0;overflow:auto;padding:2px 12px 10px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
-#fTabs{display:flex;gap:4px;padding:3px;margin:0 10px 10px;background:var(--surface);border:1px solid var(--line);border-radius:999px;flex-shrink:0}
-#fTabs button{flex:1;border:0;background:transparent;border-radius:999px;padding:6px 2px;font-size:12px;color:var(--muted)}
-#fTabs button.on{background:var(--accent);color:var(--accent-t)}
-.fseg{display:flex;gap:6px;margin-bottom:6px}.fseg button{padding:6px}.fseg button{flex:1}.fseg button.on{background:var(--accent);color:var(--accent-t);border-color:var(--accent)}
-.famt{width:100%;text-align:center;font-size:28px;font-weight:600;border:0;border-bottom:1px solid var(--line);background:transparent;padding:6px 4px;margin-bottom:8px}
-.famt.e{color:#c0392b}.famt.i{color:#2e9e5b}
-.frows{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}.frows label:nth-child(3),.frows label:nth-child(4){grid-column:span 1}.frows label,.fcard label{display:grid;gap:3px;font-size:12px;color:var(--muted)}
-.frows select,.frows input,.fcard select,.fcard input{font-size:14px;padding:6px 8px;color:var(--text);min-width:0;width:100%}
-.fcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:8px;overflow:hidden}
-.fr{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid var(--line);font-size:14px;gap:8px}.fr:last-child{border-bottom:0}
-.fr.nav{cursor:pointer}.fr.nav:after{content:"›";color:var(--muted);font-size:18px}
-.fr .e,.frow .e,.fgh .e{color:#c0392b}.fr .i,.frow .i{color:#2e9e5b}
-.fr.sub{padding-left:28px;font-size:13px;color:var(--muted)}
-.fgh{font-size:12px;color:var(--muted);padding:8px 2px 3px}
-.frow{display:flex;justify-content:space-between;gap:10px;padding:7px 10px;background:var(--surface);border:1px solid var(--line);border-radius:10px;margin-bottom:6px;cursor:pointer;font-size:14px}.frow span{white-space:nowrap;font-weight:600}
-.fbar{height:5px;border-radius:3px;background:var(--line);margin:0 14px 8px;overflow:hidden}.fbar i{display:block;height:100%}
-.fdn{width:130px;height:130px;display:block;margin:6px auto;transform:rotate(0deg)}
-.fleg{display:flex;flex-wrap:wrap;gap:4px 12px;justify-content:center;font-size:12px;color:var(--muted);margin-bottom:8px}.fleg i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px}
-.fset{display:flex;gap:6px;padding:10px 12px;flex-wrap:wrap}.fset>*{flex:1;min-width:110px}
-.fchip{display:inline-flex;align-items:center;gap:4px;padding:3px 4px 3px 10px;border:1px solid var(--line);border-radius:999px;font-size:12px;margin:2px}.fchip button{border:0;background:transparent;padding:0 6px;color:var(--muted)}
+#mFin{padding:0;background:var(--surface);align-items:stretch;justify-content:stretch;backdrop-filter:none;z-index:30}
+#mFin .sheet{max-width:none;width:100%;height:100%;border-radius:0;box-shadow:none;background:transparent;padding:0;display:flex;flex-direction:column;overflow:hidden;animation:none!important}
+.fhd{display:grid;grid-template-columns:70px 1fr 70px;align-items:center;padding:calc(env(safe-area-inset-top,0px) + 10px) 12px 6px;flex-shrink:0;min-height:48px}
+html.sa .fhd{padding-right:82px}
+.fhd h2{margin:0;font-size:16px;text-align:center;font-weight:600}.fhd button{border:0;background:transparent;color:var(--accent);padding:6px 4px;font-size:16px}.fhd .l{text-align:left}.fhd .r{text-align:right}
+#fBody{flex:1;min-height:0;overflow:auto;padding:0 0 12px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+#fTabs{display:flex;border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));flex-shrink:0}
+#fTabs button{flex:1;border:0;background:transparent;display:grid;justify-items:center;gap:2px;padding:2px;font-size:10px;color:var(--muted)}
+#fTabs button.on{color:var(--accent)}#fTabs svg{width:22px;height:22px}
+.fbig{display:block;width:100%;text-align:center;font-size:26px;font-weight:600;border:0;background:transparent;padding:26px 12px;color:var(--muted)}
+.fbig.e{color:#c0392b}.fbig.i{color:#2e9e5b}.fbig.z{font-size:20px;font-weight:500}
+.frw{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px 16px;border-top:1px solid var(--line);font-size:15px;cursor:pointer;min-height:48px}
+.frw:last-of-type{border-bottom:1px solid var(--line)}
+.frw .v{color:var(--accent);text-align:right;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.frw .v:after{content:"  ›";color:var(--muted)}
+.frw.nn .v:after,.frw.st .v:after{content:""}.frw small{display:block;color:var(--muted);font-size:12px}
+.frw .e{color:#c0392b}.frw .i{color:#2e9e5b}.frw b{font-weight:600;white-space:nowrap}
+.frw input[type=date],.frw select{border:0;background:transparent;color:var(--accent);text-align:right;font-size:15px;padding:0;max-width:60%}
+.fsave{display:block;width:100%;border:0;background:transparent;color:var(--accent);font-size:17px;padding:16px;font-weight:600}
+.fgh{font-size:12px;color:var(--muted);padding:14px 16px 5px;text-transform:none}
+.fbar{height:5px;background:var(--line);margin:0 16px 6px;border-radius:3px;overflow:hidden}.fbar i{display:block;height:100%}
+.fpad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:10px 16px}.fpad button{padding:15px 0;font-size:22px;border-radius:12px}
+.fpill{display:block;margin:0 auto 6px;padding:6px 16px;border-radius:999px}
+.fdn{width:150px;height:150px;display:block;margin:6px auto}
+.fleg{display:flex;flex-wrap:wrap;gap:4px 12px;justify-content:center;font-size:12px;color:var(--muted);padding:0 16px 8px}.fleg i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px}
+.fadd{display:flex;gap:8px;padding:10px 16px}.fadd input{flex:1;min-width:0}
+.fchip{display:inline-flex;align-items:center;padding:2px 4px 2px 10px;border:1px solid var(--line);border-radius:999px;font-size:12px;margin:2px 4px 2px 0}.fchip button{border:0;background:transparent;padding:0 6px;color:var(--muted)}
+.fnote{display:block;width:calc(100% - 32px);margin:12px 16px;min-height:140px;font-size:16px}
 </style>
 </head>
 <body>
@@ -264,7 +268,7 @@ body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 </div></div>
 
 <div class="modal" id="mFin"><div class="sheet">
-  <div class="fhd"><h2 id="fTitle">Финансы</h2><button id="fClose" aria-label="Закрыть">✕</button></div>
+  <div class="fhd"><button class="l" id="fL"></button><h2 id="fTitle">Финансы</h2><button class="r" id="fR"></button></div>
   <div id="fBody"></div>
   <div id="fTabs"></div>
 </div></div>
@@ -782,41 +786,54 @@ function stReset(){stEdit=null;$("kSName").value="";$("kSCost").value=""}
 function closeSw(except){document.querySelectorAll("#kSetList .swc.open").forEach(c=>{if(c!==except){c.style.transform="";c.classList.remove("open")}})}
 
 /* ===== Финансы ===== */
-const FDEF=[{t:"e",n:"Дом",s:["Аренда","Коммунальные"]},{t:"e",n:"Продукты",s:["Супермаркет","Рынок"]},{t:"e",n:"Покупки",s:[]},{t:"e",n:"Транспорт",s:["Топливо","Такси"]},{t:"e",n:"Здоровье",s:[]},{t:"e",n:"Остальные",s:[]},{t:"i",n:"Зарплата",s:[]},{t:"i",n:"Фриланс",s:[]}];
-let fin=[],fcfg=null,fTab="new",fType="e",fEdit=null,fAmt="",fCat="",fSub="",fNt="",fDate="",fSubv=null,fPer="all",fRc="all";
+const FDEF=[{n:"Дом",s:["Аренда","Коммунальные"]},{n:"Продукты",s:["Супермаркет","Рынок"]},{n:"Транспорт",s:["Топливо","Такси"]},{n:"Здоровье",s:[]},{n:"Зарплата",s:[]},{n:"Остальные",s:[]}];
+let fin=[],fcfg=null,fTab="new",fScr="",fNeg=true,fDigits="",fEdit=null,fCat="",fSub="",fNt="",fDate="",fMon=null,fSubv=null,fPer="all",fRc="all";
 const fCats=()=>fcfg&&fcfg.cats&&fcfg.cats.length?fcfg.cats:FDEF;
 const fYM=(y,m)=>y+"-"+String(m+1).padStart(2,"0"),fIso=d=>fYM(d.getFullYear(),d.getMonth())+"-"+String(d.getDate()).padStart(2,"0"),fToday=()=>fIso(new Date());
 const fDateRu=d=>{const x=new Date((d||fToday())+"T12:00:00");return isNaN(x)?d:x.toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"})};
-const fMonRu=k=>{const x=new Date(k+"-15T12:00:00");return isNaN(x)?k:x.toLocaleDateString("ru-RU",{month:"long",year:"numeric"})};
+const fMonRu=k=>{const x=new Date(k+"-15T12:00:00");if(isNaN(x))return k;const t=x.toLocaleDateString("ru-RU",{month:"long",year:"numeric"});return t.charAt(0).toUpperCase()+t.slice(1)};
 const fSum=(L,t)=>L.filter(o=>o.t===t).reduce((a,o)=>a+(+o.a||0),0);
+const fAmtNum=()=>+String(fDigits).replace(",",".")||0;
+const fAmtTxt=()=>fDigits?(fNeg?"−":"+")+fmt(fAmtNum())+(/[.,]$/.test(fDigits)?",":""):"";
+const FIC={new:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>',log:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>',rep:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3v9h9a9 9 0 1 1-9-9z"/></svg>',set:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>'};
+function fReset(){fEdit=null;fDigits="";fNeg=true;fSub="";fNt="";fDate="";fScr=""}
 function fRender(){
-  const T=[["new","Запись"],["log","Журнал"],["rep","Отчёт"],["set","Настройки"]];
-  $("fTabs").innerHTML=T.map(([k,n])=>`<button data-fa="tab" data-v="${k}" class="${fTab===k?"on":""}">${n}</button>`).join("");
-  $("fTitle").textContent=fTab==="new"?(fEdit?"Изменить запись":"Новая запись"):fTab==="log"?"Журнал":fTab==="rep"?(fSubv||"Отчёт"):"Настройки";
+  const T=[["new","Новая запись"],["log","Журнал"],["rep","Отчёт"],["set","Настройки"]];
+  $("fTabs").innerHTML=T.map(([k,n])=>`<button data-fa="tab" data-v="${k}" class="${fTab===k?"on":""}">${FIC[k]}<span>${n}</span></button>`).join("");
+  let title="Финансы",L="",R="";
+  if(fTab==="new"){title=fEdit?"Изменить запись":"Новая запись";
+    if(fScr==="pad"){R="Готово"}else if(fScr==="cat"){title="Категория";L="‹"}else if(fScr==="sub"){title="Подкатегория";L="‹"}else if(fScr==="note"){title="Примечание";L="‹";R="Готово"}else L="✕"}
+  else if(fTab==="log"){title=fMon?fMonRu(fMon):"Журнал";L=fMon?"‹":"✕"}
+  else if(fTab==="rep"){title=fSubv||"Отчёт";L=fSubv?"‹":"✕"}
+  else{title="Настройки";L="✕"}
+  $("fTitle").textContent=title;$("fL").textContent=L;$("fR").textContent=R;$("fL").style.visibility=L?"visible":"hidden";
   $("fBody").innerHTML=({new:fvNew,log:fvLog,rep:fvRep,set:fvSet})[fTab]();
 }
 function fvNew(){
+  const cs=fCats();
+  if(fScr==="pad")return `<div class="fbig ${fDigits?(fNeg?"e":"i"):"z"}" style="padding:18px 12px 6px">${fDigits?fAmtTxt():"0"}</div><button class="fpill" data-fa="sign">${fNeg?"− Расход (нажмите, чтобы сменить на доход)":"+ Доход (нажмите, чтобы сменить на расход)"}</button>
+    <div class="fpad">${[1,2,3,4,5,6,7,8,9].map(n=>`<button data-fa="key" data-v="${n}">${n}</button>`).join("")}<button data-fa="key" data-v=",">,</button><button data-fa="key" data-v="0">0</button><button data-fa="key" data-v="back">⌫</button></div>`;
+  if(fScr==="cat")return `<div class="fadd"><input id="fxNew" placeholder="Новая категория"><button data-fa="addcat">Добавить</button></div>`+cs.map((c,i)=>`<div class="frw st" data-fa="pickcat" data-v="${i}"><span>${esc(c.n)}</span><span class="v">${c.n===fCat?"✓":""}</span></div>`).join("");
+  if(fScr==="sub"){const c=cs.find(x=>x.n===fCat);return `<div class="fadd"><input id="fxNew" placeholder="Новая подкатегория"><button data-fa="addsub">Добавить</button></div><div class="frw st" data-fa="picksub" data-v=""><span>Без подкатегории</span><span class="v">${fSub?"":"✓"}</span></div>`+(c?c.s:[]).map((x,i)=>`<div class="frw st" data-fa="picksub" data-v="${i}"><span>${esc(x)}</span><span class="v">${x===fSub?"✓":""}</span></div>`).join("")}
+  if(fScr==="note")return `<textarea id="fxNt" class="fnote" placeholder="Примечание">${esc(fNt)}</textarea>`;
+  if(!fCat)fCat=cs[0]?cs[0].n:"";
   if(!fDate)fDate=fToday();
-  const cs=fCats().filter(c=>c.t===fType);
-  if(!cs.find(c=>c.n===fCat)){fCat=cs[0]?cs[0].n:"";fSub=""}
-  const cur=cs.find(c=>c.n===fCat),subs=cur?cur.s:[];
-  return `<div class="fseg"><button data-fa="type" data-v="e" class="${fType==="e"?"on":""}">Расход</button><button data-fa="type" data-v="i" class="${fType==="i"?"on":""}">Доход</button></div>
-  <input id="fxAmt" class="famt ${fType}" type="number" step="0.01" inputmode="decimal" placeholder="0" value="${esc(fAmt)}">
-  <div class="frows">
-    <label>Категория<select id="fxCat">${cs.map(c=>`<option${c.n===fCat?" selected":""}>${esc(c.n)}</option>`).join("")}</select></label>
-    <label>Подкатегория<select id="fxSub"><option value="">—</option>${subs.map(x=>`<option${x===fSub?" selected":""}>${esc(x)}</option>`).join("")}</select></label>
-    <label>Примечание<input id="fxNt" value="${esc(fNt)}"></label>
-    <label>Дата<input id="fxDt" type="date" value="${esc(fDate)}"></label>
-  </div>
-  <div class="acts"><button class="p" data-fa="save">Сохранить</button><button data-fa="cancel">Отмена</button>${fEdit?`<button class="d" data-fa="del" style="margin-left:auto">Удалить</button>`:""}</div>`;
+  return `<div class="fbig ${fDigits?(fNeg?"e":"i"):""}" data-fa="pad">${fDigits?fAmtTxt():"Нажмите для ввода суммы"}</div>
+  <div class="frw" data-fa="cat"><span>Категория</span><span class="v">${esc(fCat)||"Выбрать"}</span></div>
+  <div class="frw" data-fa="sub"><span>Подкатегория</span><span class="v">${esc(fSub)||"Нет"}</span></div>
+  <div class="frw" data-fa="note"><span>Примечание</span><span class="v">${esc(fNt)||"Нет"}</span></div>
+  <div class="frw nn"><span>Дата</span><input id="fxDt" type="date" value="${esc(fDate)}"></div>
+  <button class="fsave" data-fa="save">Сохранить</button>
+  <button class="fsave" data-fa="cancel" style="font-weight:400;color:var(--muted)">Отмена</button>
+  ${fEdit?`<button class="fsave" data-fa="del" style="color:var(--danger)">Удалить</button>`:""}`;
 }
+function fRow(o){return `<div class="frw" data-fa="edit" data-v="${esc(o.id)}"><span><b style="font-weight:600">${esc(o.c)}${o.sc?" › "+esc(o.sc):""}</b>${o.nt?`<small>${esc(o.nt)}</small>`:""}</span><b class="${o.t}">${o.t==="e"?"−":"+"}${fmt(o.a)}</b></div>`}
 function fvLog(){
-  const L=[...fin].sort((x,y)=>(y.d||"").localeCompare(x.d||"")||(y.ts||0)-(x.ts||0));
-  if(!L.length)return '<div class="empty">Записей пока нет</div>';
-  let h="",last=null;
-  L.forEach(o=>{if(o.d!==last){last=o.d;h+=`<div class="fgh">${esc(fDateRu(o.d))}</div>`}
-    h+=`<div class="frow" data-fa="edit" data-v="${esc(o.id)}"><div><b>${esc(o.c)}${o.sc?" › "+esc(o.sc):""}</b>${o.nt?`<div class="m">${esc(o.nt)}</div>`:""}</div><span class="${o.t}">${o.t==="e"?"−":"+"}${fmt(o.a)}</span></div>`});
-  return h;
+  if(!fin.length)return '<div class="empty">Записей пока нет</div>';
+  if(!fMon){const m={};fin.forEach(o=>{const k=(o.d||"").slice(0,7);m[k]=(m[k]||0)+1});
+    return Object.keys(m).sort().reverse().map(k=>`<div class="frw" data-fa="mon" data-v="${k}"><span>${esc(fMonRu(k))}<small>${m[k]} зап.</small></span><span class="v"></span></div>`).join("")}
+  const L=fin.filter(o=>(o.d||"").slice(0,7)===fMon).sort((x,y)=>(y.d||"").localeCompare(x.d||"")||(y.ts||0)-(x.ts||0));
+  let h="",last=null;L.forEach(o=>{if(o.d!==last){last=o.d;h+=`<div class="fgh">${esc(fDateRu(o.d))}</div>`}h+=fRow(o)});return h;
 }
 function fFiltered(){
   const n=new Date(),y=n.getFullYear(),m=n.getMonth(),p=new Date(y,m-1,1),m30=fIso(new Date(Date.now()-30*864e5));
@@ -830,78 +847,78 @@ function fFiltered(){
 }
 const FGRN=["#2f6b2f","#9ad98f","#5aa75a","#c6ecbf","#1f4d1f"],FRED=["#f09a9a","#d95757","#b33a3a","#8c2323","#5e1212","#3d0a0a"];
 function fDonut(items,pal){
-  const tot=items.reduce((a,x)=>a+x[1],0);if(!tot)return '<div class="m" style="text-align:center;padding:24px">Нет данных</div>';
+  const tot=items.reduce((a,x)=>a+x[1],0);if(!tot)return '<div class="m" style="text-align:center;padding:20px">Нет данных</div>';
   let off=0;const seg=items.map(([n,v],i)=>{const p=v/tot*100,c=`<circle r="15.9155" cx="21" cy="21" fill="none" stroke="${pal[i%pal.length]}" stroke-width="7" stroke-dasharray="${p} ${100-p}" stroke-dashoffset="${25-off}"/>`;off+=p;return c}).join("");
   return `<svg viewBox="0 0 42 42" class="fdn">${seg}</svg><div class="fleg">${items.map(([n,v],i)=>`<span><i style="background:${pal[i%pal.length]}"></i>${esc(n)} ${Math.round(v/tot*100)}%</span>`).join("")}</div>`;
 }
 function fGroup(L,t,key){const m={};L.filter(o=>o.t===t).forEach(o=>{const k=key(o);m[k]=(m[k]||0)+(+o.a||0)});return Object.entries(m).sort((a,b)=>b[1]-a[1])}
 function fvRep(){
-  const L=fFiltered(),inc=fSum(L,"i"),exp=fSum(L,"e");
-  const back=`<button data-fa="back" style="margin-bottom:10px">‹ Отчёт</button>`;
+  const L=fFiltered(),inc=fSum(L,"i"),exp=fSum(L,"e"),pr=(n,v,c)=>`<div class="frw nn"><span>${n}</span><b class="${c||""}">${v}</b></div>`;
   if(fSubv==="По категориям"){
     const blk=(t,name,cls)=>{const g=fGroup(L,t,o=>o.c),tot=g.reduce((a,x)=>a+x[1],0);if(!g.length)return"";
-      return `<div class="fgh">${name}</div><div class="fcard">${g.map(([n,v])=>{const subs=fGroup(L.filter(o=>o.c===n),t,o=>o.sc||"").filter(x=>x[0]);
-        return `<div class="fr"><span>${esc(n)}</span><b class="${cls}">${fmt(v)}</b></div><div class="fbar"><i style="width:${tot?v/tot*100:0}%;background:${t==="e"?"#d95757":"#5aa75a"}"></i></div>`+subs.map(([sn,sv])=>`<div class="fr sub"><span>${esc(sn)}</span><span>${fmt(sv)}</span></div>`).join("")}).join("")}</div>`};
-    return back+(blk("i","Доход","i")+blk("e","Расход","e")||'<div class="empty">Нет данных</div>');
+      return `<div class="fgh">${name}</div>`+g.map(([n,v])=>`<div class="frw nn"><span>${esc(n)} · ${tot?(v/tot*100).toFixed(1):0}%</span><b class="${cls}">${fmt(v)}</b></div><div class="fbar"><i style="width:${tot?v/tot*100:0}%;background:${t==="e"?"#d95757":"#5aa75a"}"></i></div>`).join("")};
+    return blk("i","Доход","i")+blk("e","Расход","e")||'<div class="empty">Нет данных</div>';
   }
-  if(fSubv==="Круговые диаграммы"){
-    return back+`<div class="fgh">Доход</div>${fDonut(fGroup(L,"i",o=>o.c),FGRN)}<div class="fgh">Расход</div>${fDonut(fGroup(L,"e",o=>o.c),FRED)}<div class="fcard"><div class="fr"><span>Итог</span><b>${fmt(inc-exp)}</b></div></div>`;
-  }
+  if(fSubv==="Круговые диаграммы")return `<div class="fgh">Доход</div>${fDonut(fGroup(L,"i",o=>o.c),FGRN)}<div class="fgh">Расход</div>${fDonut(fGroup(L,"e",o=>o.c),FRED)}`+pr("Итог",fmt(inc-exp));
   if(fSubv==="По времени"){
     const m={};L.forEach(o=>{const k=(o.d||"").slice(0,7);(m[k]=m[k]||{i:0,e:0})[o.t]+=(+o.a||0)});
     const ks=Object.keys(m).sort().reverse();
-    return back+(ks.length?`<div class="fcard">${ks.map(k=>`<div class="fr"><span>${esc(fMonRu(k))}</span><span><span class="i">${fmt(m[k].i)}</span> · <span class="e">${fmt(m[k].e)}</span> · <b>${fmt(m[k].i-m[k].e)}</b></span></div>`).join("")}</div><div class="m">Доход · Расход · Итог</div>`:'<div class="empty">Нет данных</div>');
+    return ks.length?ks.map(k=>`<div class="frw nn"><span>${esc(fMonRu(k))}<small>Доход ${fmt(m[k].i)} · Расход ${fmt(m[k].e)}</small></span><b>${fmt(m[k].i-m[k].e)}</b></div>`).join(""):'<div class="empty">Нет данных</div>';
   }
   if(fSubv==="Средние"){
     const ds=L.map(o=>o.d).filter(Boolean).sort();let days=1,mons=1;
     if(ds.length){const a=new Date(ds[0]+"T12:00:00"),b=new Date(ds[ds.length-1]+"T12:00:00");days=Math.max(1,Math.round((b-a)/864e5)+1);mons=Math.max(1,(b.getFullYear()-a.getFullYear())*12+b.getMonth()-a.getMonth()+1)}
-    const ni=L.filter(o=>o.t==="i").length,ne=L.filter(o=>o.t==="e").length;
-    return back+`<div class="fgh">В день</div><div class="fcard"><div class="fr"><span>Доход</span><b class="i">${fmt(inc/days)}</b></div><div class="fr"><span>Расход</span><b class="e">${fmt(exp/days)}</b></div></div>
-    <div class="fgh">В месяц</div><div class="fcard"><div class="fr"><span>Доход</span><b class="i">${fmt(inc/mons)}</b></div><div class="fr"><span>Расход</span><b class="e">${fmt(exp/mons)}</b></div></div>
-    <div class="fgh">На одну запись</div><div class="fcard"><div class="fr"><span>Доход</span><b class="i">${fmt(ni?inc/ni:0)}</b></div><div class="fr"><span>Расход</span><b class="e">${fmt(ne?exp/ne:0)}</b></div></div>`;
+    return `<div class="fgh">В день</div>${pr("Доход",fmt(inc/days),"i")}${pr("Расход",fmt(exp/days),"e")}<div class="fgh">В месяц</div>${pr("Доход",fmt(inc/mons),"i")}${pr("Расход",fmt(exp/mons),"e")}`;
   }
   const names=[...new Set([...fCats().map(c=>c.n),...fin.map(o=>o.c)])];
   const P=[["all","Все записи"],["m","Этот месяц"],["pm","Прошлый месяц"],["30","Последние 30 дней"],["y","Этот год"]];
-  return `<div class="fcard"><div class="fset"><label>Период<select id="fxPer">${P.map(([k,n])=>`<option value="${k}"${fPer===k?" selected":""}>${n}</option>`).join("")}</select></label><label>Категории<select id="fxRc"><option value="all">Все</option>${names.map(n=>`<option${fRc===n?" selected":""}>${esc(n)}</option>`).join("")}</select></label></div></div>
-  <div class="fcard"><div class="fr"><span>Доход</span><b class="i">${fmt(inc)}</b></div><div class="fr"><span>Расход</span><b class="e">${exp?"−":""}${fmt(exp)}</b></div><div class="fr"><span>Итог</span><b>${fmt(inc-exp)}</b></div></div>
-  <div class="fcard">${["По категориям","Круговые диаграммы","По времени","Средние"].map(n=>`<div class="fr nav" data-fa="sv" data-v="${n}"><span>${n}</span></div>`).join("")}</div>`;
+  return `<div class="frw nn"><span>Период</span><select id="fxPer">${P.map(([k,n])=>`<option value="${k}"${fPer===k?" selected":""}>${n}</option>`).join("")}</select></div>
+  <div class="frw nn"><span>Категории</span><select id="fxRc"><option value="all">Все</option>${names.map(n=>`<option${fRc===n?" selected":""}>${esc(n)}</option>`).join("")}</select></div>
+  ${pr("Доход",fmt(inc),"i")}${pr("Расход",(exp?"−":"")+fmt(exp),"e")}${pr("Итог",fmt(inc-exp))}
+  <div style="height:12px"></div>
+  ${["По категориям","Круговые диаграммы","По времени","Средние"].map(n=>`<div class="frw" data-fa="sv" data-v="${n}"><span>${n}</span><span class="v"></span></div>`).join("")}`;
 }
 function fvSet(){
-  const cs=fCats(),blk=(t,name)=>`<div class="fgh">${name}</div><div class="fcard">${cs.map((c,i)=>c.t!==t?"":`<div style="padding:8px 12px;border-bottom:1px solid var(--line)"><div class="fr" style="padding:2px 0;border:0"><b>${esc(c.n)}</b><button data-fa="delc" data-v="${i}" class="d" style="padding:2px 10px;font-size:12px">Удалить</button></div>${c.s.map((x,j)=>`<span class="fchip">${esc(x)}<button data-fa="dels" data-v="${i}|${j}">✕</button></span>`).join("")}</div>`).join("")||'<div class="fr m">Пусто</div>'}</div>`;
-  return blk("e","Расходы")+blk("i","Доходы")+`<div class="fgh">Добавить категорию</div><div class="fcard"><div class="fset"><select id="fxNT"><option value="e">Расход</option><option value="i">Доход</option></select><input id="fxNC" placeholder="Название"><button data-fa="addc">Добавить</button></div></div>
-  <div class="fgh">Добавить подкатегорию</div><div class="fcard"><div class="fset"><select id="fxSC">${cs.map((c,i)=>`<option value="${i}">${esc(c.n)}</option>`).join("")}</select><input id="fxNS" placeholder="Название"><button data-fa="adds">Добавить</button></div></div>`;
+  const cs=fCats();
+  return `<div class="fgh">Категории</div>`+cs.map((c,i)=>`<div style="padding:10px 16px;border-top:1px solid var(--line)"><div style="display:flex;justify-content:space-between;align-items:center"><b>${esc(c.n)}</b><button data-fa="delc" data-v="${i}" class="d" style="padding:2px 10px;font-size:12px">Удалить</button></div>${c.s.map((x,j)=>`<span class="fchip">${esc(x)}<button data-fa="dels" data-v="${i}|${j}">✕</button></span>`).join("")}</div>`).join("")+`<div class="fgh">Добавить категорию</div><div class="fadd"><input id="fxNC" placeholder="Название"><button data-fa="addc">Добавить</button></div>`;
 }
 async function fSaveCfg(cats){fcfg={cats};try{if(db)await db.doc("settings/fin").set(fcfg)}catch(e){}fRender()}
-function fCopyCats(){return fCats().map(c=>({t:c.t,n:c.n,s:[...c.s]}))}
-$("fBody").addEventListener("input",e=>{const i=e.target.id;
-  if(i==="fxAmt")fAmt=e.target.value;else if(i==="fxNt")fNt=e.target.value});
-$("fBody").addEventListener("change",e=>{const i=e.target.id,v=e.target.value;
-  if(i==="fxDt")fDate=v;
-  else if(i==="fxCat"){fCat=v;fSub="";fRender()}
-  else if(i==="fxSub")fSub=v;
-  else if(i==="fxPer"){fPer=v;fRender()}
-  else if(i==="fxRc"){fRc=v;fRender()}});
+function fCopyCats(){return fCats().map(c=>({n:c.n,s:[...c.s]}))}
+$("mFin").addEventListener("input",e=>{if(e.target.id==="fxNt")fNt=e.target.value});
+$("mFin").addEventListener("change",e=>{const i=e.target.id,v=e.target.value;
+  if(i==="fxDt")fDate=v;else if(i==="fxPer"){fPer=v;fRender()}else if(i==="fxRc"){fRc=v;fRender()}});
+$("fL").onclick=()=>{
+  if(fTab==="new"&&fScr){if(fScr==="note")fNt=($("fxNt")||{value:fNt}).value;fScr="";fRender()}
+  else if(fTab==="log"&&fMon){fMon=null;fRender()}
+  else if(fTab==="rep"&&fSubv){fSubv=null;fRender()}
+  else $("mFin").classList.remove("on")};
+$("fR").onclick=()=>{if(fTab==="new"&&fScr==="note")fNt=$("fxNt").value;fScr="";fRender()};
 $("mFin").addEventListener("click",async e=>{
-  const t=e.target.closest("[data-fa]");if(!t)return;const a=t.dataset.fa,v=t.dataset.v;
-  if(a==="tab"){fTab=v;fSubv=null;if(v!=="new"&&fEdit){fEdit=null;fAmt="";fNt="";fSub=""}fRender()}
-  else if(a==="type"){fType=v;fCat="";fSub="";fRender()}
+  const t=e.target.closest("[data-fa]");if(!t)return;const a=t.dataset.fa,v=t.dataset.v,cs=fCopyCats();
+  if(a==="tab"){fTab=v;fMon=null;fSubv=null;if(fScr)fScr="";if(v!=="new"&&fEdit)fReset();fRender()}
+  else if(a==="pad"){fScr="pad";fRender()}
+  else if(a==="sign"){fNeg=!fNeg;fRender()}
+  else if(a==="key"){if(v==="back")fDigits=fDigits.slice(0,-1);else if(v===","){if(fDigits&&!/[.,]/.test(fDigits))fDigits+=","}else if(fDigits.length<11&&!(fDigits==="0"&&v==="0")&&!(/[.,]\d\d$/.test(fDigits)))fDigits=(fDigits==="0"?"":fDigits)+v;fRender()}
+  else if(a==="cat"){fScr="cat";fRender()}else if(a==="sub"){fScr="sub";fRender()}else if(a==="note"){fScr="note";fRender()}
+  else if(a==="pickcat"){const c=cs[+v];if(c){if(c.n!==fCat)fSub="";fCat=c.n}fScr="";fRender()}
+  else if(a==="picksub"){const c=cs.find(x=>x.n===fCat);fSub=v===""?"":(c&&c.s[+v])||"";fScr="";fRender()}
+  else if(a==="addcat"){const n=$("fxNew").value.trim();if(!n)return;if(!cs.find(c=>c.n===n))cs.push({n,s:[]});fCat=n;fSub="";fScr="";await fSaveCfg(cs)}
+  else if(a==="addsub"){const n=$("fxNew").value.trim(),c=cs.find(x=>x.n===fCat);if(!n||!c)return;if(!c.s.includes(n))c.s.push(n);fSub=n;fScr="";await fSaveCfg(cs)}
   else if(a==="save"){
-    const n=Math.abs(+String(fAmt).replace(",","."))||0;if(!n){$("fxAmt").style.borderColor="var(--danger)";return}
-    const d={a:n,t:fType,c:fCat,sc:fSub,nt:fNt.trim(),d:fDate||fToday()};
+    const n=fAmtNum();if(!n){fScr="pad";fRender();return}
+    const d={a:n,t:fNeg?"e":"i",c:fCat,sc:fSub,nt:fNt.trim(),d:fDate||fToday()};
     try{if(fEdit)await db.doc("fin/"+fEdit).update(d);else await db.collection("fin").add({...d,ts:Date.now()})}catch(x){}
-    fEdit=null;fAmt="";fNt="";fSub="";fDate="";fTab="log";fRender()}
-  else if(a==="cancel"){fEdit=null;fAmt="";fNt="";fSub="";fDate="";$("mFin").classList.remove("on")}
-  else if(a==="del"){if(!(await askPw()))return;try{await db.doc("fin/"+fEdit).delete()}catch(x){}fEdit=null;fAmt="";fNt="";fSub="";fTab="log";fRender()}
-  else if(a==="edit"){const o=fin.find(x=>x.id===v);if(!o||!(await askPw()))return;fEdit=o.id;fType=o.t;fCat=o.c;fSub=o.sc||"";fAmt=String(o.a);fNt=o.nt||"";fDate=o.d||fToday();fTab="new";fRender()}
+    fReset();fTab="log";fRender()}
+  else if(a==="cancel"){fReset();$("mFin").classList.remove("on")}
+  else if(a==="del"){if(!(await askPw()))return;try{await db.doc("fin/"+fEdit).delete()}catch(x){}fReset();fTab="log";fRender()}
+  else if(a==="mon"){fMon=v;fRender()}
+  else if(a==="edit"){const o=fin.find(x=>x.id===v);if(!o||!(await askPw()))return;fEdit=o.id;fNeg=o.t==="e";fCat=o.c;fSub=o.sc||"";fDigits=String(o.a).replace(".",",");fNt=o.nt||"";fDate=o.d||fToday();fScr="";fTab="new";fRender()}
   else if(a==="sv"){fSubv=v;fRender()}
-  else if(a==="back"){fSubv=null;fRender()}
-  else if(a==="addc"){const n=$("fxNC").value.trim();if(!n)return;const c=fCopyCats();c.push({t:$("fxNT").value,n,s:[]});fSaveCfg(c)}
-  else if(a==="adds"){const n=$("fxNS").value.trim(),c=fCopyCats(),k=c[+$("fxSC").value];if(!n||!k)return;if(!k.s.includes(n))k.s.push(n);fSaveCfg(c)}
-  else if(a==="delc"){if(!(await askPw()))return;const c=fCopyCats();c.splice(+v,1);fSaveCfg(c)}
-  else if(a==="dels"){if(!(await askPw()))return;const[i,j]=v.split("|").map(Number),c=fCopyCats();c[i].s.splice(j,1);fSaveCfg(c)}
+  else if(a==="addc"){const n=$("fxNC").value.trim();if(!n)return;if(!cs.find(c=>c.n===n))cs.push({n,s:[]});fSaveCfg(cs)}
+  else if(a==="delc"){if(!(await askPw()))return;cs.splice(+v,1);fSaveCfg(cs)}
+  else if(a==="dels"){if(!(await askPw()))return;const[i,j]=v.split("|").map(Number);cs[i].s.splice(j,1);fSaveCfg(cs)}
 });
-$("bFin").onclick=()=>{fTab="new";fSubv=null;fEdit=null;fRender();$("mFin").classList.add("on")};
-$("fClose").onclick=()=>$("mFin").classList.remove("on");
+$("bFin").onclick=()=>{fTab="new";fMon=null;fSubv=null;fReset();fRender();$("mFin").classList.add("on")};
 $("bKalc").onclick=()=>{kFill();kPrFill();$("mK").classList.add("on")};
 $("kClose").onclick=()=>$("mK").classList.remove("on");
 $("kToOrder").onclick=()=>{
@@ -979,7 +996,7 @@ render();
   db.collection("orders").onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>
-<script>var BUILD="20261114134422";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
+<script>var BUILD="20261114135207";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
 document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()});window.addEventListener("load",function(){setTimeout(chk,1200)})})();</script>
 </body>
 </html>
