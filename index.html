@@ -530,7 +530,7 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const fmt=n=>(Math.round((+n||0)*100)/100).toLocaleString("ru-RU");
 
-const loadTheme=()=>{try{return JSON.parse(localStorage.getItem("uchet_theme")||"null")}catch(e){return null}};
+const loadTheme=()=>{try{const t=JSON.parse(localStorage.getItem("uchet_theme")||"null");if(t&&t.photo==="none"&&!t.pn)delete t.photo;return t}catch(e){return null}};
 function applyTheme(){
   const r=document.documentElement.style;
   if(settings.bg){
@@ -641,7 +641,7 @@ async function saveSetting(p){
   try{localStorage.setItem("uchet_theme",JSON.stringify(settings))}catch(e){$("sNote").textContent="Не удалось сохранить на этом устройстве (фото слишком большое?)"}
 }
 function buildSettings(){
-  $("sNote").textContent="Когда выбираете цвет, фото отключается, чтобы цвет был виден. «Стандартное» возвращает фото. Всё сохраняется только на этом устройстве.";
+  $("sNote").textContent="Цвет лежит под фото. Чтобы он был виден полностью, нажмите «Без фото»; «Стандартное» возвращает фото. Всё сохраняется только на этом устройстве.";
 }
 function exportCsv(){
   const H=["№","Дата","Имя","Фамилия","Телефон","Адрес","Слэбов","Сумма","Заметка","Аванс","Остаток"];
@@ -664,7 +664,7 @@ $("oSave").onclick=save;$("oCancel").onclick=()=>$("mO").classList.remove("on");
 function readPhoto(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{let w=900,q=.62,out="";for(let t=0;t<6;t++){const sc=Math.min(1,w/im.width);const c=document.createElement("canvas");c.width=Math.round(im.width*sc);c.height=Math.round(im.height*sc);c.getContext("2d").drawImage(im,0,0,c.width,c.height);out=c.toDataURL("image/jpeg",q);if(out.length<180000)break;w=Math.round(w*.8);q=Math.max(.45,q-.05)}res(out)};im.onerror=rej;im.src=r.result};r.onerror=rej;r.readAsDataURL(f)})}
 $("phFile").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;try{const d=await readPhoto(f);settings={...settings,photo:d};applyTheme()}catch(x){}};
 $("phDef").onclick=()=>{settings={...settings};delete settings.photo;applyTheme()};
-$("phNone").onclick=()=>{settings={...settings,photo:"none"};applyTheme()};
+$("phNone").onclick=()=>{settings={...settings,photo:"none",pn:1};applyTheme()};
 let prevSet=null;
 $("bSet").onclick=()=>{prevSet={...settings};buildSettings();csLoad();$("mS").classList.add("on")};
 function hsl2hex(h,s,l){s/=100;l/=100;const k=n=>(n+h/30)%12,a=s*Math.min(l,1-l),f=n=>Math.round(255*(l-a*Math.max(-1,Math.min(k(n)-3,Math.min(9-k(n),1)))));return"#"+[f(0),f(8),f(4)].map(x=>x.toString(16).padStart(2,"0")).join("")}
@@ -675,7 +675,7 @@ function csPaint(){const h=+$("cH").value,s=+$("cS").value,l=+$("cL").value;
   $("cL").style.background="linear-gradient(to right,#000,hsl("+h+","+s+"%,50%),#fff)"}
 let csRaf=0;
 function csSet(){csPaint();if(csRaf)return;csRaf=requestAnimationFrame(()=>{csRaf=0;csApply()})}
-function csApply(){const hx=hsl2hex(+$("cH").value,+$("cS").value,+$("cL").value),n=parseInt(hx.slice(1),16),L=((n>>16)&255)*.299+((n>>8)&255)*.587+(n&255)*.114;settings={...settings,bg:hx,dark:L<110,photo:"none"};applyTheme()}
+function csApply(){const hx=hsl2hex(+$("cH").value,+$("cS").value,+$("cL").value),n=parseInt(hx.slice(1),16),L=((n>>16)&255)*.299+((n>>8)&255)*.587+(n&255)*.114;settings={...settings,bg:hx,dark:L<110};applyTheme()}
 ["cH","cS","cL"].forEach(i=>$(i).oninput=csSet);
 function csLoad(){const [h,s,l]=hex2hsl(settings.bg);$("cH").value=h;$("cS").value=s;$("cL").value=l;csPaint()}
 $("sSave").onclick=async()=>{await saveSetting({});$("mS").classList.remove("on")};
@@ -1027,7 +1027,7 @@ render();
   db.collection("orders").onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>
-<script>var BUILD="20261114144152";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
+<script>var BUILD="20261114144600";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
 document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()});window.addEventListener("load",function(){setTimeout(chk,1200)})})();</script>
 </body>
 </html>
