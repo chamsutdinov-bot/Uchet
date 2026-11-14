@@ -36,7 +36,7 @@ input,textarea{width:100%;border:1px solid var(--line);background:var(--surface)
 .stat b{display:block;font-size:18px}
 .stat span{font-size:12px;color:var(--muted)}
 .bar{display:flex;gap:8px;margin-bottom:12px}
-.card{background:color-mix(in srgb,var(--surface) 82%,transparent);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px}.card .row b{font-size:15px}.card .no{font-size:11px;font-weight:400;color:var(--muted);margin-right:4px}.card .sub{margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card .m{font-size:12px}
+.card{background:color-mix(in srgb,var(--surface) 82%,transparent);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px}.card .row .nm{font-size:16px}.card .sum{font-size:16px}.card .ph{font-size:17px;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card .ph .m{font-size:12px}.card .chips{margin-top:8px}.card .chip{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:42px;gap:1px;line-height:1.15}.card .chip em{font-style:normal;font-size:13px;font-weight:600;color:var(--text)}.card .chip.on em{color:#4ec27f}.card .no{font-size:11px;font-weight:400;color:var(--muted);margin-right:4px}.card .sub{margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card .m{font-size:12px}
 .row{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
 .row b{font-size:16px}
 .m{color:var(--muted);font-size:13px;margin-top:4px}
@@ -564,12 +564,13 @@ function askPw(){return new Promise(res=>{const m=$("mPw"),i=$("pwIn"),e=$("pwEr
   const done=v=>{m.classList.remove("on");$("pwGo").onclick=$("pwNo").onclick=i.onkeydown=null;res(v)};
   const go=async()=>{let ok=false;try{ok=(await sha(i.value.trim()))===PWH}catch(x){}if(ok)done(true);else{e.textContent="Неверный пароль";i.value="";i.focus()}};
   $("pwGo").onclick=go;$("pwNo").onclick=()=>done(false);i.onkeydown=ev=>{if(ev.key==="Enter")go()}})}
-function cardHtml(o){return `<div class="card"><div class="row"><b><span class="no">№${esc(o.no)}</span> ${esc(o.fn)} ${esc(o.ln)}</b><span class="m">${esc(o.date)}</span></div>
-  ${o.tp==="w"&&!(tab==="w"&&curCl)?`<div class="m"><span class="tag">Опт · ${esc(cn(o.cl))}</span></div>`:""}
-  <div class="m sub">📞 ${o.ph?`<a href="tel:${esc(o.ph)}">${esc(o.ph)}</a>`:"—"} · 📍 ${esc(o.ad)||"—"}</div>
-  <div class="mn">${o.s?`<span><small>Сумма</small><b>${fmt(o.s)}</b></span>`:""}${o.avs?`<span class="${o.av?"ok":""}"><small>Аванс${o.av?" ✓":""}</small><b>${fmt(o.avs)}</b></span>`:""}${o.s&&o.avs?`<span class="${o.os?"ok":""}"><small>Остаток${o.os?" ✓":""}</small><b>${fmt(Math.max(0,o.s-o.avs))}</b></span>`:""}</div>
+function cardHtml(o){
+  const rest=(o.s&&o.avs)?Math.max(0,o.s-o.avs):0,val={av:o.avs?fmt(o.avs):"",os:(o.s&&o.avs)?fmt(rest):""};
+  return `<div class="card"><div class="row"><b class="nm">${esc(o.fn)} ${esc(o.ln)}</b>${o.s?`<b class="sum">${fmt(o.s)}</b>`:""}</div>
+  <div class="m sub">№${esc(o.no)} · ${esc(o.date)}${o.tp==="w"&&!(tab==="w"&&curCl)?` · <span class="tag">Опт · ${esc(cn(o.cl))}</span>`:""}</div>
+  <div class="ph">📞 ${o.ph?`<a href="tel:${esc(o.ph)}">${esc(o.ph)}</a>`:"—"} <span class="m">· 📍 ${esc(o.ad)||"—"}</span></div>
   ${o.nt?`<div class="m">${esc(o.nt)}</div>`:""}
-  <div class="chips">${STEPS.map(([k,n])=>`<button class="chip${o[k]?" on":""}" data-t="${o.id}" data-k="${k}">${o[k]?"✓ ":""}${n}</button>`).join("")}</div>
+  <div class="chips">${STEPS.map(([k,n])=>`<button class="chip${o[k]?" on":""}" data-t="${o.id}" data-k="${k}"><span>${o[k]?"✓ ":""}${n}</span>${val[k]?`<em>${val[k]}</em>`:""}</button>`).join("")}</div>
   <div class="acts"><button data-e="${o.id}">Изменить</button>${isAdmin?`<button class="d" data-d="${o.id}">Удалить</button>`:""}</div></div>`}
 const cn=id=>{const c=clients.find(x=>x.id===id);return c?c.name:"—"};
 function renderClients(t){
@@ -1014,7 +1015,7 @@ render();
   db.collection("orders").onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>
-<script>var BUILD="20261114142137";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
+<script>var BUILD="20261114142236";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
 document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()});window.addEventListener("load",function(){setTimeout(chk,1200)})})();</script>
 </body>
 </html>
