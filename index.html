@@ -174,6 +174,7 @@ html.sa .fhd{padding-right:82px}@media (max-width:699px){html.sa #fBody>:nth-chi
 .fsw{position:relative;overflow:hidden}.fsw .fsd{visibility:hidden}.fsw.drag .fsd,.fsw.open .fsd{visibility:visible}.fsw .frw{touch-action:pan-y;transition:transform .2s}.fsw.drag .frw{transition:none}
 .fsd{position:absolute;right:0;top:0;bottom:0;width:84px;border:0;background:#d9453a;color:#fff;font-size:14px;border-radius:0}
 .cs{display:grid;gap:4px;margin:4px 0 8px}.cs span{font-size:12px;color:var(--muted)}.cs input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:18px;border-radius:9px;border:1px solid var(--line);padding:0}.cs input::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:#fff;border:2px solid #777;box-shadow:0 1px 3px rgba(0,0,0,.4)}.cs input::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#fff;border:2px solid #777}
+html,body{transition:background-color .25s ease}
 </style>
 </head>
 <body>
@@ -640,7 +641,7 @@ async function saveSetting(p){
   try{localStorage.setItem("uchet_theme",JSON.stringify(settings))}catch(e){$("sNote").textContent="Не удалось сохранить на этом устройстве (фото слишком большое?)"}
 }
 function buildSettings(){
-  $("sNote").textContent="Цвет и фото фона сохраняются только на этом устройстве.";
+  $("sNote").textContent="Когда выбираете цвет, фото отключается, чтобы цвет был виден. «Стандартное» возвращает фото. Всё сохраняется только на этом устройстве.";
 }
 function exportCsv(){
   const H=["№","Дата","Имя","Фамилия","Телефон","Адрес","Слэбов","Сумма","Заметка","Аванс","Остаток"];
@@ -672,7 +673,9 @@ function csPaint(){const h=+$("cH").value,s=+$("cS").value,l=+$("cL").value;
   $("cH").style.background="linear-gradient(to right,"+[0,60,120,180,240,300,360].map(x=>"hsl("+x+",100%,50%)").join(",")+")";
   $("cS").style.background="linear-gradient(to right,hsl("+h+",0%,"+l+"%),hsl("+h+",100%,"+l+"%))";
   $("cL").style.background="linear-gradient(to right,#000,hsl("+h+","+s+"%,50%),#fff)"}
-function csSet(){csPaint();const hx=hsl2hex(+$("cH").value,+$("cS").value,+$("cL").value),n=parseInt(hx.slice(1),16),L=((n>>16)&255)*.299+((n>>8)&255)*.587+(n&255)*.114;settings={...settings,bg:hx,dark:L<110};applyTheme()}
+let csRaf=0;
+function csSet(){csPaint();if(csRaf)return;csRaf=requestAnimationFrame(()=>{csRaf=0;csApply()})}
+function csApply(){const hx=hsl2hex(+$("cH").value,+$("cS").value,+$("cL").value),n=parseInt(hx.slice(1),16),L=((n>>16)&255)*.299+((n>>8)&255)*.587+(n&255)*.114;settings={...settings,bg:hx,dark:L<110,photo:"none"};applyTheme()}
 ["cH","cS","cL"].forEach(i=>$(i).oninput=csSet);
 function csLoad(){const [h,s,l]=hex2hsl(settings.bg);$("cH").value=h;$("cS").value=s;$("cL").value=l;csPaint()}
 $("sSave").onclick=async()=>{await saveSetting({});$("mS").classList.remove("on")};
@@ -1024,7 +1027,7 @@ render();
   db.collection("orders").onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>
-<script>var BUILD="20261114143913";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
+<script>var BUILD="20261114144152";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
 document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()});window.addEventListener("load",function(){setTimeout(chk,1200)})})();</script>
 </body>
 </html>
