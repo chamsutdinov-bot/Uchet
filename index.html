@@ -554,7 +554,7 @@ function updateStrip(){
 const MN=["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"];
 function ym(o){const d=String(o.date||"");let m=d.match(/^(\d{4})-(\d{2})/);if(m)return[+m[1],+m[2]];m=d.match(/(\d{1,2})[.\/](\d{1,2})[.\/](\d{2,4})/);if(m){let y=+m[3];if(y<100)y+=2000;return[y,+m[2]]}return[0,0]}
 const STEPS=[["av","Аванс"],["zm","Замер"],["us","Установка"],["os","Остаток"]];
-const PWH="cd6aa1c275efecb9e53bb05033ae7717496e2f60f57b2e512065eba7da1eef6e";
+const PWH="d17f25ecfbcc7857f7bebea469308be0b2580943e96d13a3ad98a13675c4bfc2";
 async function sha(t){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
 function askPw(){return new Promise(res=>{const m=$("mPw"),i=$("pwIn"),e=$("pwErr");i.value="";e.textContent="";m.classList.add("on");setTimeout(()=>i.focus(),50);
   const done=v=>{m.classList.remove("on");$("pwGo").onclick=$("pwNo").onclick=i.onkeydown=null;res(v)};
@@ -996,7 +996,7 @@ render();
   db.collection("orders").onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>
-<script>var BUILD="20261114135559";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
+<script>var BUILD="20261114140035";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
 document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()});window.addEventListener("load",function(){setTimeout(chk,1200)})})();</script>
 </body>
 </html>
