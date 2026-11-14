@@ -190,9 +190,7 @@ body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
   <div id="kBody" style="flex:1;min-height:0;overflow-y:auto;padding:2px 2px 8px">
     <label>Название</label>
     <select id="kStone"></select>
-    <div class="seg" id="kMode" style="margin-top:16px"><button data-m="p" class="on">Погонные метры</button><button data-m="a">Квадратура</button></div>
-    <div class="kg" id="kP"><div><label>Длина, м</label><input id="kLen" type="number" step="0.01" inputmode="decimal"></div><div><label>Глубина, м</label><input id="kDep" type="number" step="0.01" inputmode="decimal" value="0.6"></div></div>
-    <div class="kg" id="kA" style="display:none"><div><label>Площадь, м²</label><input id="kArea" type="number" step="0.01" inputmode="decimal"></div></div>
+    <div class="kg" id="kP" style="margin-top:16px"><div><label>Расход слэба, шт</label><input id="kSlab" type="number" step="0.01" inputmode="decimal" placeholder="например 1,5"></div></div>
 
     <label>Работы</label>
     <div class="kw">
@@ -210,8 +208,8 @@ body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 <div class="modal" id="mKs"><div class="sheet" style="max-width:460px">
   <h2 style="margin:0 0 10px;flex-shrink:0">Данные</h2>
   <div style="flex:1;min-height:0;overflow-y:auto;padding:2px 2px 8px">
-    <label>Камни: наименование и цена за м²</label>
-    <div class="kw"><input id="kSName" placeholder="Наименование"><input id="kSCost" type="number" step="0.01" inputmode="decimal" placeholder="Цена за м²"></div>
+    <label>Камни: наименование и цена за слэб</label>
+    <div class="kw"><input id="kSName" placeholder="Наименование"><input id="kSCost" type="number" step="0.01" inputmode="decimal" placeholder="Цена за слэб"></div>
     <button class="g addcl" id="kSAdd" style="margin-top:8px">+ Добавить камень</button>
     <div class="note" style="margin:12px 0 6px">Проведите влево по камню, чтобы удалить</div>
     <div id="kSetList"></div>
@@ -707,27 +705,26 @@ function applyRole(){isAdmin=canAdmin&&mode!=="manager";$("bDedupe").style.displ
 [$("mF")].forEach(m=>m.onclick=e=>{if(e.target===m)m.classList.remove("on")});
 $("bFclose").onclick=()=>$("mF").classList.remove("on");
 $("fFile").onchange=e=>{const f=e.target.files[0];e.target.value="";if(f)importFile(f)};
-let stones=[],calcP={fig:0,cut:0,rad:0,joint:0,ledge:0},kMode="p",stEdit=null,lastMoved=false,sw=null,ptm=null,lastCalc=null;
+let stones=[],calcP={fig:0,cut:0,rad:0,joint:0,ledge:0},stEdit=null,lastMoved=false,sw=null,ptm=null,lastCalc=null;
 const nv=id=>parseFloat(String($(id).value).replace(",","."))||0;
 function kRow(a,b,t){return `<div class="kr${t?" t":""}"><span>${a}</span><span>${b}</span></div>`}
 const WORKS=[["Фигура","kFig","kpFig","fig"],["Вырез","kCut","kpCut","cut"],["Радиус","kRad","kpRad","rad"],["Стык","kJoint","kpJoint","joint"],["Выступ","kLedge","kpLedge","ledge"]];
 function kCalcRun(){
   const st=stones.find(x=>x.id===$("kStone").value),cost=st?(+st.cost||0):0;
-  const base=kMode==="p"?nv("kLen")*nv("kDep"):nv("kArea");
-  const area=base,stone=area*cost;
+  const slab=nv("kSlab"),stone=slab*cost;
   const w=WORKS.map(x=>{const pr=+calcP[x[3]]||0,q=nv(x[1]);return[x[0],q,pr,q*pr]}).filter(x=>x[1]>0);
   const total=stone+w.reduce((a,x)=>a+x[3],0),sale=total;
-  let h=kRow("Площадь камня",fmt(area)+" м²")+kRow(st?esc(st.name):"Камень",fmt(stone));
+  let h=kRow("Расход слэба",fmt(slab)+" шт")+kRow(st?esc(st.name)+" × "+fmt(cost):"Камень",fmt(stone));
   w.forEach(x=>{h+=kRow(x[0]+" "+fmt(x[1])+" × "+fmt(x[2]),fmt(x[3]))});
   h+=kRow("Общая цена",fmt(sale),1);
-  lastCalc={area,total,st:st?st.name:"",w};
+  lastCalc={slab,total,st:st?st.name:"",w};
   $("kRes").innerHTML=h;
 }
 function kPrFill(){WORKS.forEach(x=>{if(document.activeElement!==$(x[2]))$(x[2]).value=calcP[x[3]]||""})}
 function loadStone(id){const x=stones.find(y=>y.id===id);if(!x){stReset();return}stEdit=x.id;$("kSName").value=x.name||"";$("kSCost").value=x.cost||""}
 function kFill(){
   const sel=$("kStone"),cur=sel.value;
-  sel.innerHTML=stones.length?stones.map(x=>`<option value="${x.id}">${esc(x.name)} — ${fmt(x.cost)}/м²</option>`).join(""):'<option value="">—</option>';
+  sel.innerHTML=stones.length?stones.map(x=>`<option value="${x.id}">${esc(x.name)} — ${fmt(x.cost)}/слэб</option>`).join(""):'<option value="">—</option>';
   sel.value=stones.some(x=>x.id===cur)?cur:(stones[0]?stones[0].id:"");
   if(!$("kSetList").contains(document.activeElement))$("kSetList").innerHTML=stones.map(x=>`<div class="swr"><button class="swd" data-del="${x.id}">Удалить</button><div class="swc" style="padding:6px"><div class="kw" style="width:100%"><input data-sid="${x.id}" data-f="name" value="${esc(x.name)}"><input data-sid="${x.id}" data-f="cost" type="number" step="0.01" inputmode="decimal" value="${x.cost??""}"></div></div></div>`).join("");
   kCalcRun();
@@ -740,13 +737,12 @@ $("kToOrder").onclick=()=>{
   kCalcRun();const c=lastCalc||{};
   $("mK").classList.remove("on");
   openForm(null);
-  $("fM").value=c.area?Math.round(c.area*100)/100:"";
+  $("fM").value="";
   $("fS").value=c.total?Math.round(c.total*100)/100:"";
-  const parts=[];if(c.st)parts.push(c.st);(c.w||[]).forEach(x=>parts.push(x[0]+" "+fmt(x[1])));
+  const parts=[];if(c.st)parts.push(c.st);if(c.slab)parts.push("слэб "+fmt(c.slab));(c.w||[]).forEach(x=>parts.push(x[0]+" "+fmt(x[1])));
   $("fNt").value=parts.join(", ");
 };
-$("kMode").onclick=e=>{const b=e.target.closest("button");if(!b)return;kMode=b.dataset.m;document.querySelectorAll("#kMode button").forEach(x=>x.classList.toggle("on",x===b));$("kP").style.display=kMode==="p"?"":"none";$("kA").style.display=kMode==="a"?"":"none";kCalcRun()};
-["kStone","kLen","kDep","kArea","kFig","kCut","kRad","kJoint","kLedge"].forEach(i=>{$(i).addEventListener("input",kCalcRun);$(i).addEventListener("change",kCalcRun)});
+["kStone","kSlab","kFig","kCut","kRad","kJoint","kLedge"].forEach(i=>{$(i).addEventListener("input",kCalcRun);$(i).addEventListener("change",kCalcRun)});
 $("kStone").addEventListener("change",kFill);
 async function saveStone(){
   const name=$("kSName").value.trim();$("kSName").style.borderColor=name?"":"var(--danger)";if(!name||$("kSCost").value==="")return;
@@ -810,7 +806,7 @@ render();
   db.collection("orders").onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>
-<script>var BUILD="20261114093330";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
+<script>var BUILD="20261114125309";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
 document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()});window.addEventListener("load",function(){setTimeout(chk,1200)})})();</script>
 </body>
 </html>
