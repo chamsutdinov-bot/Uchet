@@ -398,15 +398,15 @@ async function openAccess(A,pw){
 async function autoOpen(){
   try{
     if(!W.acc)return false;const ar=await fetch(W.acc,{cache:"no-store"});if(!ar.ok)return false;
-    const A=await ar.json();if(!A.o)return false;
-    const t=await openAccess(A,"open");if(!t)return false;
+    const A=await ar.json();
+    const t=await openAccess(A,A.o?"open":_entryPw);if(!t)return false;
     const r=await fetch("https://api.github.com/repos/"+GH_REPO,{headers:{Authorization:"Bearer "+t,Accept:"application/vnd.github+json"},cache:"no-store"});
     if(!r.ok)return false;
     try{localStorage.setItem(W.key,t)}catch(e){}
     return true;
   }catch(e){return false}
 }
-let _keyWait=null;
+let _keyWait=null,_entryPw="";
 function needKey(msg){
   if(ghKey()&&!msg)return Promise.resolve();
   if(_keyWait)return _keyWait;
@@ -1027,7 +1027,7 @@ $("bRef").onclick=()=>{if(!busy)refresh()};
 settings=loadTheme()||{bg:"#1c1a18",dark:true};applyTheme();
 render();
 $("bWs").onclick=()=>location.reload();
-function chooseWs(){return new Promise(res=>{const m=$("mWs");m.classList.add("on");m.onclick=async e=>{const b=e.target.closest&&e.target.closest("[data-w]");if(!b)return;const w=WS[b.dataset.w];m.classList.remove("on");if(!(await askPw(w.pw))){m.classList.add("on");return}W=w;GH_REPO=W.repo;PWH=W.pw;document.title=W.n;$("wsN").textContent=W.n;res()}})}
+function chooseWs(){return new Promise(res=>{const m=$("mWs");m.classList.add("on");m.onclick=async e=>{const b=e.target.closest&&e.target.closest("[data-w]");if(!b)return;const w=WS[b.dataset.w];m.classList.remove("on");if(!(await askPw(w.pw))){m.classList.add("on");return}_entryPw=$("pwIn").value.trim();W=w;GH_REPO=W.repo;PWH=W.pw;document.title=W.n;$("wsN").textContent=W.n;res()}})}
 (async()=>{
   await chooseWs();
   try{user=await cuse("user");canAdmin=user?user.canEdit():false}catch(e){}
@@ -1046,7 +1046,7 @@ function chooseWs(){return new Promise(res=>{const m=$("mWs");m.classList.add("o
   db.collection("orders").onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>
-<script>var BUILD="20261114214618";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
+<script>var BUILD="20261114215003";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
 document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()});window.addEventListener("load",function(){setTimeout(chk,1200)})})();</script>
 </body>
 </html>
