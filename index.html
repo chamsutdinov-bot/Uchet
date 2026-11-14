@@ -526,6 +526,7 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const fmt=n=>(Math.round((+n||0)*100)/100).toLocaleString("ru-RU");
 
+const loadTheme=()=>{try{return JSON.parse(localStorage.getItem("uchet_theme")||"null")}catch(e){return null}};
 function applyTheme(){
   const r=document.documentElement.style;
   if(settings.bg){
@@ -633,11 +634,10 @@ async function save(){
 }
 async function saveSetting(p){
   Object.assign(settings,p);applyTheme();
-  try{await db.doc("settings/theme").set(settings)}catch(e){}
+  try{localStorage.setItem("uchet_theme",JSON.stringify(settings))}catch(e){$("sNote").textContent="Не удалось сохранить на этом устройстве (фото слишком большое?)"}
 }
 function buildSettings(){
-  $("sNote").textContent=isAdmin?"Цвет фона применяется у всех сотрудников.":"Менять цвет фона может только владелец.";
-  document.querySelectorAll("#cBg,#phNone,#phDef,#phFile").forEach(b=>b.disabled=!isAdmin);
+  $("sNote").textContent="Цвет и фото фона сохраняются только на этом устройстве.";
 }
 function exportCsv(){
   const H=["№","Дата","Имя","Фамилия","Телефон","Адрес","Слэбов","Сумма","Заметка","Аванс","Остаток"];
@@ -658,12 +658,12 @@ $("list").onclick=async e=>{
 $("bAdd").onclick=()=>openForm(null);
 $("oSave").onclick=save;$("oCancel").onclick=()=>$("mO").classList.remove("on");
 function readPhoto(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{let w=900,q=.62,out="";for(let t=0;t<6;t++){const sc=Math.min(1,w/im.width);const c=document.createElement("canvas");c.width=Math.round(im.width*sc);c.height=Math.round(im.height*sc);c.getContext("2d").drawImage(im,0,0,c.width,c.height);out=c.toDataURL("image/jpeg",q);if(out.length<180000)break;w=Math.round(w*.8);q=Math.max(.45,q-.05)}res(out)};im.onerror=rej;im.src=r.result};r.onerror=rej;r.readAsDataURL(f)})}
-$("phFile").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f||!isAdmin)return;try{const d=await readPhoto(f);settings={...settings,photo:d};applyTheme()}catch(x){}};
-$("phDef").onclick=()=>{if(!isAdmin)return;settings={...settings};delete settings.photo;applyTheme()};
-$("phNone").onclick=()=>{if(!isAdmin)return;settings={...settings,photo:"none"};applyTheme()};
+$("phFile").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;try{const d=await readPhoto(f);settings={...settings,photo:d};applyTheme()}catch(x){}};
+$("phDef").onclick=()=>{settings={...settings};delete settings.photo;applyTheme()};
+$("phNone").onclick=()=>{settings={...settings,photo:"none"};applyTheme()};
 let prevSet=null;
-$("bSet").onclick=()=>{prevSet={...settings};buildSettings();$("sSave").disabled=!isAdmin;$("mS").classList.add("on")};
-$("cBg").oninput=e=>{if(!isAdmin)return;const h=e.target.value,n=parseInt(h.slice(1),16),L=((n>>16)&255)*.299+((n>>8)&255)*.587+(n&255)*.114;settings={...settings,bg:h,dark:L<110};applyTheme()};
+$("bSet").onclick=()=>{prevSet={...settings};buildSettings();$("mS").classList.add("on")};
+$("cBg").oninput=e=>{const h=e.target.value,n=parseInt(h.slice(1),16),L=((n>>16)&255)*.299+((n>>8)&255)*.587+(n&255)*.114;settings={...settings,bg:h,dark:L<110};applyTheme()};
 $("sSave").onclick=async()=>{await saveSetting({});$("mS").classList.remove("on")};
 $("sCancel").onclick=()=>{settings=prevSet&&prevSet.bg?prevSet:{bg:BGS[0][0],dark:false};applyTheme();$("mS").classList.remove("on")};
 $("bExp").onclick=exportCsv;$("q").oninput=render;$("selY").onchange=render;$("selM").onchange=render;$("selS").onchange=render;
@@ -978,7 +978,7 @@ async function refresh(){
       const [o,t,cl]=await Promise.all([db.collection("orders").get(),db.doc("settings/theme").get(),db.collection("clients").get()]);
       clients=cl.docs.map(d=>({id:d.id,...d.data()}));
       orders=o.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));
-      if(t.exists){settings=t.data();applyTheme()}
+      if(t.exists&&!loadTheme()){settings=t.data();applyTheme()}
       render();
     }
     ptr.textContent="Обновлено";
@@ -994,7 +994,7 @@ addEventListener("touchmove",e=>{
 addEventListener("touchend",()=>{if(ty==null)return;const go=pull*.5>=48;ty=null;pull=0;if(go)refresh();else hidePtr()});
 addEventListener("touchcancel",()=>{ty=null;pull=0;hidePtr()});
 $("bRef").onclick=()=>{if(!busy)refresh()};
-settings={bg:"#1c1a18",dark:true};applyTheme();
+settings=loadTheme()||{bg:"#1c1a18",dark:true};applyTheme();
 render();
 (async()=>{
   try{user=await cuse("user");canAdmin=user?user.canEdit():false}catch(e){}
@@ -1004,7 +1004,7 @@ render();
   if(LOCAL)$("who").textContent=SRV?"Общая база: данные видны на всех устройствах":"Автономная версия: данные хранятся только на этом устройстве";
   db=await cuse("db");if(LOCAL&&SRV)$("who").textContent="Общая база: данные видны на всех устройствах";
   if(!db){$("list").innerHTML='<div class="empty">Войдите в аккаунт, чтобы увидеть данные</div>';return}
-  db.doc("settings/theme").onSnapshot(s=>{if(s.exists){settings=s.data();applyTheme()}});
+  db.doc("settings/theme").onSnapshot(s=>{if(s.exists&&!loadTheme()){settings=s.data();applyTheme()}});
   db.collection("clients").onSnapshot(s=>{clients=s.docs.map(d=>({id:d.id,...d.data()}));render()});
   db.collection("fin").onSnapshot(s=>{fin=s.docs.map(d=>({id:d.id,...d.data()}));if($("mFin").classList.contains("on")&&!(document.activeElement&&document.activeElement.closest&&document.activeElement.closest("#fBody")&&/INPUT|SELECT/.test(document.activeElement.tagName)))fRender()});
   db.doc("settings/fin").onSnapshot(s=>{if(s.exists){fcfg=s.data();if($("mFin").classList.contains("on")&&fTab==="set")fRender()}});
@@ -1013,7 +1013,7 @@ render();
   db.collection("orders").onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>
-<script>var BUILD="20261114143529";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
+<script>var BUILD="20261114143658";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
 document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()});window.addEventListener("load",function(){setTimeout(chk,1200)})})();</script>
 </body>
 </html>
