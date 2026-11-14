@@ -309,7 +309,6 @@ html.sa .fhd{padding-right:82px}@media (max-width:699px){html.sa #fBody>:nth-chi
 
 <div class="modal" id="mS"><div class="sheet">
   <h2>Поменять цвет фона</h2>
-  <div class="sw" id="swBg"></div>
   <label>Свой цвет</label><input type="color" id="cBg" value="#f4f1ec" style="height:44px;padding:4px">
   <label>Фото фона</label>
   <div style="display:grid;gap:8px">
@@ -637,9 +636,8 @@ async function saveSetting(p){
   try{await db.doc("settings/theme").set(settings)}catch(e){}
 }
 function buildSettings(){
-  $("swBg").innerHTML=BGS.map((b,i)=>`<button data-bg="${i}" title="${b[1]}" style="background:${b[0]}"></button>`).join("");
   $("sNote").textContent=isAdmin?"Цвет фона применяется у всех сотрудников.":"Менять цвет фона может только владелец.";
-  document.querySelectorAll("#swBg button,#cBg,#phNone,#phDef,#phFile").forEach(b=>b.disabled=!isAdmin);
+  document.querySelectorAll("#cBg,#phNone,#phDef,#phFile").forEach(b=>b.disabled=!isAdmin);
 }
 function exportCsv(){
   const H=["№","Дата","Имя","Фамилия","Телефон","Адрес","Слэбов","Сумма","Заметка","Аванс","Остаток"];
@@ -669,7 +667,6 @@ $("cBg").oninput=e=>{if(!isAdmin)return;const h=e.target.value,n=parseInt(h.slic
 $("sSave").onclick=async()=>{await saveSetting({});$("mS").classList.remove("on")};
 $("sCancel").onclick=()=>{settings=prevSet&&prevSet.bg?prevSet:{bg:BGS[0][0],dark:false};applyTheme();$("mS").classList.remove("on")};
 $("bExp").onclick=exportCsv;$("q").oninput=render;$("selY").onchange=render;$("selM").onchange=render;$("selS").onchange=render;
-$("swBg").onclick=e=>{const b=e.target.closest("button");if(b&&isAdmin){const x=BGS[b.dataset.bg];settings={...settings,bg:x[0],dark:!!x[2]};applyTheme()}};
 
 const PATS=[["ph",["телефон","тел","phone","моб"]],["ad",["адрес","address"]],["date",["дата","date"]],["ln",["фамил","surname","last"]],["fn",["имя","name","клиент","фио","покупат"]],["sl",["слэб","slab","метр","м2","м²","кв","площад"]],["s",["сумм","цена","стоим","оплат","amount","price"]],["nt",["заметк","коммент","прим","note"]],["no",["№","номер","заказ","order"]]];
 function colMap(h){const m={};h.forEach((x,i)=>{const t=String(x||"").toLowerCase();for(const[k,ps]of PATS){if(!(k in m)&&ps.some(p=>t.includes(p))){m[k]=i;break}}});return m}
@@ -1016,7 +1013,7 @@ render();
   db.collection("orders").onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>
-<script>var BUILD="20261114143135";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
+<script>var BUILD="20261114143529";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
 document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()});window.addEventListener("load",function(){setTimeout(chk,1200)})})();</script>
 </body>
 </html>
