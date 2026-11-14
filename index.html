@@ -632,6 +632,7 @@ function openForm(id){
 async function save(){
   if(!db)return;
   if(fTp==="w"&&!$("fCl").value){$("fCl").style.borderColor="var(--danger)";return}
+  if(!editId&&!(await askPw()))return;
   const d={no:$("fNo").value.trim(),date:$("fDate").value,fn:$("fFn").value.trim(),ph:$("fPh").value.trim(),ad:$("fAd").value.trim(),sl:+String($("fM").value).replace(",",".")||0,s:+$("fS").value||0,avs:+$("fAvS").value||0,nt:$("fNt").value.trim(),tp:fTp,cl:fTp==="w"?$("fCl").value:"",av:$("cAv").checked,zm:$("cZm").checked,us:$("cUs").checked,os:$("cOs").checked,ts:Date.now()};
   try{
     if(editId)await db.doc("orders/"+editId).update(d);else await db.collection("orders").add(d);
@@ -660,7 +661,7 @@ $("list").onclick=async e=>{
   if(b.dataset.ec){if(await askPw())openClient(b.dataset.ec);return}
   if(b.dataset.ac){openClient(null);return}
   if(b.dataset.e){if(await askPw())openForm(b.dataset.e);return}
-  if(b.dataset.t&&db){const o=orders.find(x=>x.id===b.dataset.t),k=b.dataset.k;if(o){o[k]=!o[k];render();try{await db.doc("orders/"+o.id).update({[k]:o[k]})}catch(x){o[k]=!o[k];render()}}}
+  if(b.dataset.t&&db){if(!(await askPw()))return;const o=orders.find(x=>x.id===b.dataset.t),k=b.dataset.k;if(o){o[k]=!o[k];render();try{await db.doc("orders/"+o.id).update({[k]:o[k]})}catch(x){o[k]=!o[k];render()}}}
   if(b.dataset.d&&isAdmin){if(!(await askPw()))return;try{await db.doc("orders/"+b.dataset.d).delete()}catch(x){}}
 };
 $("bAdd").onclick=()=>openForm(null);
@@ -711,6 +712,7 @@ async function importFile(f){
 }
 async function doImport(){
   const rows=pend;if(!rows||!db)return;
+  if(!(await askPw()))return;
   const g=$("fGo");g.disabled=true;let n=0;const base=Date.now();
   try{for(const o of rows){o.ts=base-n;await db.collection("orders").add(o);n++;g.textContent="⏳ "+n+" / "+rows.length}}
   catch(e){say("Загружено "+n+" из "+rows.length+". Ошибка: "+(e.message||e.code))}
@@ -741,6 +743,7 @@ function openClient(id){
 $("cSave").onclick=async()=>{
   const name=$("cName").value.trim();if(!name){$("cName").style.borderColor="var(--danger)";return}
   if(!db)return;
+  if(!editCl&&!(await askPw()))return;
   const d={name,ct:$("cCt").value.trim(),ph:$("cPh").value.trim(),nt:$("cNt").value.trim(),ts:Date.now()};
   try{if(editCl)await db.doc("clients/"+editCl).update(d);else await db.collection("clients").add(d);$("mC").classList.remove("on")}catch(e){}
 };
@@ -927,10 +930,11 @@ const a=t.dataset.fa,v=t.dataset.v,cs=fCopyCats();
   else if(a==="cat"){fScr="cat";fRender()}else if(a==="sub"){fScr="sub";fRender()}else if(a==="note"){fScr="note";fRender()}
   else if(a==="pickcat"){const c=cs[+v];if(c){if(c.n!==fCat)fSub="";fCat=c.n}fScr="";fRender()}
   else if(a==="picksub"){const c=cs.find(x=>x.n===fCat);fSub=v===""?"":(c&&c.s[+v])||"";fScr="";fRender()}
-  else if(a==="addcat"){const n=$("fxNew").value.trim();if(!n)return;if(!cs.find(c=>c.n===n))cs.push({n,s:[]});fCat=n;fSub="";fScr="";await fSaveCfg(cs)}
-  else if(a==="addsub"){const n=$("fxNew").value.trim(),c=cs.find(x=>x.n===fCat);if(!n||!c)return;if(!c.s.includes(n))c.s.push(n);fSub=n;fScr="";await fSaveCfg(cs)}
+  else if(a==="addcat"){const n=$("fxNew").value.trim();if(!n||!(await askPw()))return;if(!cs.find(c=>c.n===n))cs.push({n,s:[]});fCat=n;fSub="";fScr="";await fSaveCfg(cs)}
+  else if(a==="addsub"){const n=$("fxNew").value.trim(),c=cs.find(x=>x.n===fCat);if(!n||!c||!(await askPw()))return;if(!c.s.includes(n))c.s.push(n);fSub=n;fScr="";await fSaveCfg(cs)}
   else if(a==="save"){
     const n=fAmtNum();if(!n){$("fxAmt").focus();return}
+    if(!fEdit&&!(await askPw()))return;
     const d={a:n,t:fNeg?"e":"i",c:fCat,sc:fSub,nt:fNt.trim(),d:fDate||fToday()};
     try{if(fEdit)await db.doc("fin/"+fEdit).update(d);else await db.collection("fin").add({...d,ts:Date.now()})}catch(x){}
     fReset();fTab="log";fRender()}
@@ -939,7 +943,7 @@ const a=t.dataset.fa,v=t.dataset.v,cs=fCopyCats();
   else if(a==="mon"){fMon=v;fRender()}
   else if(a==="edit"){const o=fin.find(x=>x.id===v);if(!o||!(await askPw()))return;fEdit=o.id;fNeg=o.t==="e";fCat=o.c;fSub=o.sc||"";fDigits=String(o.a).replace(".",",");fNt=o.nt||"";fDate=o.d||fToday();fScr="";fTab="new";fRender()}
   else if(a==="sv"){fSubv=v;fRender()}
-  else if(a==="addc"){const n=$("fxNC").value.trim();if(!n)return;if(!cs.find(c=>c.n===n))cs.push({n,s:[]});fSaveCfg(cs)}
+  else if(a==="addc"){const n=$("fxNC").value.trim();if(!n||!(await askPw()))return;if(!cs.find(c=>c.n===n))cs.push({n,s:[]});fSaveCfg(cs)}
   else if(a==="delc"){if(!(await askPw()))return;cs.splice(+v,1);fSaveCfg(cs)}
   else if(a==="dels"){if(!(await askPw()))return;const[i,j]=v.split("|").map(Number);cs[i].s.splice(j,1);fSaveCfg(cs)}
 });
@@ -963,6 +967,7 @@ $("kStone").addEventListener("change",kFill);
 async function saveStone(){
   const name=$("kSName").value.trim();$("kSName").style.borderColor=name?"":"var(--danger)";if(!name||$("kSCost").value==="")return;
   if(!db)return;
+  if(!(await askPw()))return;
   const d={name,cost:nv("kSCost"),ts:Date.now()};
   try{if(stEdit)await db.doc("stones/"+stEdit).update(d);else await db.collection("stones").add(d);stReset()}catch(e){}
 }
@@ -970,7 +975,7 @@ $("kSAdd").onclick=saveStone;
 $("kSetList").addEventListener("change",async e=>{const i=e.target;if(!i.dataset.sid||!db)return;const v=i.dataset.f==="cost"?(parseFloat(String(i.value).replace(",","."))||0):i.value.trim();if(i.dataset.f==="name"&&!v)return;try{await db.doc("stones/"+i.dataset.sid).update({[i.dataset.f]:v})}catch(x){}});
 $("kGear").onclick=()=>{kPrFill();kFill();$("mKs").classList.add("on")};
 $("ksClose").onclick=()=>$("mKs").classList.remove("on");
-$("ksSave").onclick=async()=>{calcP={fig:nv("kpFig"),cut:nv("kpCut"),rad:nv("kpRad"),joint:nv("kpJoint"),ledge:nv("kpLedge")};try{if(db)await db.doc("settings/calc").set(calcP)}catch(e){}kCalcRun();$("mKs").classList.remove("on")};
+$("ksSave").onclick=async()=>{if(!(await askPw()))return;calcP={fig:nv("kpFig"),cut:nv("kpCut"),rad:nv("kpRad"),joint:nv("kpJoint"),ledge:nv("kpLedge")};try{if(db)await db.doc("settings/calc").set(calcP)}catch(e){}kCalcRun();$("mKs").classList.remove("on")};
 $("kSetList").addEventListener("pointerdown",e=>{const c=e.target.closest(".swc");if(!c)return;closeSw(c);sw={c,x:e.clientX,y:e.clientY,dx:0,m:false,base:c.classList.contains("open")?-92:0}});
 $("kSetList").addEventListener("pointermove",e=>{if(!sw)return;const dx=e.clientX-sw.x,dy=e.clientY-sw.y;if(!sw.m&&Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy))sw.m=true;if(sw.m){sw.dx=dx;sw.c.style.transition="none";sw.c.style.transform="translateX("+Math.max(-92,Math.min(0,sw.base+dx))+"px)"}});
 function swEnd(){if(!sw)return;const c=sw.c;c.style.transition="";if(sw.m){const v=sw.base+sw.dx;if(v<-46){c.style.transform="translateX(-92px)";c.classList.add("open")}else{c.style.transform="";c.classList.remove("open")}}lastMoved=sw.m;sw=null}
@@ -1024,7 +1029,7 @@ render();
   db.collection("orders").onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>
-<script>var BUILD="20261114150017";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
+<script>var BUILD="20261114155713";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
 document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()});window.addEventListener("load",function(){setTimeout(chk,1200)})})();</script>
 </body>
 </html>
