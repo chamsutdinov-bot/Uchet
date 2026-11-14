@@ -566,9 +566,10 @@ function ym(o){const d=String(o.date||"");let m=d.match(/^(\d{4})-(\d{2})/);if(m
 const STEPS=[["av","Аванс"],["zm","Замер"],["us","Установка"],["os","Остаток"]];
 const PWH="d17f25ecfbcc7857f7bebea469308be0b2580943e96d13a3ad98a13675c4bfc2";
 async function sha(t){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
-function askPw(){return new Promise(res=>{const m=$("mPw"),i=$("pwIn"),e=$("pwErr");i.value="";e.textContent="";m.classList.add("on");setTimeout(()=>i.focus(),50);
+const FINH="8c1cdb9cb4dbac6dbb6ebd118ec8f9523d22e4e4cb8cc9df5f7e1e499bba3c10";
+function askPw(H){return new Promise(res=>{const m=$("mPw"),i=$("pwIn"),e=$("pwErr");i.value="";e.textContent="";m.classList.add("on");setTimeout(()=>i.focus(),50);
   const done=v=>{m.classList.remove("on");$("pwGo").onclick=$("pwNo").onclick=i.onkeydown=null;res(v)};
-  const go=async()=>{let ok=false;try{ok=(await sha(i.value.trim()))===PWH}catch(x){}if(ok)done(true);else{e.textContent="Неверный пароль";i.value="";i.focus()}};
+  const go=async()=>{let ok=false;try{ok=(await sha(i.value.trim()))===(H||PWH)}catch(x){}if(ok)done(true);else{e.textContent="Неверный пароль";i.value="";i.focus()}};
   $("pwGo").onclick=go;$("pwNo").onclick=()=>done(false);i.onkeydown=ev=>{if(ev.key==="Enter")go()}})}
 function cardHtml(o){
   const rest=(o.s&&o.avs)?Math.max(0,o.s-o.avs):0,val={av:o.avs?fmt(o.avs):"",os:(o.s&&o.avs)?fmt(rest):""};
@@ -950,7 +951,7 @@ const a=t.dataset.fa,v=t.dataset.v,cs=fCopyCats();
 let fEd=null;
 $("mFin").addEventListener("touchstart",e=>{const t=e.touches[0];fEd=t.clientX<40?{x:t.clientX,y:t.clientY}:null},{passive:true});
 $("mFin").addEventListener("touchend",e=>{if(!fEd)return;const t=e.changedTouches[0],dx=t.clientX-fEd.x,dy=Math.abs(t.clientY-fEd.y);fEd=null;if(dx>70&&dy<70)$("fL").onclick()},{passive:true});
-$("bFin").onclick=()=>{fTab="new";fMon=null;fSubv=null;fReset();fRender();$("mFin").classList.add("on")};
+$("bFin").onclick=async()=>{if(!(await askPw(FINH)))return;fTab="new";fMon=null;fSubv=null;fReset();fRender();$("mFin").classList.add("on")};
 $("bKalc").onclick=()=>{kFill();kPrFill();$("mK").classList.add("on")};
 $("kClose").onclick=()=>$("mK").classList.remove("on");
 $("kToOrder").onclick=()=>{
@@ -1029,7 +1030,7 @@ render();
   db.collection("orders").onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>
-<script>var BUILD="20261114155713";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
+<script>var BUILD="20261114155920";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
 document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()});window.addEventListener("load",function(){setTimeout(chk,1200)})})();</script>
 </body>
 </html>
