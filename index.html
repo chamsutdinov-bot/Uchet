@@ -145,7 +145,7 @@ body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #mFin{--fbg:color-mix(in srgb,var(--surface) 55%,#000);--fcd:var(--surface)}}
 #mFin .sheet{max-width:none;width:100%;height:100%;border-radius:0;box-shadow:none;background:transparent;padding:0;display:flex;flex-direction:column;overflow:hidden;animation:none!important}
 .fhd{display:grid;grid-template-columns:64px 1fr 64px;align-items:center;padding:calc(env(safe-area-inset-top,0px) + 6px) 12px 4px;flex-shrink:0;min-height:40px}
-html.sa .fhd{padding-right:82px}@media (max-width:699px){html.sa #fBody>:nth-child(-n+2){margin-right:82px;width:auto}}
+html.sa .fhd{padding-right:82px}@media (max-width:699px){html.sa #fBody>:nth-child(-n+2),html.sa #fBody.fnew>:nth-child(3){margin-right:82px;width:auto}html.sa #fBody>input.fbig{width:calc(100% - 82px)}}.fbig:focus{outline:none}.fbig::placeholder{font-size:18px;font-weight:500}
 .fhd h2{margin:0;font-size:15px;text-align:center;font-weight:600}.fhd button{border:0;background:transparent;color:var(--accent);padding:4px;font-size:16px}.fhd .l{text-align:left}.fhd .r{text-align:right}
 #fBody{flex:1;min-height:0;overflow:auto;padding:4px 0 10px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 #fTabs{display:flex;background:var(--fcd);border-top:.5px solid var(--fsep);padding:4px 4px calc(4px + env(safe-area-inset-bottom,0px));flex-shrink:0}
@@ -813,7 +813,7 @@ function fRender(){
   else if(fTab==="rep"){title=fSubv||"Отчёт";L=fSubv?"‹":"✕"}
   else{title="Настройки";L="✕"}
   $("fTitle").textContent=title;$("fL").textContent=L;$("fR").textContent=R;$("fL").style.visibility=L?"visible":"hidden";
-  $("fBody").innerHTML=({new:fvNew,log:fvLog,rep:fvRep,set:fvSet})[fTab]();
+  $("fBody").className=(fTab==="new"&&!fScr)?"fnew":"";$("fBody").innerHTML=({new:fvNew,log:fvLog,rep:fvRep,set:fvSet})[fTab]();
 }
 function fvNew(){
   const cs=fCats();
@@ -1016,7 +1016,7 @@ render();
   db.collection("orders").onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>
-<script>var BUILD="20261114142709";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
+<script>var BUILD="20261114143135";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
 document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()});window.addEventListener("load",function(){setTimeout(chk,1200)})})();</script>
 </body>
 </html>
