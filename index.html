@@ -175,6 +175,7 @@ body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
     <div><label>Слэбов (1 или 0,5)</label><input id="fM" type="number" step="0.5" min="0" inputmode="decimal"></div>
     <div><label>Сумма</label><input id="fS" type="number" step="0.01" inputmode="decimal"></div>
     <div><label>Аванс, сумма</label><input id="fAvS" type="number" step="0.01" inputmode="decimal"></div>
+    <div><label>Остаток, сумма (считается сам)</label><input id="fOst" readonly tabindex="-1"></div>
     <div><label>Заметка</label><input id="fNt"></div>
   </div>
   <div class="chk">
@@ -561,12 +562,14 @@ function setTp(tp,cl){
   f.innerHTML='<option value="">'+(clients.length?"Выберите оптовика":"Нет оптовиков: добавьте на вкладке «Опт»")+'</option>'+clients.slice().sort((a,b)=>String(a.name).localeCompare(String(b.name),"ru")).map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join("");
   f.value=cl||"";f.style.borderColor="";
 }
+function ostCalc(){const t=+$("fS").value||0,a=+$("fAvS").value||0;$("fOst").value=(t&&a)?fmt(Math.max(0,t-a)):""}
+["fS","fAvS"].forEach(i=>{$(i).addEventListener("input",ostCalc);$(i).addEventListener("change",ostCalc)});
 function openForm(id){
   editId=id;const o=orders.find(x=>x.id===id)||{};
   $("mT").textContent=id?"Изменить заказ":"Новый заказ";setTp(o.tp||(id?"r":(tab==="w"?"w":"r")),o.cl||(id?"":(curCl||"")));
   $("fNo").value=o.no||"";$("fDate").value=o.date||new Date().toISOString().slice(0,10);
   $("fFn").value=o.fn||"";$("fPh").value=o.ph||"";$("fAd").value=o.ad||"";
-  $("fM").value=o.sl??"";$("fS").value=o.s??"";$("fAvS").value=o.avs??"";$("fNt").value=o.nt||"";$("cAv").checked=!!o.av;$("cZm").checked=!!o.zm;$("cUs").checked=!!o.us;$("cOs").checked=!!o.os;
+  $("fM").value=o.sl??"";$("fS").value=o.s??"";$("fAvS").value=o.avs??"";$("fNt").value=o.nt||"";$("cAv").checked=!!o.av;$("cZm").checked=!!o.zm;$("cUs").checked=!!o.us;$("cOs").checked=!!o.os;ostCalc();
   $("mO").classList.add("on");
 }
 async function save(){
@@ -809,7 +812,7 @@ render();
   db.collection("orders").onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>
-<script>var BUILD="20261114130414";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
+<script>var BUILD="20261114131851";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
 document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()});window.addEventListener("load",function(){setTimeout(chk,1200)})})();</script>
 </body>
 </html>
