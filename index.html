@@ -281,6 +281,13 @@ html,body{transition:background-color .25s ease}
   <div id="fBody"></div>
   <div id="fTabs"></div>
 </div></div>
+<div class="modal" id="mWs" style="z-index:60"><div class="sheet" style="max-width:340px;text-align:center">
+  <h2>Выберите учёт</h2>
+  <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px">
+    <button class="p" data-w="interstone" style="font-size:18px;padding:16px 0">Interstone</button>
+    <button class="p" data-w="liderstone" style="font-size:18px;padding:16px 0">Liderstone</button>
+  </div>
+</div></div>
 <div class="modal" id="mPw" style="z-index:40"><div class="sheet" style="max-width:360px">
   <h2>Введите пароль</h2>
   <input id="pwIn" type="password" inputmode="numeric" placeholder="Пароль" autocomplete="off" autocapitalize="off" autocorrect="off">
@@ -372,8 +379,12 @@ function remoteDb(){
 
 /* ====== ОБЩАЯ БАЗА НА GITHUB ======
    Данные лежат в закрытом репозитории GH_REPO (папка data/). Доступ даёт «ключ доступа» (токен), его вводят один раз на устройстве. */
-const GH_REPO="chamsutdinov-bot/uchet-data";
-const ghKey=()=>{try{return localStorage.getItem("uchet_gh")||""}catch(e){return""}};
+const WS={
+  interstone:{n:"Interstone",repo:"chamsutdinov-bot/uchet-data",key:"uchet_gh",acc:"access.json",pw:"d17f25ecfbcc7857f7bebea469308be0b2580943e96d13a3ad98a13675c4bfc2",fin:1},
+  liderstone:{n:"Liderstone",repo:"chamsutdinov-bot/liderstone-data",key:"uchet_gh_l",acc:null,pw:"cc399d73903f06ee694032ab0538f05634ff7e1ce5e8e50ac330a871484f34cf",fin:0}
+};
+let W=WS.interstone,GH_REPO=W.repo;
+const ghKey=()=>{try{return localStorage.getItem(W.key)||""}catch(e){return""}};
 async function openAccess(A,pw){
   try{
     const b=x=>Uint8Array.from(atob(x),c=>c.charCodeAt(0));
@@ -384,12 +395,12 @@ async function openAccess(A,pw){
 }
 async function autoOpen(){
   try{
-    const ar=await fetch("access.json",{cache:"no-store"});if(!ar.ok)return false;
+    if(!W.acc)return false;const ar=await fetch(W.acc,{cache:"no-store"});if(!ar.ok)return false;
     const A=await ar.json();if(!A.o)return false;
     const t=await openAccess(A,"open");if(!t)return false;
     const r=await fetch("https://api.github.com/repos/"+GH_REPO,{headers:{Authorization:"Bearer "+t,Accept:"application/vnd.github+json"},cache:"no-store"});
     if(!r.ok)return false;
-    try{localStorage.setItem("uchet_gh",t)}catch(e){}
+    try{localStorage.setItem(W.key,t)}catch(e){}
     return true;
   }catch(e){return false}
 }
@@ -405,7 +416,7 @@ function needKey(msg){
       go.disabled=true;er.textContent="Проверяю…";
       let tok=k;
       try{
-        const ar=await fetch("access.json",{cache:"no-store"});
+        const ar=W.acc?await fetch(W.acc,{cache:"no-store"}):{ok:false};
         if(ar.ok){
           const t=await openAccess(await ar.json(),k);
           if(!t){er.textContent="Неверный пароль";go.disabled=false;return}
@@ -414,7 +425,7 @@ function needKey(msg){
       }catch(e){}
       try{
         const r=await fetch("https://api.github.com/repos/"+GH_REPO,{headers:{Authorization:"Bearer "+tok,Accept:"application/vnd.github+json"},cache:"no-store"});
-        if(r.ok){try{localStorage.setItem("uchet_gh",tok)}catch(e){}m.classList.remove("on");inp.value="";go.disabled=false;_keyWait=null;go.onclick=null;res();return}
+        if(r.ok){try{localStorage.setItem(W.key,tok)}catch(e){}m.classList.remove("on");inp.value="";go.disabled=false;_keyWait=null;go.onclick=null;res();return}
         er.textContent=r.status===401?"Неверный пароль или закончился срок доступа":"Нет доступа к базе (код "+r.status+")";
       }catch(e){er.textContent="Нет связи с GitHub. Проверьте интернет"}
       go.disabled=false;
@@ -437,7 +448,7 @@ function ghDb(){
     const r=await fetch(API+encodeURIComponent(c)+".json",{headers:h,cache:"no-store"});
     if(r.status===304)return{...cur,changed:false};
     if(r.status===404){const e={obj:{},sha:null,etag:null};const ch=!cur||Object.keys(cur.obj).length>0;cache[c]=e;return{...e,changed:ch}}
-    if(r.status===401){try{localStorage.removeItem("uchet_gh")}catch(e){}await needKey("Войдите снова");return load(c,true)}
+    if(r.status===401){try{localStorage.removeItem(W.key)}catch(e){}await needKey("Войдите снова");return load(c,true)}
     if(!r.ok)throw new Error("HTTP "+r.status);
     const j=await r.json();let txt;
     if(j.content&&j.encoding==="base64")txt=b64d(j.content);
@@ -460,7 +471,7 @@ function ghDb(){
         if(r.ok){const j=await r.json();cache[c]={obj,sha:j.content.sha,etag:null};emit(c);return}
         lastErr=new Error("HTTP "+r.status);
         if(r.status===409||r.status===422){await new Promise(z=>setTimeout(z,300+Math.random()*500));continue}
-        if(r.status===401){try{localStorage.removeItem("uchet_gh")}catch(e){}await needKey("Войдите снова");continue}
+        if(r.status===401){try{localStorage.removeItem(W.key)}catch(e){}await needKey("Войдите снова");continue}
         break;
       }
       throw lastErr||new Error("Не удалось сохранить");
@@ -564,7 +575,7 @@ function updateStrip(){
 const MN=["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"];
 function ym(o){const d=String(o.date||"");let m=d.match(/^(\d{4})-(\d{2})/);if(m)return[+m[1],+m[2]];m=d.match(/(\d{1,2})[.\/](\d{1,2})[.\/](\d{2,4})/);if(m){let y=+m[3];if(y<100)y+=2000;return[y,+m[2]]}return[0,0]}
 const STEPS=[["av","Аванс"],["zm","Замер"],["us","Установка"],["os","Остаток"]];
-const PWH="d17f25ecfbcc7857f7bebea469308be0b2580943e96d13a3ad98a13675c4bfc2";
+let PWH=WS.interstone.pw;
 async function sha(t){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
 const FINH="8c1cdb9cb4dbac6dbb6ebd118ec8f9523d22e4e4cb8cc9df5f7e1e499bba3c10";
 function askPw(H){return new Promise(res=>{const m=$("mPw"),i=$("pwIn"),e=$("pwErr");i.value="";e.textContent="";m.classList.add("on");setTimeout(()=>i.focus(),50);
@@ -770,9 +781,9 @@ $("wipeGo").onclick=async()=>{
   }catch(e){say("Удалено "+n+". Ошибка: "+(e.message||e.code))}
   g.disabled=false;g.textContent="Удалить все заказы навсегда";$("wipeBox").style.display="none";
 };
-$("bLogout").onclick=()=>{try{localStorage.removeItem("uchet_gh")}catch(e){}location.reload()};
+$("bLogout").onclick=()=>{try{localStorage.removeItem(W.key)}catch(e){}location.reload()};
 $("bFiles").onclick=()=>$("mF").classList.add("on");
-function applyRole(){isAdmin=canAdmin&&mode!=="manager";$("bDedupe").style.display=isAdmin?"":"none";$("bLogout").style.display=(typeof GH_REPO!=="undefined"&&GH_REPO&&SRV)?"":"none";$("bWipe").style.display=isAdmin?"":"none";$("bKalc").style.display="flex";$("bFin").style.display="flex";$("kGear").style.display=(isAdmin||LOCAL)?"flex":"none";render()}
+function applyRole(){isAdmin=canAdmin&&mode!=="manager";$("bDedupe").style.display=isAdmin?"":"none";$("bLogout").style.display=(typeof GH_REPO!=="undefined"&&GH_REPO&&SRV)?"":"none";$("bWipe").style.display=isAdmin?"":"none";$("bKalc").style.display="flex";$("bFin").style.display=W.fin?"flex":"none";$("kGear").style.display=(isAdmin||LOCAL)?"flex":"none";render()}
 [$("mF")].forEach(m=>m.onclick=e=>{if(e.target===m)m.classList.remove("on")});
 $("bFclose").onclick=()=>$("mF").classList.remove("on");
 $("fFile").onchange=e=>{const f=e.target.files[0];e.target.value="";if(f)importFile(f)};
@@ -1013,7 +1024,9 @@ addEventListener("touchcancel",()=>{ty=null;pull=0;hidePtr()});
 $("bRef").onclick=()=>{if(!busy)refresh()};
 settings=loadTheme()||{bg:"#1c1a18",dark:true};applyTheme();
 render();
+function chooseWs(){return new Promise(res=>{const m=$("mWs");m.classList.add("on");m.onclick=e=>{const b=e.target.closest&&e.target.closest("[data-w]");if(!b)return;W=WS[b.dataset.w];GH_REPO=W.repo;PWH=W.pw;document.title=W.n;m.classList.remove("on");res()}})}
 (async()=>{
+  await chooseWs();
   try{user=await cuse("user");canAdmin=user?user.canEdit():false}catch(e){}
   let sv=null;try{sv=localStorage.getItem("role")}catch(e){}
   mode=canAdmin?"founder":"manager";
@@ -1030,7 +1043,7 @@ render();
   db.collection("orders").onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>
-<script>var BUILD="20261114161047";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
+<script>var BUILD="20261114205803";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
 document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()});window.addEventListener("load",function(){setTimeout(chk,1200)})})();</script>
 </body>
 </html>
