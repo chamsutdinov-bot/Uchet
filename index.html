@@ -808,7 +808,7 @@ function fvNew(){
     <label>Примечание<input id="fxNt" value="${esc(fNt)}"></label>
     <label>Дата<input id="fxDt" type="date" value="${esc(fDate)}"></label>
   </div>
-  <div class="acts"><button class="p" data-fa="save">Сохранить</button>${fEdit?`<button data-fa="cancel">Отмена</button><button class="d" data-fa="del" style="margin-left:auto">Удалить</button>`:""}</div>`;
+  <div class="acts"><button class="p" data-fa="save">Сохранить</button><button data-fa="cancel">Отмена</button>${fEdit?`<button class="d" data-fa="del" style="margin-left:auto">Удалить</button>`:""}</div>`;
 }
 function fvLog(){
   const L=[...fin].sort((x,y)=>(y.d||"").localeCompare(x.d||"")||(y.ts||0)-(x.ts||0));
@@ -890,7 +890,7 @@ $("mFin").addEventListener("click",async e=>{
     const d={a:n,t:fType,c:fCat,sc:fSub,nt:fNt.trim(),d:fDate||fToday()};
     try{if(fEdit)await db.doc("fin/"+fEdit).update(d);else await db.collection("fin").add({...d,ts:Date.now()})}catch(x){}
     fEdit=null;fAmt="";fNt="";fSub="";fDate="";fTab="log";fRender()}
-  else if(a==="cancel"){fEdit=null;fAmt="";fNt="";fSub="";fTab="log";fRender()}
+  else if(a==="cancel"){fEdit=null;fAmt="";fNt="";fSub="";fDate="";$("mFin").classList.remove("on")}
   else if(a==="del"){if(!(await askPw()))return;try{await db.doc("fin/"+fEdit).delete()}catch(x){}fEdit=null;fAmt="";fNt="";fSub="";fTab="log";fRender()}
   else if(a==="edit"){const o=fin.find(x=>x.id===v);if(!o||!(await askPw()))return;fEdit=o.id;fType=o.t;fCat=o.c;fSub=o.sc||"";fAmt=String(o.a);fNt=o.nt||"";fDate=o.d||fToday();fTab="new";fRender()}
   else if(a==="sv"){fSubv=v;fRender()}
@@ -979,7 +979,7 @@ render();
   db.collection("orders").onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>
-<script>var BUILD="20261114134335";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
+<script>var BUILD="20261114134422";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
 document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()});window.addEventListener("load",function(){setTimeout(chk,1200)})})();</script>
 </body>
 </html>
