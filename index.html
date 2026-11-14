@@ -932,6 +932,9 @@ const a=t.dataset.fa,v=t.dataset.v,cs=fCopyCats();
   else if(a==="delc"){if(!(await askPw()))return;cs.splice(+v,1);fSaveCfg(cs)}
   else if(a==="dels"){if(!(await askPw()))return;const[i,j]=v.split("|").map(Number);cs[i].s.splice(j,1);fSaveCfg(cs)}
 });
+let fEd=null;
+$("mFin").addEventListener("touchstart",e=>{const t=e.touches[0];fEd=t.clientX<40?{x:t.clientX,y:t.clientY}:null},{passive:true});
+$("mFin").addEventListener("touchend",e=>{if(!fEd)return;const t=e.changedTouches[0],dx=t.clientX-fEd.x,dy=Math.abs(t.clientY-fEd.y);fEd=null;if(dx>70&&dy<70)$("fL").onclick()},{passive:true});
 $("bFin").onclick=()=>{fTab="new";fMon=null;fSubv=null;fReset();fRender();$("mFin").classList.add("on")};
 $("bKalc").onclick=()=>{kFill();kPrFill();$("mK").classList.add("on")};
 $("kClose").onclick=()=>$("mK").classList.remove("on");
@@ -1010,7 +1013,7 @@ render();
   db.collection("orders").onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>
-<script>var BUILD="20261114140729";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
+<script>var BUILD="20261114140759";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
 document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()});window.addEventListener("load",function(){setTimeout(chk,1200)})})();</script>
 </body>
 </html>
