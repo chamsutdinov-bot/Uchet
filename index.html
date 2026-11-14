@@ -176,6 +176,7 @@ html.sa .fhd{padding-right:82px}@media (max-width:699px){html.sa #fBody>:nth-chi
 .cs{display:grid;gap:4px;margin:4px 0 8px}.cs span{font-size:12px;color:var(--muted)}.cs input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:18px;border-radius:9px;border:1px solid var(--line);padding:0}.cs input::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:#fff;border:2px solid #777;box-shadow:0 1px 3px rgba(0,0,0,.4)}.cs input::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#fff;border:2px solid #777}
 html,body{transition:background-color .25s ease}
 #mS .sheet{padding:12px 14px;max-width:360px}#mS h2{font-size:16px;margin:0 0 8px}#mS .sw{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;justify-items:center}#mS .sw button{width:32px;height:32px}#mS label{font-size:12px;margin:6px 0 2px;display:block}#mS .upl{margin:0!important}#mS #phDef,#mS #phNone{font-size:13px;padding:7px 4px;min-height:0}#mS .note{font-size:11px;margin:6px 0}#mS .acts{margin-top:8px}#mS .acts button{padding:7px 16px}
+#cGrid{display:grid;grid-template-columns:repeat(12,1fr);gap:0;border-radius:8px;overflow:hidden}#cGrid button{border:0;border-radius:0;padding:0;min-height:0;height:17px}
 </style>
 </head>
 <body>
@@ -314,7 +315,7 @@ html,body{transition:background-color .25s ease}
 <div class="modal" id="mS"><div class="sheet">
   <h2>Поменять цвет фона</h2>
   <div class="sw" id="swBg"></div>
-  <label>Свой цвет</label><input type="color" id="cBg" value="#f4f1ec" style="height:32px;padding:2px">
+  <label>Другой цвет</label><div id="cGrid"></div>
   <label>Фото фона</label>
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
     <label class="upl" style="font-size:13px;margin:0;padding:7px 4px"><span>Загрузить</span><input id="phFile" type="file" accept="image/*" style="position:absolute;inset:0;width:100%;height:100%;opacity:0"></label>
@@ -642,6 +643,7 @@ async function saveSetting(p){
   try{localStorage.setItem("uchet_theme",JSON.stringify(settings))}catch(e){$("sNote").textContent="Не удалось сохранить на этом устройстве (фото слишком большое?)"}
 }
 function buildSettings(){
+  buildGrid();
   $("swBg").innerHTML=BGS.map((b,i)=>`<button data-bg="${i}" title="${b[1]}" style="background:${b[0]}"></button>`).join("");
   $("sNote").textContent="Цвет и фото фона сохраняются только на этом устройстве."
 }
@@ -668,9 +670,11 @@ $("phFile").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f
 $("phDef").onclick=()=>{settings={...settings};delete settings.photo;applyTheme()};
 $("phNone").onclick=()=>{settings={...settings,photo:"none",pn:1};applyTheme()};
 let prevSet=null;
-$("bSet").onclick=()=>{prevSet={...settings};buildSettings();$("cBg").value=settings.bg&&/^#[0-9a-f]{6}$/i.test(settings.bg)?settings.bg:"#1c1a18";$("mS").classList.add("on")};
+$("bSet").onclick=()=>{prevSet={...settings};buildSettings();$("mS").classList.add("on")};
 $("swBg").onclick=e=>{const b=e.target.closest("button");if(b){const x=BGS[b.dataset.bg];settings={...settings,bg:x[0],dark:!!x[2]};applyTheme()}};
-$("cBg").oninput=e=>{const h=e.target.value,n=parseInt(h.slice(1),16),L=((n>>16)&255)*.299+((n>>8)&255)*.587+(n&255)*.114;settings={...settings,bg:h,dark:L<110};applyTheme()};
+function hsl2hex(h,s,l){s/=100;l/=100;const k=n=>(n+h/30)%12,a=s*Math.min(l,1-l),f=n=>Math.round(255*(l-a*Math.max(-1,Math.min(k(n)-3,Math.min(9-k(n),1)))));return"#"+[f(0),f(8),f(4)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+function buildGrid(){const c=[];for(let i=0;i<12;i++)c.push(hsl2hex(0,0,100-i*100/11));[88,74,60,46,33,20].forEach(l=>{for(let h=0;h<360;h+=30)c.push(hsl2hex(h,65,l))});$("cGrid").innerHTML=c.map(x=>`<button data-c="${x}" style="background:${x}"></button>`).join("")}
+$("cGrid").onclick=e=>{const b=e.target.closest("button");if(!b)return;const h=b.dataset.c,n=parseInt(h.slice(1),16),L=((n>>16)&255)*.299+((n>>8)&255)*.587+(n&255)*.114;settings={...settings,bg:h,dark:L<110};applyTheme()};
 $("sSave").onclick=async()=>{await saveSetting({});$("mS").classList.remove("on")};
 $("sCancel").onclick=()=>{settings=prevSet&&prevSet.bg?prevSet:{bg:BGS[0][0],dark:false};applyTheme();$("mS").classList.remove("on")};
 $("bExp").onclick=exportCsv;$("q").oninput=render;$("selY").onchange=render;$("selM").onchange=render;$("selS").onchange=render;
@@ -1020,7 +1024,7 @@ render();
   db.collection("orders").onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>
-<script>var BUILD="20261114145513";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
+<script>var BUILD="20261114150017";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
 document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()});window.addEventListener("load",function(){setTimeout(chk,1200)})})();</script>
 </body>
 </html>
