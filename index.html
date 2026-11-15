@@ -1115,6 +1115,8 @@ document.addEventListener("touchmove",e=>{
 document.addEventListener("touchend",()=>{if(!g)return;if(!g.m){g=null;return}const v=g.dx/Math.max(1,Date.now()-g.t0);fin(g.dx>innerWidth*0.33||(v>0.5&&g.dx>40))});
 document.addEventListener("touchcancel",()=>{if(g&&g.m)fin(false);else g=null});
 })();
+const SA=!!(navigator.standalone||matchMedia("(display-mode:standalone)").matches);
+if(SA){const _ps=history.pushState.bind(history);history.pushState=function(){}}
 addEventListener("popstate",()=>{
   const now=Date.now();
   const open=[...document.querySelectorAll(".modal.on")].filter(m=>!["mWs","mPw","mLogin"].includes(m.id)).pop();
@@ -1141,7 +1143,7 @@ addEventListener("popstate",()=>{
   db.collection("orders").onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>
-<script>var BUILD="20261115120232";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin):not(#mWs):not(#mPw):not(#mFin)"))return;try{if(document.getElementById("mFin").classList.contains("on")&&typeof fEdit!=="undefined"&&(fEdit||fDigits||fScr))return}catch(e){}try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
+<script>var BUILD="20261115120542";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin):not(#mWs):not(#mPw):not(#mFin)"))return;try{if(document.getElementById("mFin").classList.contains("on")&&typeof fEdit!=="undefined"&&(fEdit||fDigits||fScr))return}catch(e){}try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
 document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()});window.addEventListener("load",function(){setTimeout(chk,1200)});setInterval(chk,45000)})();</script>
 </body>
 </html>
