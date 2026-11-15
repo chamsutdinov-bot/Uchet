@@ -837,7 +837,7 @@ function fRender(){
   const T=[["new","Новая запись"],["log","Журнал"],["rep","Отчёт"],["set","Настройки"]];
   $("fTabs").innerHTML=T.map(([k,n])=>`<button data-fa="tab" data-v="${k}" class="${fTab===k?"on":""}">${FIC[k]}<span>${n}</span></button>`).join("");
   let title="Финансы",L="",R="";
-  if(fTab==="new"){title=fEdit?"Изменить запись":"Новая запись";
+  if(fTab==="new"){title=fEdit?"Изменить запись":"Новая запись";if(fEdit)L="‹";
     if(fScr==="pad"){R="Готово"}else if(fScr==="cat"){title="Категория";L="‹"}else if(fScr==="sub"){title="Подкатегория";L="‹"}else if(fScr==="note"){title="Примечание";L="‹";R="Готово"}else L="✕"}
   else if(fTab==="log"){title=fMon?fMonRu(fMon):"Журнал";L=fMon?"‹":"✕"}
   else if(fTab==="rep"){title=fSubv||"Отчёт";L=fSubv?"‹":"✕"}
@@ -924,7 +924,8 @@ $("mFin").addEventListener("input",e=>{if(e.target.id==="fxNt")fNt=e.target.valu
 $("mFin").addEventListener("change",e=>{const i=e.target.id,v=e.target.value;
   if(i==="fxDt")fDate=v;else if(i==="fxPer"){fPer=v;fRender()}else if(i==="fxRc"){fRc=v;fRender()}});
 $("fL").onclick=()=>{
-  if(fTab==="new"&&fScr){if(fScr==="note")fNt=($("fxNt")||{value:fNt}).value;fScr="";fRender()}
+  if(fTab==="new"&&!fScr&&fEdit){fReset();fTab="log";fRender()}
+  else if(fTab==="new"&&fScr){if(fScr==="note")fNt=($("fxNt")||{value:fNt}).value;fScr="";fRender()}
   else if(fTab==="log"&&fMon){fMon=null;fRender()}
   else if(fTab==="rep"&&fSubv){fSubv=null;fRender()}
   else $("mFin").classList.remove("on")};
@@ -1067,7 +1068,7 @@ addEventListener("popstate",()=>{
   db.collection("orders").onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>
-<script>var BUILD="20261115113141";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
+<script>var BUILD="20261115113429";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
 document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()});window.addEventListener("load",function(){setTimeout(chk,1200)})})();</script>
 </body>
 </html>
