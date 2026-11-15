@@ -966,7 +966,7 @@ const a=t.dataset.fa,v=t.dataset.v,cs=fCopyCats();
 });
 let fEd=null;
 $("mFin").addEventListener("touchstart",e=>{const t=e.touches[0];fEd=t.clientX<40?{x:t.clientX,y:t.clientY}:null},{passive:true});
-$("mFin").addEventListener("touchend",e=>{if(!fEd)return;const t=e.changedTouches[0],dx=t.clientX-fEd.x,dy=Math.abs(t.clientY-fEd.y);fEd=null;if(dx>70&&dy<70)$("fL").onclick()},{passive:true});
+$("mFin").addEventListener("touchend",e=>{if(!fEd)return;const t=e.changedTouches[0],dx=t.clientX-fEd.x,dy=Math.abs(t.clientY-fEd.y);fEd=null;if(dx>70&&dy<70){if(Date.now()-_navT<900)return;_navT=Date.now();$("fL").onclick()}},{passive:true});
 $("bFin").onclick=async()=>{if(!(await askPw(FINH)))return;fTab="new";fMon=null;fSubv=null;fReset();fRender();$("mFin").classList.add("on")};
 $("bKalc").onclick=()=>{kFill();kPrFill();$("mK").classList.add("on")};
 $("kClose").onclick=()=>$("mK").classList.remove("on");
@@ -1032,10 +1032,13 @@ render();
 $("bWs").onclick=()=>location.reload();
 function chooseWs(){return new Promise(res=>{const m=$("mWs");m.classList.add("on");m.onclick=async e=>{const b=e.target.closest&&e.target.closest("[data-w]");if(!b)return;const w=WS[b.dataset.w];m.classList.remove("on");if(!(await askPw(w.pw))){m.classList.add("on");return}_entryPw=$("pwIn").value.trim();try{document.activeElement&&document.activeElement.blur()}catch(e){}const fixTop=()=>{scrollTo(0,0);document.documentElement.scrollTop=0;document.body.scrollTop=0};fixTop();[80,300,700,1200].forEach(t=>setTimeout(fixTop,t));W=w;GH_REPO=W.repo;PWH=W.pw;document.title=W.n;$("wsN").textContent=W.n;res()}})}
 const CANCEL={mO:"oCancel",mS:"sCancel",mC:"cCancel",mF:"bFclose",mK:"kClose",mKs:"ksClose",mFin:"fL"};
+let _navT=0;
 addEventListener("popstate",()=>{
+  const now=Date.now();
   const open=[...document.querySelectorAll(".modal.on")].filter(m=>!["mWs","mPw","mLogin"].includes(m.id)).pop();
-  if(open){history.pushState({u:1},"");const b=CANCEL[open.id]&&$(CANCEL[open.id]);if(b)b.click();else open.classList.remove("on");return}
+  if(open){history.pushState({u:1},"");if(now-_navT<700)return;_navT=now;const b=CANCEL[open.id]&&$(CANCEL[open.id]);if(b)b.click();else open.classList.remove("on");return}
   if(document.querySelector("#mWs.on,#mPw.on,#mLogin.on")){history.pushState({u:1},"");return}
+  if(now-_navT<1800){history.pushState({u:1},"");return}
   location.reload();
 });
 (async()=>{
@@ -1057,7 +1060,7 @@ addEventListener("popstate",()=>{
   db.collection("orders").onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>
-<script>var BUILD="20261115112855";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
+<script>var BUILD="20261115113025";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin)"))return;try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
 document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()});window.addEventListener("load",function(){setTimeout(chk,1200)})})();</script>
 </body>
 </html>
