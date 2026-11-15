@@ -970,9 +970,61 @@ const a=t.dataset.fa,v=t.dataset.v,cs=fCopyCats();
   else if(a==="delc"){cs.splice(+v,1);fSaveCfg(cs)}
   else if(a==="dels"){const[i,j]=v.split("|").map(Number);cs[i].s.splice(j,1);fSaveCfg(cs)}
 });
-let fEd=null;
-$("mFin").addEventListener("touchstart",e=>{const t=e.touches[0];fEd=t.clientX<40?{x:t.clientX,y:t.clientY}:null},{passive:true});
-$("mFin").addEventListener("touchend",e=>{if(!fEd)return;const t=e.changedTouches[0],dx=t.clientX-fEd.x,dy=Math.abs(t.clientY-fEd.y);fEd=null;if(dx>70&&dy<70){if(Date.now()-_navT<900)return;_navT=Date.now();$("fL").onclick()}},{passive:true});
+/* свайп назад в Финансах: страница едет за пальцем, под ней видна предыдущая */
+function fPeek(){
+  const sv={fTab,fScr,fMon,fSubv,fEdit,fDigits,fNeg,fCat,fSub,fNt,fDate};let h=null;
+  try{
+    if(fTab==="new"&&!fScr&&fEdit)fTab="log";
+    else if(fTab==="new"&&fScr)fScr="";
+    else if(fTab==="log"&&fMon)fMon=null;
+    else if(fTab==="rep"&&fSubv)fSubv=null;
+    else return null;
+    h=({new:fvNew,log:fvLog,rep:fvRep,set:fvSet})[fTab]();
+  }catch(e){h=null}
+  finally{fTab=sv.fTab;fScr=sv.fScr;fMon=sv.fMon;fSubv=sv.fSubv;fEdit=sv.fEdit;fDigits=sv.fDigits;fNeg=sv.fNeg;fCat=sv.fCat;fSub=sv.fSub;fNt=sv.fNt;fDate=sv.fDate}
+  return h;
+}
+let fG=null;
+function fGEnd(done){
+  if(!fG)return;const g=fG;fG=null;const W=innerWidth,body=$("fBody"),mf=$("mFin"),el=g.mode==="sub"?body:mf;
+  const fin=()=>{
+    el.style.transition="none";el.style.transform="";el.style.boxShadow="";if(g.mode==="sub"){body.style.background="";body.style.position="";body.style.zIndex=""}
+    if(g.ghost)g.ghost.remove();
+  };
+  if(done){
+    el.style.transition="transform .2s ease-out";el.style.transform="translateX("+W+"px)";if(g.ghost)g.ghost.style.transition="transform .2s ease-out",g.ghost.style.transform="translateX(0)";
+    setTimeout(()=>{_navT=Date.now();$("fL").onclick();fin()},210);
+  }else{
+    el.style.transition="transform .2s ease-out";el.style.transform="translateX(0)";if(g.ghost)g.ghost.style.transition="transform .2s ease-out",g.ghost.style.transform="translateX(-28%)";
+    setTimeout(fin,210);
+  }
+}
+$("mFin").addEventListener("touchstart",e=>{
+  if(fG&&fG.m)return;
+  if(e.touches.length!==1){fG=null;return}
+  const t=e.touches[0];fG=t.clientX<=50?{x:t.clientX,y:t.clientY,t0:Date.now(),m:false,dx:0,mode:""}:null;
+},{passive:true});
+$("mFin").addEventListener("touchmove",e=>{
+  if(!fG)return;const t=e.touches[0],dx=t.clientX-fG.x,dy=t.clientY-fG.y;
+  if(!fG.m){
+    if(Math.abs(dy)>Math.abs(dx)&&Math.abs(dy)>8){fG=null;return}
+    if(!(dx>10&&Math.abs(dy)<dx))return;
+    fG.m=true;const h=fPeek(),body=$("fBody");
+    if(h!=null){
+      fG.mode="sub";const g=body.cloneNode(false);g.innerHTML=h;g.className=body.className;
+      g.style.cssText="position:absolute;left:0;right:0;top:"+body.offsetTop+"px;height:"+body.offsetHeight+"px;overflow:hidden;z-index:0;transform:translateX(-28%);pointer-events:none";
+      body.after(g);fG.ghost=g;body.style.position="relative";body.style.zIndex="1";body.style.background="var(--fbg)";body.style.boxShadow="-8px 0 24px rgba(0,0,0,.25)";
+    }else{fG.mode="close";$("mFin").style.boxShadow="-8px 0 24px rgba(0,0,0,.25)"}
+  }
+  e.preventDefault();fG.dx=Math.max(0,dx);const W=innerWidth,el=fG.mode==="sub"?$("fBody"):$("mFin");
+  el.style.transition="none";el.style.transform="translateX("+fG.dx+"px)";
+  if(fG.ghost){fG.ghost.style.transition="none";fG.ghost.style.transform="translateX("+(-28+fG.dx/W*28)+"%)"}
+},{passive:false});
+$("mFin").addEventListener("touchend",e=>{
+  if(!fG)return;if(!fG.m){fG=null;return}
+  const W=innerWidth,v=fG.dx/Math.max(1,Date.now()-fG.t0);fGEnd(fG.dx>W*0.33||(v>0.5&&fG.dx>40));
+});
+$("mFin").addEventListener("touchcancel",()=>{if(fG&&fG.m)fGEnd(false);else fG=null});
 $("bFin").onclick=async()=>{if(!(await askPw(FINH)))return;fTab="new";fMon=null;fSubv=null;fReset();fRender();$("mFin").classList.add("on")};
 $("bKalc").onclick=()=>{kFill();kPrFill();$("mK").classList.add("on")};
 $("kClose").onclick=()=>$("mK").classList.remove("on");
@@ -1044,6 +1096,25 @@ $("bWs").onclick=()=>location.reload();
 function chooseWs(){return new Promise(res=>{const m=$("mWs");m.classList.add("on");m.onclick=async e=>{const b=e.target.closest&&e.target.closest("[data-w]");if(!b)return;const w=WS[b.dataset.w];m.classList.remove("on");if(!(await askPw(w.pw))){m.classList.add("on");return}_entryPw=$("pwIn").value.trim();try{document.activeElement&&document.activeElement.blur()}catch(e){}const fixTop=()=>{scrollTo(0,0);document.documentElement.scrollTop=0;document.body.scrollTop=0};fixTop();[80,300,700,1200].forEach(t=>setTimeout(fixTop,t));W=w;GH_REPO=W.repo;PWH=W.pw;document.title=W.n;$("wsN").textContent=W.n;res()}})}
 const CANCEL={mO:"oCancel",mS:"sCancel",mC:"cCancel",mF:"bFclose",mK:"kClose",mKs:"ksClose",mFin:"fL"};
 let _navT=0;
+/* свайп назад для остальных окон: окно едет за пальцем, под ним видна предыдущая страница */
+(function(){let g=null;
+function fin(done){if(!g)return;const q=g;g=null;const W=innerWidth,sh=q.sh,md=q.md;
+ sh.style.transition="transform .2s ease-out";md.style.transition="background .2s ease-out";
+ if(done){sh.style.transform="translateX("+W+"px)";md.style.background="rgba(0,0,0,0)"}else{sh.style.transform="translateX(0)";md.style.background=""}
+ setTimeout(()=>{sh.style.transition=sh.style.transform=md.style.transition="";md.style.background="";if(done){_navT=Date.now();const b=$(CANCEL[md.id]);if(b)b.click();else md.classList.remove("on")}},210)}
+document.addEventListener("touchstart",e=>{
+ if(g&&g.m)return;g=null;if(e.touches.length!==1)return;
+ const md=document.querySelector(".modal.on:not(#mFin):not(#mWs):not(#mPw):not(#mLogin)");if(!md||!CANCEL[md.id])return;
+ const t=e.touches[0];if(t.clientX>50)return;g={x:t.clientX,y:t.clientY,t0:Date.now(),m:false,dx:0,md,sh:md.querySelector(".sheet")};
+},{passive:true});
+document.addEventListener("touchmove",e=>{
+ if(!g)return;const t=e.touches[0],dx=t.clientX-g.x,dy=t.clientY-g.y;
+ if(!g.m){if(Math.abs(dy)>Math.abs(dx)&&Math.abs(dy)>8){g=null;return}if(!(dx>10&&Math.abs(dy)<dx))return;g.m=true;g.sh.style.animation="none";g.sh.style.boxShadow="-8px 0 24px rgba(0,0,0,.25)"}
+ e.preventDefault();g.dx=Math.max(0,dx);const W=innerWidth;g.sh.style.transition="none";g.sh.style.transform="translateX("+g.dx+"px)";g.md.style.background="rgba(0,0,0,"+(0.45*(1-g.dx/W)).toFixed(3)+")";
+},{passive:false});
+document.addEventListener("touchend",()=>{if(!g)return;if(!g.m){g=null;return}const v=g.dx/Math.max(1,Date.now()-g.t0);fin(g.dx>innerWidth*0.33||(v>0.5&&g.dx>40))});
+document.addEventListener("touchcancel",()=>{if(g&&g.m)fin(false);else g=null});
+})();
 addEventListener("popstate",()=>{
   const now=Date.now();
   const open=[...document.querySelectorAll(".modal.on")].filter(m=>!["mWs","mPw","mLogin"].includes(m.id)).pop();
@@ -1070,7 +1141,7 @@ addEventListener("popstate",()=>{
   db.collection("orders").onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>
-<script>var BUILD="20261115115533";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin):not(#mWs):not(#mPw):not(#mFin)"))return;try{if(document.getElementById("mFin").classList.contains("on")&&typeof fEdit!=="undefined"&&(fEdit||fDigits||fScr))return}catch(e){}try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
+<script>var BUILD="20261115120232";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin):not(#mWs):not(#mPw):not(#mFin)"))return;try{if(document.getElementById("mFin").classList.contains("on")&&typeof fEdit!=="undefined"&&(fEdit||fDigits||fScr))return}catch(e){}try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
 document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()});window.addEventListener("load",function(){setTimeout(chk,1200)});setInterval(chk,45000)})();</script>
 </body>
 </html>
