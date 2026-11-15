@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<script>var BUILD="20261115121231";(function(){var d=document.documentElement,done=false;d.style.visibility="hidden";function show(){if(!done){done=true;d.style.visibility=""}}setTimeout(show,2000);try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b);return}}show()}).catch(show)}catch(e){show()}})();</script>
+<script>var BUILD="20261115122104";(function(){var d=document.documentElement,done=false;d.style.visibility="hidden";function show(){if(!done){done=true;d.style.visibility=""}}setTimeout(show,2000);try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b);return}}show()}).catch(show)}catch(e){show()}})();</script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Interstone</title>
-<script>try{if(navigator.standalone||matchMedia("(display-mode:standalone)").matches)document.documentElement.classList.add("sa")}catch(e){}</script>
+<script>try{if(navigator.standalone||matchMedia("(display-mode:standalone)").matches)document.documentElement.classList.add("sa")}catch(e){}
+try{(function(){var h=document.documentElement;function f(){var w=innerWidth,H=innerHeight,sa=h.classList.contains("sa"),o=null;try{o=localStorage.getItem("duo")}catch(e){}var d=o==="1"?true:o==="0"?false:(sa&&w/H>0.58);h.classList.toggle("duo",d)}f();addEventListener("resize",f);addEventListener("orientationchange",f)})()}catch(e){}</script>
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -23,7 +24,7 @@
 html,body{margin:0}html{background:var(--stripc,var(--bg));min-height:100%}body{min-height:calc(100vh + 1px);min-height:calc(100dvh + 1px);box-sizing:border-box}
 #ptr{position:fixed;top:calc(env(safe-area-inset-top,0px) + 4px);left:50%;transform:translate(-50%,-70px);opacity:0;background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:20px;padding:7px 14px;font-size:13px;z-index:30;pointer-events:none;transition:transform .2s,opacity .2s;box-shadow:0 4px 14px rgba(0,0,0,.2);white-space:nowrap}
 body{background:var(--bg);color:var(--text);font-family:var(--font);padding:12px 12px 40px;max-width:1000px;margin:0 auto}
-html.sa body{max-width:none;margin:0;padding-left:12px;padding-right:12px}html.sa header,html.sa .bar{padding-right:82px}@media (max-width:699px){html.sa .bar2{padding-right:82px}}
+html.sa body{max-width:none;margin:0;padding-left:12px;padding-right:12px}html.duo header,html.duo .bar{padding-right:82px}@media (max-width:699px){html.duo .bar2{padding-right:82px}}
 header{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
 .logo{height:46px;width:auto;max-width:60%;margin-right:auto;display:block;filter:var(--logo-f)}
 h1{font-size:19px;margin:0;flex:1;min-width:150px}
@@ -151,7 +152,7 @@ body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #mFin{--fbg:color-mix(in srgb,var(--surface) 55%,#000);--fcd:var(--surface)}}
 #mFin .sheet{max-width:none;width:100%;height:100%;border-radius:0;box-shadow:none;background:transparent;padding:0;display:flex;flex-direction:column;overflow:hidden;animation:none!important}
 .fhd{display:grid;grid-template-columns:64px 1fr 64px;align-items:center;padding:calc(env(safe-area-inset-top,0px) + 6px) 12px 4px;flex-shrink:0;min-height:40px}
-html.sa .fhd{padding-right:82px}@media (max-width:699px){html.sa #fBody>:nth-child(-n+2),html.sa #fBody.fnew>:nth-child(3){margin-right:82px;width:auto}html.sa #fBody>input.fbig{width:calc(100% - 82px)}}.fbig:focus{outline:none}.fbig::placeholder{font-size:18px;font-weight:500}
+html.duo .fhd{padding-right:82px}@media (max-width:699px){html.duo #fBody>:nth-child(-n+2),html.duo #fBody.fnew>:nth-child(3){margin-right:82px;width:auto}html.duo #fBody>input.fbig{width:calc(100% - 82px)}}.fbig:focus{outline:none}.fbig::placeholder{font-size:18px;font-weight:500}
 .fhd h2{margin:0;font-size:15px;text-align:center;font-weight:600}.fhd button{border:0;background:transparent;color:var(--accent);padding:4px;font-size:16px}.fhd .l{text-align:left}.fhd .r{text-align:right}
 #fBody{flex:1;min-height:0;overflow:auto;padding:4px 0 10px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 #fTabs{display:flex;background:var(--fcd);border-top:.5px solid var(--fsep);padding:4px 4px calc(4px + env(safe-area-inset-bottom,0px));flex-shrink:0}
