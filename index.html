@@ -1053,7 +1053,7 @@ addEventListener("popstate",()=>{
 });
 (async()=>{
   await chooseWs();
-  try{history.pushState({u:1},"")}catch(e){}
+  setTimeout(()=>{try{history.pushState({u:1},"")}catch(e){}},1500);
   try{user=await cuse("user");canAdmin=user?user.canEdit():false}catch(e){}
   let sv=null;try{sv=localStorage.getItem("role")}catch(e){}
   mode=canAdmin?"founder":"manager";
@@ -1070,7 +1070,7 @@ addEventListener("popstate",()=>{
   db.collection("orders").onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>
-<script>var BUILD="20261115115122";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin):not(#mWs):not(#mPw):not(#mFin)"))return;try{if(document.getElementById("mFin").classList.contains("on")&&typeof fEdit!=="undefined"&&(fEdit||fDigits||fScr))return}catch(e){}try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
+<script>var BUILD="20261115115533";(function(){var last=0;function chk(){var n=Date.now();if(n-last<20000)return;last=n;if(document.querySelector(".modal.on:not(#mLogin):not(#mWs):not(#mPw):not(#mFin)"))return;try{if(document.getElementById("mFin").classList.contains("on")&&typeof fEdit!=="undefined"&&(fEdit||fDigits||fScr))return}catch(e){}try{fetch("version.json?t="+n,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j.b||j.b==BUILD)return;var k="uchet_try";if(sessionStorage.getItem(k)==j.b)return;sessionStorage.setItem(k,j.b);location.replace(location.pathname+"?v="+j.b)}).catch(function(){})}catch(e){}}
 document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()});window.addEventListener("load",function(){setTimeout(chk,1200)});setInterval(chk,45000)})();</script>
 </body>
 </html>
