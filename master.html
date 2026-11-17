@@ -16,11 +16,12 @@
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{background:#141312;min-height:100%}
-html,body{margin:0;height:100%;overflow:hidden}
+html,body{margin:0}
+body{min-height:calc(100vh + 1px);min-height:calc(100dvh + 1px)}
 
-body{background:#141312;color:#f1ece5;font-family:-apple-system,system-ui,"Segoe UI",sans-serif;-webkit-user-select:none;user-select:none;overscroll-behavior:none}
+body{background:#141312;color:#f1ece5;font-family:-apple-system,system-ui,"Segoe UI",sans-serif;-webkit-user-select:none;user-select:none;}
 button{font:inherit;color:inherit;border:0;cursor:pointer;touch-action:manipulation}
-#app{position:fixed;left:0;right:0;top:0;bottom:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;box-sizing:border-box;padding:calc(3vh + env(safe-area-inset-top)) 4vw calc(3vh + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:2.4vh}
+#app{position:relative;min-height:100vh;min-height:100dvh;box-sizing:border-box;padding:calc(3vh + env(safe-area-inset-top)) 4vw calc(3vh + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:2.4vh}
 .top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px}
 .cap{font-size:clamp(14px,1.8vmax,22px);color:#a69f95;letter-spacing:.04em;text-transform:uppercase}
 h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height:1.1}
@@ -108,8 +109,7 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height
   .row .btn{padding:12px 16px;font-size:17px}
   h1{font-size:30px}
 }
-#app.home{overflow-y:auto}
-#app.home::after{content:"";position:absolute;left:0;top:100%;width:1px;height:1px}
+#app.home{height:100vh;height:100dvh;overflow:hidden}
 #app.home .grid{min-height:0;grid-auto-rows:unset;flex:1 1 0;overflow:hidden}
 #app.home .tile{min-height:0;padding:6px;gap:4px;border-radius:min(28px,12%);container-type:size}
 #app.home .tile b{font-size:var(--tb,28px);font-size:clamp(14px,min(30cqh,15cqw),46px);line-height:1.1}
@@ -122,7 +122,7 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height
 .mt .plus{background:linear-gradient(180deg,rgba(76,196,110,.95),rgba(31,157,69,.9));color:#fff;font-size:24px;border-color:rgba(255,255,255,.4)}
 .mt.add{border-style:dashed}.mt.add input{font-weight:500}
 </style>
-<script>var BUILD="20261117214230"</script>
+<script>var BUILD="20261117214350"</script>
 <script>
 try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null");}catch(e){}
 </script>
@@ -346,7 +346,7 @@ function fitGrid(){
   document.getElementById("app").style.setProperty("--tb",tb+"px");document.getElementById("app").style.setProperty("--ts",Math.max(10,Math.min(22,tb*.48))+"px");
 }
 addEventListener("resize",fitGrid);addEventListener("pageshow",fitGrid);document.addEventListener("visibilitychange",()=>{if(!document.hidden)fitGrid()});try{new ResizeObserver(fitGrid).observe(document.getElementById("app"))}catch(e){}addEventListener("orientationchange",()=>setTimeout(fitGrid,200));
-function openMaster(id){V={n:"master",m:id};q="";draw();$("app").scrollTop=0}
+function openMaster(id){V={n:"master",m:id};q="";draw();scrollTo(0,0)}
 function drawMaster(){
   const id=V.m,m=L.staff[id];if(!m){V={n:"home"};return draw()}
   const today=ymd(Date.now()),s=dayState(id,today),pc=pendingConf(id);
@@ -499,7 +499,7 @@ async function refreshAll(){
   }catch(e){ptr.textContent="Не удалось обновить"}
   setTimeout(()=>{hidePtr();pbusy=false},800);
 }
-addEventListener("touchstart",e=>{pty=($("app").scrollTop<=1&&!pbusy&&!$("ov").innerHTML.trim())?e.touches[0].clientY:null;ppull=0},{passive:true});
+addEventListener("touchstart",e=>{pty=(scrollY<=1&&!pbusy&&!$("ov").innerHTML.trim())?e.touches[0].clientY:null;ppull=0},{passive:true});
 addEventListener("touchmove",e=>{
   if(pty==null)return;ppull=Math.max(0,e.touches[0].clientY-pty);
   if(ppull>0){const d=Math.min(ppull*.5,64);ptr.style.transition="none";ptr.textContent=d>=48?"Отпустите для обновления":"Потяните вниз";ptr.style.transform="translate(-50%,"+(d-40)+"px)";ptr.style.opacity=Math.min(1,d/36)}
