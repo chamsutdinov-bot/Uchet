@@ -105,8 +105,9 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height
 #app.home .tile{min-height:0;padding:6px;gap:4px;border-radius:min(28px,12%)}
 #app.home .tile b{font-size:var(--tb,28px);line-height:1.1}
 #app.home .tile small{font-size:var(--ts,14px)}
+#ptr{position:fixed;top:calc(env(safe-area-inset-top,0px) + 6px);left:50%;transform:translate(-50%,-70px);opacity:0;background:rgba(40,36,32,.95);color:#f1ece5;border:1px solid rgba(255,255,255,.22);border-radius:22px;padding:9px 18px;font-size:16px;font-weight:600;z-index:60;pointer-events:none;transition:transform .2s,opacity .2s;box-shadow:0 6px 18px rgba(0,0,0,.4);white-space:nowrap}
 </style>
-<script>var BUILD="20261117205928"</script>
+<script>var BUILD="20261117210039"</script>
 <script>
 try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null");}catch(e){}
 </script>
@@ -116,6 +117,7 @@ try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null");}catch(e){}
 <div class="sync" id="sync"></div>
 <button class="gear" id="gear" aria-label="Настройки">⚙︎</button>
 <div id="ov"></div>
+<div id="ptr">Потяните вниз</div>
 <script>
 "use strict";
 /* ===== настройки ===== */
@@ -439,6 +441,27 @@ document.addEventListener("click",e=>{
 });
 setInterval(()=>{const c=$("clk");if(c)c.textContent=hm(Date.now());if(V.n==="home"&&!document.hidden){}},10000);
 setInterval(()=>{autoClose()},30000);
+
+/* свайп вниз = обновить всё: версия приложения + данные */
+const ptr=$("ptr");let pty=null,ppull=0,pbusy=false;
+const hidePtr=()=>{ptr.style.transition="";ptr.style.transform="translate(-50%,-70px)";ptr.style.opacity=0};
+async function refreshAll(){
+  pbusy=true;ptr.style.transition="";ptr.textContent="Обновляю…";ptr.style.transform="translate(-50%,14px)";ptr.style.opacity=1;
+  try{
+    try{const r=await fetch("version.json?t="+Date.now(),{cache:"no-store"}),j=await r.json();
+      if(j&&j.b&&j.b!==BUILD){ptr.textContent="Новая версия…";location.replace(location.pathname+"?v="+j.b);return}}catch(e){}
+    await flush();await pull();draw();
+    ptr.textContent="Обновлено";
+  }catch(e){ptr.textContent="Не удалось обновить"}
+  setTimeout(()=>{hidePtr();pbusy=false},800);
+}
+addEventListener("touchstart",e=>{pty=(window.scrollY<=0&&!pbusy&&!$("ov").innerHTML.trim())?e.touches[0].clientY:null;ppull=0},{passive:true});
+addEventListener("touchmove",e=>{
+  if(pty==null)return;ppull=Math.max(0,e.touches[0].clientY-pty);
+  if(ppull>0){const d=Math.min(ppull*.5,64);ptr.style.transition="none";ptr.textContent=d>=48?"Отпустите для обновления":"Потяните вниз";ptr.style.transform="translate(-50%,"+(d-40)+"px)";ptr.style.opacity=Math.min(1,d/36)}
+},{passive:true});
+addEventListener("touchend",()=>{if(pty==null)return;const go=ppull*.5>=48;pty=null;ppull=0;if(go)refreshAll();else hidePtr()});
+addEventListener("touchcancel",()=>{pty=null;ppull=0;hidePtr()});
 
 /* автообновление: раз в минуту проверяем версию, при новой — тихо перезагружаем */
 function autoUpd(){
