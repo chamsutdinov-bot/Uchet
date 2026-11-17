@@ -95,6 +95,7 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height
   h1{font-size:30px}
 }
 </style>
+<script>var BUILD="20261117205150"</script>
 <script>
 try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null");}catch(e){}
 </script>
@@ -392,6 +393,21 @@ document.addEventListener("click",e=>{
 });
 setInterval(()=>{const c=$("clk");if(c)c.textContent=hm(Date.now());if(V.n==="home"&&!document.hidden){}},10000);
 setInterval(()=>{autoClose()},30000);
+
+/* автообновление: раз в минуту проверяем версию, при новой — тихо перезагружаем */
+function autoUpd(){
+  if(document.hidden||$("ov").innerHTML.trim()||document.activeElement&&/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;
+  fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.json():null).then(j=>{
+    if(!j||!j.b||j.b===BUILD)return;
+    let g="";try{g=sessionStorage.getItem("m_upd")||""}catch(e){}
+    const now=Date.now(),[gb,gt]=g.split("|");
+    if(gb===j.b&&now-(+gt||0)<300000)return;
+    try{sessionStorage.setItem("m_upd",j.b+"|"+now)}catch(e){}
+    location.replace(location.pathname+"?v="+j.b);
+  }).catch(()=>{});
+}
+setInterval(autoUpd,60000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)autoUpd()});
 setInterval(()=>{if(!document.hidden&&key()){pull();flush()}},8000);
 document.addEventListener("visibilitychange",()=>{if(!document.hidden&&key()){pull();flush()}});
 addEventListener("online",()=>{flush();pull()});
