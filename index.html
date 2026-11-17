@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<script>var BUILD="20261117153424";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){}</script>
+<script>var BUILD="20261117153550";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){}</script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -306,7 +306,7 @@ html,body{transition:background-color .25s ease}
   <div id="fBody"></div>
   <div id="fTabs"></div>
 </div></div>
-<div class="modal" id="mWs" style="z-index:60"><div class="sheet" style="max-width:340px;text-align:center">
+<div class="modal on" id="mWs" style="z-index:60"><div class="sheet" style="max-width:340px;text-align:center">
   <h2>Выберите учёт</h2>
   <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px">
     <button class="p" data-w="interstone" style="font-size:18px;padding:16px 0">Interstone</button>
@@ -1111,7 +1111,7 @@ $("bWs").onclick=()=>location.reload();
 (function(){const els=["mWs","mPw","mLogin"].map(id=>$(id)),h=document.documentElement;
   const upd=()=>{h.classList.toggle("pwlock",els.some(m=>m.classList.contains("on")))};
   els.forEach(m=>{new MutationObserver(upd).observe(m,{attributes:true,attributeFilter:["class"]});m.addEventListener("touchmove",e=>{if(e.target===m)e.preventDefault()},{passive:false})})})();
-function chooseWs(){return new Promise(res=>{const m=$("mWs");let RS=null;try{RS=JSON.parse(sessionStorage.getItem("uchet_resume")||"null");sessionStorage.removeItem("uchet_resume")}catch(e){}if(RS&&!WS[RS.w])RS=null;if(!RS)m.classList.add("on");m.onclick=async e=>{const b=e.target.closest&&e.target.closest("[data-w]");if(!b)return;const w=WS[b.dataset.w];m.classList.remove("on");if(!(RS||await askPw(w.pw))){m.classList.add("on");return}_entryPw=RS?RS.pw:$("pwIn").value.trim();try{document.activeElement&&document.activeElement.blur()}catch(e){}const fixTop=()=>{scrollTo(0,0);document.documentElement.scrollTop=0;document.body.scrollTop=0};fixTop();[80,300,700,1200].forEach(t=>setTimeout(fixTop,t));W=w;GH_REPO=W.repo;PWH=W.pw;document.title=W.n;$("wsN").textContent=W.n;if(W===WS.liderstone){const lg=document.querySelector("img.logo");if(lg){lg.alt="Liderstone";lg.src=LOGO_L;lg.style.height="38px"}}res()};if(RS)m.onclick({target:{closest:()=>({dataset:{w:RS.w}})}})})}
+function chooseWs(){return new Promise(res=>{const m=$("mWs");let RS=null;try{RS=JSON.parse(sessionStorage.getItem("uchet_resume")||"null");sessionStorage.removeItem("uchet_resume")}catch(e){}if(RS&&!WS[RS.w])RS=null;if(RS)m.classList.remove("on");else m.classList.add("on");m.onclick=async e=>{const b=e.target.closest&&e.target.closest("[data-w]");if(!b)return;const w=WS[b.dataset.w];m.classList.remove("on");if(!(RS||await askPw(w.pw))){m.classList.add("on");return}_entryPw=RS?RS.pw:$("pwIn").value.trim();try{document.activeElement&&document.activeElement.blur()}catch(e){}const fixTop=()=>{scrollTo(0,0);document.documentElement.scrollTop=0;document.body.scrollTop=0};fixTop();[80,300,700,1200].forEach(t=>setTimeout(fixTop,t));W=w;GH_REPO=W.repo;PWH=W.pw;document.title=W.n;$("wsN").textContent=W.n;if(W===WS.liderstone){const lg=document.querySelector("img.logo");if(lg){lg.alt="Liderstone";lg.src=LOGO_L;lg.style.height="38px"}}res()};if(RS)m.onclick({target:{closest:()=>({dataset:{w:RS.w}})}})})}
 const CANCEL={mO:"oCancel",mS:"sCancel",mC:"cCancel",mF:"bFclose",mK:"kClose",mKs:"ksClose",mFin:"fL"};
 let _navT=0;
 /* свайп назад для остальных окон: окно едет за пальцем, под ним видна предыдущая страница */
