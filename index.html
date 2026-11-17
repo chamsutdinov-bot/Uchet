@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<script>var BUILD="20261117113617";(function(){var d=document.documentElement,done=false;d.style.visibility="hidden";function show(){if(!done){done=true;d.style.visibility=""}}setTimeout(show,2000);try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b);return}}show()}).catch(show)}catch(e){show()}})();</script>
+<script>var BUILD="20261117113949";(function(){var d=document.documentElement,done=false;d.style.visibility="hidden";function show(){if(!done){done=true;d.style.visibility=""}}setTimeout(show,2000);try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b);return}}show()}).catch(show)}catch(e){show()}})();</script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -218,6 +218,7 @@ html,body{transition:background-color .25s ease}
 <div class="modal" id="mO"><div class="sheet">
   <h2 id="mT">Новый заказ</h2>
   <div class="seg" id="tpSeg"><button type="button" data-tp="r" class="on">Розница</button><button type="button" data-tp="w">Опт</button></div>
+  <div class="seg" id="mtSeg" style="margin-top:8px"><button type="button" data-mt="Акрил">Акрил</button><button type="button" data-mt="Кварц">Кварц</button></div><input type="hidden" id="fMt">
   <div id="clRow" style="display:none;margin-bottom:10px"><label>Оптовик</label><select id="fCl"></select></div>
   <div class="form">
     <div><label>№ заказа</label><input id="fNo"></div>
@@ -225,7 +226,6 @@ html,body{transition:background-color .25s ease}
     <div><label>Имя</label><input id="fFn"></div>
     <div><label>Телефон</label><input id="fPh" type="tel"></div>
     <div><label>Адрес</label><input id="fAd"></div>
-    <div><label>Материал</label><select id="fMt"><option value="">Выбрать</option><option value="Акрил">Акрил</option><option value="Кварц">Кварц</option></select></div>
     <div><label>Слэбов (1 или 0,5)</label><input id="fM" type="number" step="0.5" min="0" inputmode="decimal"></div>
     <div><label>Сумма</label><input id="fS" type="number" step="0.01" inputmode="decimal"></div>
     <div><label>Аванс, сумма</label><input id="fAvS" type="number" step="0.01" inputmode="decimal"></div>
@@ -658,7 +658,7 @@ function openForm(id){
   $("mT").textContent=id?"Изменить заказ":"Новый заказ";setTp(o.tp||(id?"r":(tab==="w"?"w":"r")),o.cl||(id?"":(curCl||"")));
   $("fNo").value=o.no||"";$("fDate").value=o.date||new Date().toISOString().slice(0,10);
   $("fFn").value=o.fn||"";$("fPh").value=o.ph||"";$("fAd").value=o.ad||"";
-  $("fMt").value=o.mt||"";$("fM").value=o.sl??"";$("fS").value=o.s??"";$("fAvS").value=o.avs??"";$("fNt").value=o.nt||"";$("cAv").checked=!!o.av;$("cZm").checked=!!o.zm;$("cUs").checked=!!o.us;$("cOs").checked=!!o.os;ostCalc();
+  setMt(o.mt||"");$("fM").value=o.sl??"";$("fS").value=o.s??"";$("fAvS").value=o.avs??"";$("fNt").value=o.nt||"";$("cAv").checked=!!o.av;$("cZm").checked=!!o.zm;$("cUs").checked=!!o.us;$("cOs").checked=!!o.os;ostCalc();
   $("mO").classList.add("on");
 }
 async function save(){
@@ -786,6 +786,8 @@ $("cDel").onclick=async()=>{
   try{await db.doc("clients/"+editCl).delete()}catch(e){}
   $("mC").classList.remove("on");curCl=null;render();
 };
+function setMt(v){$("fMt").value=v;document.querySelectorAll("#mtSeg button").forEach(b=>b.classList.toggle("on",b.dataset.mt===v))}
+$("mtSeg").onclick=e=>{const b=e.target.closest("button");if(b)setMt($("fMt").value===b.dataset.mt?"":b.dataset.mt)};
 $("tpSeg").onclick=e=>{const b=e.target.closest("button");if(b)setTp(b.dataset.tp,$("fCl").value)};
 $("selT").onchange=()=>{tab=$("selT").value;curCl=null;render()};
 $("fGo").onclick=doImport;$("bDedupe").onclick=dedupe;
