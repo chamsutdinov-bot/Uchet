@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<script>var BUILD="20261117132105";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){}</script>
+<script>var BUILD="20261117152700";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){}</script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -319,6 +319,7 @@ html,body{transition:background-color .25s ease}
   <div class="pk" id="pwPad"><button type="button" data-k="1">1</button><button type="button" data-k="2">2</button><button type="button" data-k="3">3</button><button type="button" data-k="4">4</button><button type="button" data-k="5">5</button><button type="button" data-k="6">6</button><button type="button" data-k="7">7</button><button type="button" data-k="8">8</button><button type="button" data-k="9">9</button><span></span><button type="button" data-k="0">0</button><button type="button" data-k="b" aria-label="Стереть">⌫</button></div>
   <div class="note" id="pwErr" style="color:#c0392b"></div>
   <div class="acts"><button class="p" id="pwGo">Подтвердить</button><button id="pwNo">Отмена</button></div>
+  <button type="button" id="pwBio" style="display:none;width:100%;margin-top:10px;height:46px;border-radius:12px"></button>
 </div></div>
 <div class="modal" id="mLogin"><div class="sheet">
   <h2>Вход</h2>
@@ -605,11 +606,37 @@ const STEPS=[["av","Аванс"],["zm","Замер"],["us","Установка"]
 let PWH=WS.interstone.pw;
 async function sha(t){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
 const FINH="8c1cdb9cb4dbac6dbb6ebd118ec8f9523d22e4e4cb8cc9df5f7e1e499bba3c10";
-function askPw(H){return new Promise(res=>{const m=$("mPw"),i=$("pwIn"),e=$("pwErr");i.value="";e.textContent="";m.classList.add("on");
+const BIO={
+  ok:null,
+  async avail(){if(this.ok!==null)return this.ok;try{this.ok=!!(window.PublicKeyCredential&&await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable())}catch(e){this.ok=false}return this.ok},
+  key(h){return "bio_"+String(h||PWH).slice(0,14)},
+  get(h){try{return JSON.parse(localStorage.getItem(this.key(h))||"null")}catch(e){return null}},
+  b64(a){return btoa(String.fromCharCode(...new Uint8Array(a)))},
+  unb(s){return Uint8Array.from(atob(s),c=>c.charCodeAt(0))},
+  async enroll(h,pw){
+    const c=await navigator.credentials.create({publicKey:{challenge:crypto.getRandomValues(new Uint8Array(32)),rp:{name:"Uchet"},user:{id:crypto.getRandomValues(new Uint8Array(16)),name:"user",displayName:"Uchet"},pubKeyCredParams:[{type:"public-key",alg:-7},{type:"public-key",alg:-257}],authenticatorSelection:{authenticatorAttachment:"platform",userVerification:"required",residentKey:"discouraged"},timeout:60000}});
+    localStorage.setItem(this.key(h),JSON.stringify({cid:this.b64(c.rawId),pw}))
+  },
+  async verify(h){
+    const r=this.get(h);if(!r)return null;
+    await navigator.credentials.get({publicKey:{challenge:crypto.getRandomValues(new Uint8Array(32)),allowCredentials:[{type:"public-key",id:this.unb(r.cid)}],userVerification:"required",timeout:60000}});
+    return r.pw
+  }
+};
+function askPw(H){return new Promise(res=>{const m=$("mPw"),i=$("pwIn"),e=$("pwErr"),bb=$("pwBio");i.value="";e.textContent="";m.classList.add("on");
   $("pwPad").onclick=ev=>{const b=ev.target.closest("button[data-k]");if(!b)return;e.textContent="";i.value=b.dataset.k==="b"?i.value.slice(0,-1):i.value+b.dataset.k};
-  const done=v=>{m.classList.remove("on");$("pwGo").onclick=$("pwNo").onclick=i.onkeydown=null;res(v)};
-  const go=async()=>{let ok=false;try{ok=(await sha(i.value.trim()))===(H||PWH)}catch(x){}if(ok)done(true);else{e.textContent="Неверный пароль";i.value=""}};
-  $("pwGo").onclick=go;$("pwNo").onclick=()=>done(false);i.onkeydown=ev=>{if(ev.key==="Enter")go()}})}
+  const done=v=>{m.classList.remove("on");$("pwGo").onclick=$("pwNo").onclick=i.onkeydown=bb.onclick=null;bb.style.display="none";res(v)};
+  const check=async()=>{try{return(await sha(i.value.trim()))===(H||PWH)}catch(x){return false}};
+  const go=async()=>{if(await check())done(true);else{e.textContent="Неверный пароль";i.value=""}};
+  $("pwGo").onclick=go;$("pwNo").onclick=()=>done(false);i.onkeydown=ev=>{if(ev.key==="Enter")go()};
+  (async()=>{
+    if(!(await BIO.avail()))return;
+    const rec=BIO.get(H);bb.style.display="block";
+    const useBio=async()=>{e.textContent="";try{const pw=await BIO.verify(H);if(pw){i.value=pw;await go()}}catch(x){e.textContent="Не удалось по Face ID, введите пароль"}};
+    if(rec){bb.textContent="Войти по Face ID / отпечатку";bb.onclick=useBio;setTimeout(()=>{if(m.classList.contains("on"))useBio()},250)}
+    else{bb.textContent="Включить вход по Face ID";bb.onclick=async()=>{e.textContent="";if(!(await check())){e.textContent="Сначала введите пароль, потом нажмите эту кнопку";return}const pw=i.value.trim();try{await BIO.enroll(H,pw);done(true)}catch(x){e.textContent="Face ID не включился"}}}
+  })()
+})}
 function cardHtml(o){
   const rest=(o.s&&o.avs)?Math.max(0,o.s-o.avs):0,val={av:o.avs?fmt(o.avs):"",os:(o.s&&o.avs)?fmt(rest):""};
   return `<div class="card"><div class="row"><b class="nm">${esc(o.fn)} ${esc(o.ln)}</b>${o.s?`<b class="sum">${fmt(o.s)}</b>`:""}</div>
