@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<script>var BUILD="20261117113949";(function(){var d=document.documentElement,done=false;d.style.visibility="hidden";function show(){if(!done){done=true;d.style.visibility=""}}setTimeout(show,2000);try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b);return}}show()}).catch(show)}catch(e){show()}})();</script>
+<script>var BUILD="20261117114302";(function(){var d=document.documentElement,done=false;d.style.visibility="hidden";function show(){if(!done){done=true;d.style.visibility=""}}setTimeout(show,2000);try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b);return}}show()}).catch(show)}catch(e){show()}})();</script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -74,7 +74,7 @@ label{display:block;font-size:12px;color:var(--muted);margin:8px 0 3px}
 .upl{position:relative;display:block;text-align:center;border-radius:10px;padding:9px 13px;background:var(--accent);color:var(--accent-t);cursor:pointer;overflow:hidden}
 select{width:100%;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 6px;height:44px;min-width:0;font-size:14px}
 a{color:var(--text);font-weight:600;text-decoration:underline;text-decoration-color:var(--muted)}
-.bar2{display:flex;gap:8px;margin-bottom:6px}
+.bar2{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}#selMt{flex:0 0 100%}
 .gh{display:flex;justify-content:space-between;align-items:baseline;margin:16px 2px 8px;font-size:15px}
 .gh span{color:var(--muted);font-size:12px}
 #bg3d{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;perspective:900px;pointer-events:none;z-index:0;overflow:hidden}
@@ -211,6 +211,7 @@ html,body{transition:background-color .25s ease}
   <select id="selY"><option value="all">Все годы</option></select>
   <select id="selM"><option value="all">Все месяцы</option><option value="1">Январь</option><option value="2">Февраль</option><option value="3">Март</option><option value="4">Апрель</option><option value="5">Май</option><option value="6">Июнь</option><option value="7">Июль</option><option value="8">Август</option><option value="9">Сентябрь</option><option value="10">Октябрь</option><option value="11">Ноябрь</option><option value="12">Декабрь</option></select>
   <select id="selS"><option value="all">Все статусы</option><option value="av">Нет аванса</option><option value="zm">Нет замера</option><option value="us">Нет установки</option><option value="os">Нет остатка</option></select>
+  <select id="selMt"><option value="all">Все материалы</option><option value="Акрил">Акрил</option><option value="Кварц">Кварц</option></select>
 </div>
 <div id="list"></div>
 <div class="note" id="who"></div>
@@ -619,7 +620,7 @@ function renderClients(t){
 function render(){
   const t=$("q").value.trim().toLowerCase();
   $("selT").value=tab;
-  const lv=tab==="w"&&!curCl;["selY","selM","selS"].forEach(i=>$(i).style.display=lv?"none":"");
+  const lv=tab==="w"&&!curCl;["selY","selM","selS","selMt"].forEach(i=>$(i).style.display=lv?"none":"");
   if(lv){renderClients(t);return}
   const sy=$("selY");
   const years=[...new Set(orders.map(o=>ym(o)[0]).filter(Boolean))].sort((a,b)=>b-a);
@@ -631,7 +632,7 @@ function render(){
     sy.value=[...sy.options].some(x=>x.value===cur)?cur:"all";sy.dataset.k=yk;
   }
   const Y=sy.value,M=$("selM").value;
-  const L=orders.filter(o=>{if(tab==="r"&&o.tp==="w")return false;if(tab==="w"&&(o.tp!=="w"||o.cl!==curCl))return false;const[y,m]=ym(o);if(Y!=="all"&&String(y)!==Y)return false;if(M!=="all"&&String(m)!==M)return false;const S=$("selS").value;if(S!=="all"&&o[S])return false;return !t||[o.no,o.fn,o.ln,o.ph,o.ad,o.nt].join(" ").toLowerCase().includes(t)});
+  const L=orders.filter(o=>{if(tab==="r"&&o.tp==="w")return false;if(tab==="w"&&(o.tp!=="w"||o.cl!==curCl))return false;const[y,m]=ym(o);if(Y!=="all"&&String(y)!==Y)return false;if(M!=="all"&&String(m)!==M)return false;const S=$("selS").value;if(S!=="all"&&o[S])return false;const MT=$("selMt").value;if(MT!=="all"&&o.mt!==MT)return false;return !t||[o.no,o.fn,o.ln,o.ph,o.ad,o.nt].join(" ").toLowerCase().includes(t)});
   const cc=tab==="w"&&curCl?clients.find(x=>x.id===curCl):null;
   const head=(tab==="w"&&curCl)?`<div class="chead"><button data-back="1">←</button><div><b>${esc(cc?cc.name:"")}</b><div class="m">${esc(cc?[cc.ct,cc.ph].filter(Boolean).join(" · "):"")}</div></div><button data-ec="${curCl}">Изменить</button></div>`:"";
   if(!L.length){$("list").innerHTML=head+`<div class="empty">${db?"":"Загрузка…"}</div>`;return}
@@ -710,7 +711,7 @@ function buildGrid(){const c=[];for(let i=0;i<12;i++)c.push(hsl2hex(0,0,100-i*10
 $("cGrid").onclick=e=>{const b=e.target.closest("button");if(!b)return;const h=b.dataset.c,n=parseInt(h.slice(1),16),L=((n>>16)&255)*.299+((n>>8)&255)*.587+(n&255)*.114;settings={...settings,bg:h,dark:L<110};applyTheme()};
 $("sSave").onclick=async()=>{await saveSetting({});$("mS").classList.remove("on")};
 $("sCancel").onclick=()=>{settings=prevSet&&prevSet.bg?prevSet:{bg:BGS[0][0],dark:false};applyTheme();$("mS").classList.remove("on")};
-$("bExp").onclick=exportCsv;$("q").oninput=render;$("selY").onchange=render;$("selM").onchange=render;$("selS").onchange=render;
+$("bExp").onclick=exportCsv;$("q").oninput=render;$("selY").onchange=render;$("selM").onchange=render;$("selS").onchange=render;$("selMt").onchange=render;
 
 const PATS=[["ph",["телефон","тел","phone","моб"]],["ad",["адрес","address"]],["date",["дата","date"]],["ln",["фамил","surname","last"]],["fn",["имя","name","клиент","фио","покупат"]],["sl",["слэб","slab","метр","м2","м²","кв","площад"]],["s",["сумм","цена","стоим","оплат","amount","price"]],["nt",["заметк","коммент","прим","note"]],["no",["№","номер","заказ","order"]]];
 function colMap(h){const m={};h.forEach((x,i)=>{const t=String(x||"").toLowerCase();for(const[k,ps]of PATS){if(!(k in m)&&ps.some(p=>t.includes(p))){m[k]=i;break}}});return m}
