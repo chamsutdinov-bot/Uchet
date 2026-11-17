@@ -115,7 +115,7 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height
 .mt .plus{background:linear-gradient(180deg,rgba(76,196,110,.95),rgba(31,157,69,.9));color:#fff;font-size:24px;border-color:rgba(255,255,255,.4)}
 .mt.add{border-style:dashed}.mt.add input{font-weight:500}
 </style>
-<script>var BUILD="20261117211018"</script>
+<script>var BUILD="20261117211106"</script>
 <script>
 try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null");}catch(e){}
 </script>
@@ -555,13 +555,20 @@ function adminPw(){
 async function staffEditor(){
   const paint=()=>{
     const ids=Object.keys(L.staff).sort((a,b)=>(L.staff[a].o||0)-(L.staff[b].o||0));
-    $("ov").innerHTML=`<div class="ov" style="align-items:flex-start;overflow:auto"><div class="box" style="width:min(96vw,760px);text-align:left;gap:12px"><div style="display:flex;justify-content:space-between;align-items:center"><h1 style="font-size:28px;margin:0">Мастера</h1><button class="btn a" id="sd" style="padding:10px 22px">Готово</button></div>
-    <div class="mg">${ids.map(id=>`<div class="mt"><input data-r="${id}" value="${esc(L.staff[id].n)}"><button class="x" data-del="${id}" title="Удалить">✕</button></div>`).join("")}
-    <div class="mt add"><input id="nn" placeholder="Имя"><button class="plus" id="na" title="Добавить">＋</button></div></div></div></div>`;
+    $("ov").innerHTML=`<div class="ov"><div class="box" style="width:min(94vw,720px);text-align:left;gap:14px"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><h1 style="font-size:28px;margin:0">Мастера</h1><button class="btn a" id="sd" style="padding:10px 22px">Готово</button></div>
+    <div class="mg">${ids.map(id=>`<div class="mt"><input data-r="${id}" value="${esc(L.staff[id].n)}"><button class="x" data-del="${id}" title="Удалить">✕</button></div>`).join("")}</div>
+    <button class="btn g" id="na">＋ Добавить мастера</button></div></div>`;
     $("sd").onclick=()=>{$("ov").innerHTML="";draw()};
-    $("nn").onkeydown=e=>{if(e.key==="Enter")$("na").click()};$("na").onclick=async()=>{const n=$("nn").value.trim();if(!n)return;if(!(await adminPw())){paint();return}const id=newId();push({k:"st",id,d:{n,o:Date.now()}});paint()};
+    $("na").onclick=addForm;
     $("ov").querySelectorAll("[data-r]").forEach(i=>i.onchange=()=>{const id=i.dataset.r,n=i.value.trim();if(n)push({k:"st",id,d:{...L.staff[id],n}})});
     $("ov").querySelectorAll("[data-del]").forEach(b=>b.onclick=async()=>{if(!(await adminPw())){paint();return}push({k:"st",id:b.dataset.del,d:null});paint()});
+  };
+  const addForm=()=>{
+    $("ov").innerHTML=`<div class="ov"><div class="box" style="width:min(92vw,460px)"><h1 style="font-size:28px">Добавить мастера</h1><input id="nn" placeholder="Имя мастера" autocomplete="off" style="text-align:center;font-size:24px;padding:16px"><button class="btn g" id="ng">Добавить</button><button class="btn glass" id="nc">Отмена</button></div></div>`;
+    $("nc").onclick=paint;
+    const go=async()=>{const n=$("nn").value.trim();if(!n)return;if(!(await adminPw())){addForm();$("nn").value=n;return}const id=newId();push({k:"st",id,d:{n,o:Date.now()}});paint()};
+    $("ng").onclick=go;$("nn").onkeydown=e=>{if(e.key==="Enter")go()};
+    setTimeout(()=>$("nn").focus(),50);
   };
   paint();
 }
