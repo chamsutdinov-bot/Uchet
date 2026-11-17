@@ -3,7 +3,7 @@
 <head>
 <meta name="color-scheme" content="dark">
 <style>html{background:#141312}</style>
-<script>var BUILD="20261117213133";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){};try{Object.keys(localStorage).filter(function(k){return k.indexOf("bio_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){};try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null")||{bg:"#1c1a18",dark:true},_r=document.documentElement,_d=!!_t.dark;if(_t.bg){_r.style.setProperty("--bg",_t.bg);_r.style.backgroundColor=_t.bg;_r.dataset.theme=_d?"dark":"light";if(_d){var _v={"--surface":"#25221f","--text":"#f1ece5","--muted":"#a69f95","--line":"#3d3833","--accent":"#d6a36a","--accent-t":"#1b1713","--danger":"#f2a39e"};for(var _k in _v)_r.style.setProperty(_k,_v[_k]);_r.style.setProperty("--logo-f","none")}}if(_t.photo==="none"&&!_t.pn)delete _t.photo;if(_t.photo==="none")_r.style.setProperty("--bgimg","none");else if(_t.photo)_r.style.setProperty("--bgimg","url(\""+_t.photo+"\")");if(_t.font)_r.style.setProperty("--font",_t.font)}catch(e){}</script>
+<script>var BUILD="20261117213312";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){};try{Object.keys(localStorage).filter(function(k){return k.indexOf("bio_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){};try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null")||{bg:"#1c1a18",dark:true},_r=document.documentElement,_d=!!_t.dark;if(_t.bg){_r.style.setProperty("--bg",_t.bg);_r.style.backgroundColor=_t.bg;_r.dataset.theme=_d?"dark":"light";if(_d){var _v={"--surface":"#25221f","--text":"#f1ece5","--muted":"#a69f95","--line":"#3d3833","--accent":"#d6a36a","--accent-t":"#1b1713","--danger":"#f2a39e"};for(var _k in _v)_r.style.setProperty(_k,_v[_k]);_r.style.setProperty("--logo-f","none")}}if(_t.photo==="none"&&!_t.pn)delete _t.photo;if(_t.photo==="none")_r.style.setProperty("--bgimg","none");else if(_t.photo)_r.style.setProperty("--bgimg","url(\""+_t.photo+"\")");if(_t.font)_r.style.setProperty("--font",_t.font)}catch(e){}</script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -28,7 +28,7 @@ try{(function(){var h=document.documentElement;function f(){var w=innerWidth,H=i
 html,body{margin:0}html{background:var(--stripc,var(--bg));min-height:100%}body{min-height:calc(100vh + 1px);min-height:calc(100dvh + 1px);box-sizing:border-box}
 #ptr{position:fixed;top:calc(env(safe-area-inset-top,0px) + 4px);left:50%;transform:translate(-50%,-70px);opacity:0;background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:20px;padding:7px 14px;font-size:13px;z-index:30;pointer-events:none;transition:transform .2s,opacity .2s;box-shadow:0 4px 14px rgba(0,0,0,.2);white-space:nowrap}
 body{background:var(--bg);color:var(--text);font-family:var(--font);padding:12px 12px 40px;max-width:1000px;margin:0 auto}
-html.sa body{max-width:none;margin:0;padding-left:12px;padding-right:12px}html.duo header,html.duo .bar{padding-right:82px}@media (max-width:699px){html.duo .bar2{padding-right:82px}}
+html.sa body{max-width:none;margin:0;padding-left:12px;padding-right:12px}html.sa{padding:0;height:100%;overflow:hidden;min-height:0}html.sa body{position:fixed;left:0;right:0;top:0;bottom:0;min-height:0;overflow-y:scroll;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-top:calc(12px + env(safe-area-inset-top,0px));padding-bottom:calc(40px + env(safe-area-inset-bottom,0px))}html.duo header,html.duo .bar{padding-right:82px}@media (max-width:699px){html.duo .bar2{padding-right:82px}}
 header{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
 .logo{height:46px;width:auto;max-width:60%;margin-right:auto;display:block;filter:var(--logo-f)}
 h1{font-size:19px;margin:0;flex:1;min-width:150px}
@@ -1105,20 +1105,6 @@ $("kSetList").onclick=async e=>{
   if(d){if(!(await askPw()))return;try{await db.doc("stones/"+d.dataset.del).delete()}catch(x){}return}
   if(lastMoved){lastMoved=false}
 };
-/* короткая страница не остаётся «уехавшей» вверх: после прокрутки быстро возвращается на место */
-(function(){let t=null,go=false,hold=false;
-  addEventListener("touchstart",()=>{hold=true;go=false},{passive:true});
-  addEventListener("touchend",()=>{hold=false;clearTimeout(t);t=setTimeout(chk,20)},{passive:true});
-  addEventListener("scroll",()=>{if(hold||go)return;clearTimeout(t);t=setTimeout(chk,30)},{passive:true});
-  function chk(){
-    const y=window.scrollY;if(y<=0||y>140||hold)return;
-    let h=0;for(const el of document.body.children){const cs=getComputedStyle(el);if(cs.position==="fixed"||cs.display==="none")continue;h=Math.max(h,el.getBoundingClientRect().bottom+y)}
-    if(h+60>innerHeight)return;
-    go=true;const t0=performance.now();
-    const step=n=>{if(!go||hold)return;const k=Math.min(1,(n-t0)/110);window.scrollTo(0,y*(1-k)*(1-k));if(k<1)requestAnimationFrame(step);else go=false};
-    requestAnimationFrame(step);
-  }
-})();
 const ptr=$("ptr");let ty=null,pull=0,busy=false;
 function hidePtr(){ptr.style.transition="";ptr.style.transform="translate(-50%,-70px)";ptr.style.opacity=0}
 async function refresh(){
@@ -1136,7 +1122,7 @@ async function refresh(){
   }catch(e){ptr.textContent="Не удалось обновить"}
   setTimeout(()=>{hidePtr();busy=false;$("bRef").classList.remove("spin")},800);
 }
-addEventListener("touchstart",e=>{ty=(window.scrollY<=0&&!busy&&!document.querySelector(".modal.on"))?e.touches[0].clientY:null;pull=0},{passive:true});
+addEventListener("touchstart",e=>{ty=((document.documentElement.classList.contains("sa")?document.body.scrollTop:window.scrollY)<=0&&!busy&&!document.querySelector(".modal.on"))?e.touches[0].clientY:null;pull=0},{passive:true});
 addEventListener("touchmove",e=>{
   if(ty==null)return;
   pull=Math.max(0,e.touches[0].clientY-ty);
