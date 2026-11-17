@@ -121,7 +121,7 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height
 .mt .plus{background:linear-gradient(180deg,rgba(76,196,110,.95),rgba(31,157,69,.9));color:#fff;font-size:24px;border-color:rgba(255,255,255,.4)}
 .mt.add{border-style:dashed}.mt.add input{font-weight:500}
 </style>
-<script>var BUILD="20261117212730"</script>
+<script>var BUILD="20261117212812"</script>
 <script>
 try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null");}catch(e){}
 </script>
@@ -154,16 +154,17 @@ const b64e=s=>btoa(unescape(encodeURIComponent(s)));
 const b64d=s=>decodeURIComponent(escape(atob(s.replace(/\s/g,""))));
 const H=x=>({Authorization:"Bearer "+key(),Accept:"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28",...(x||{})});
 const cache={};
+const tfetch=(u,o)=>{const c=new AbortController(),t=setTimeout(()=>c.abort(),15000);return fetch(u,{...o,signal:c.signal}).finally(()=>clearTimeout(t))};
 async function load(c,force){
   const cur=cache[c],h=H();if(cur&&cur.etag&&!force)h["If-None-Match"]=cur.etag;
-  const r=await fetch(API+encodeURIComponent(c)+".json",{headers:h,cache:"no-store"});
+  const r=await tfetch(API+encodeURIComponent(c)+".json",{headers:h,cache:"no-store"});
   if(r.status===304)return{...cur,changed:false};
   if(r.status===404){const e={obj:{},sha:null,etag:null};const ch=!cur||Object.keys(cur.obj).length>0;cache[c]=e;return{...e,changed:ch}}
   if(r.status===401){const er=new Error("auth");er.auth=true;throw er}
   if(!r.ok)throw new Error("HTTP "+r.status);
   const j=await r.json();let txt;
   if(j.content&&j.encoding==="base64")txt=b64d(j.content);
-  else{const rr=await fetch(API+encodeURIComponent(c)+".json",{headers:H({Accept:"application/vnd.github.raw+json"}),cache:"no-store"});txt=await rr.text()}
+  else{const rr=await tfetch(API+encodeURIComponent(c)+".json",{headers:H({Accept:"application/vnd.github.raw+json"}),cache:"no-store"});txt=await rr.text()}
   let obj={};try{obj=JSON.parse(txt)||{}}catch(e){}
   const e={obj,sha:j.sha,etag:r.headers.get("ETag")};cache[c]=e;return{...e,changed:true};
 }
@@ -174,7 +175,7 @@ function mutate(c,fn){
     for(let i=0;i<6;i++){
       const cur=await load(c,true),obj=JSON.parse(JSON.stringify(cur.obj));fn(obj);
       const body={message:"master: "+c,content:b64e(JSON.stringify(obj))};if(cur.sha)body.sha=cur.sha;
-      const r=await fetch(API+encodeURIComponent(c)+".json",{method:"PUT",headers:H({"Content-Type":"application/json"}),body:JSON.stringify(body),cache:"no-store"});
+      const r=await tfetch(API+encodeURIComponent(c)+".json",{method:"PUT",headers:H({"Content-Type":"application/json"}),body:JSON.stringify(body),cache:"no-store"});
       if(r.ok){const j=await r.json();cache[c]={obj,sha:j.content.sha,etag:null};return}
       last=new Error("HTTP "+r.status);
       if(r.status===409||r.status===422){await new Promise(z=>setTimeout(z,300+Math.random()*500));continue}
@@ -230,6 +231,7 @@ async function pull(){
     const m=months();
     const rs=await Promise.all([load("mstaff"),load("orders"),load("mstage"),load("mlog_"+m[0]),load("mlog_"+m[1])]);
     staff=rs[0].obj;orders=rs[1].obj;stage=rs[2].obj;logs={};logs[m[0]]=rs[3].obj;logs[m[1]]=rs[4].obj;
+    saveSnap();
     if(rs.some(r=>r.changed)||true){rebuild();autoClose();draw()}
     netErr=pend.length?netErr:"";
   }catch(e){if(e.auth){try{localStorage.removeItem(KEYN)}catch(x){}login("Войдите снова")}else netErr="net"}
@@ -492,7 +494,7 @@ async function refreshAll(){
     try{const r=await fetch("version.json?t="+Date.now(),{cache:"no-store"}),j=await r.json();
       if(j&&j.b&&j.b!==BUILD){ptr.textContent="Новая версия…";location.replace(location.pathname+"?v="+j.b);return}}catch(e){}
     await flush();await pull();draw();
-    ptr.textContent="Обновлено";
+    ptr.textContent=netErr?"Нет связи — данные сохранены":"Обновлено";
   }catch(e){ptr.textContent="Не удалось обновить"}
   setTimeout(()=>{hidePtr();pbusy=false},800);
 }
@@ -582,7 +584,10 @@ async function staffEditor(){
 }
 $("gear").onclick=staffEditor;
 
-function start(){pull().then(()=>{draw();flush()})}
+const SNAPK="m_snap";
+function saveSnap(){try{const o={};for(const k in orders){const x=orders[k];o[k]={no:x.no,fn:x.fn,ln:x.ln,mt:x.mt,sl:x.sl,date:x.date,ts:x.ts,us:x.us}}localStorage.setItem(SNAPK,JSON.stringify({staff,orders:o,stage,logs}))}catch(e){}}
+function loadSnap(){try{const j=JSON.parse(localStorage.getItem(SNAPK)||"null");if(j){staff=j.staff||{};orders=j.orders||{};stage=j.stage||{};logs=j.logs||{}}}catch(e){}}
+function start(){loadSnap();rebuild();draw();pull().then(()=>{draw();flush()})}
 if(!key())login();else{start()}
 if("serviceWorker"in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
 </script>
