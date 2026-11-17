@@ -3,7 +3,7 @@
 <head>
 <meta name="color-scheme" content="dark">
 <style>html{background:#141312}</style>
-<script>var BUILD="20261117211836";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){};try{Object.keys(localStorage).filter(function(k){return k.indexOf("bio_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){};try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null")||{bg:"#1c1a18",dark:true},_r=document.documentElement,_d=!!_t.dark;if(_t.bg){_r.style.setProperty("--bg",_t.bg);_r.style.backgroundColor=_t.bg;_r.dataset.theme=_d?"dark":"light";if(_d){var _v={"--surface":"#25221f","--text":"#f1ece5","--muted":"#a69f95","--line":"#3d3833","--accent":"#d6a36a","--accent-t":"#1b1713","--danger":"#f2a39e"};for(var _k in _v)_r.style.setProperty(_k,_v[_k]);_r.style.setProperty("--logo-f","none")}}if(_t.photo==="none"&&!_t.pn)delete _t.photo;if(_t.photo==="none")_r.style.setProperty("--bgimg","none");else if(_t.photo)_r.style.setProperty("--bgimg","url(\""+_t.photo+"\")");if(_t.font)_r.style.setProperty("--font",_t.font)}catch(e){}</script>
+<script>var BUILD="20261117212001";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){};try{Object.keys(localStorage).filter(function(k){return k.indexOf("bio_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){};try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null")||{bg:"#1c1a18",dark:true},_r=document.documentElement,_d=!!_t.dark;if(_t.bg){_r.style.setProperty("--bg",_t.bg);_r.style.backgroundColor=_t.bg;_r.dataset.theme=_d?"dark":"light";if(_d){var _v={"--surface":"#25221f","--text":"#f1ece5","--muted":"#a69f95","--line":"#3d3833","--accent":"#d6a36a","--accent-t":"#1b1713","--danger":"#f2a39e"};for(var _k in _v)_r.style.setProperty(_k,_v[_k]);_r.style.setProperty("--logo-f","none")}}if(_t.photo==="none"&&!_t.pn)delete _t.photo;if(_t.photo==="none")_r.style.setProperty("--bgimg","none");else if(_t.photo)_r.style.setProperty("--bgimg","url(\""+_t.photo+"\")");if(_t.font)_r.style.setProperty("--font",_t.font)}catch(e){}</script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -47,6 +47,7 @@ header #bWs,header #bKalc,header #bSet,header #bFiles,header #bMst{width:44px;he
 #mWs.on{animation:none!important}
 @keyframes jelly{0%{transform:scale(.5,.5);opacity:0}25%{transform:scale(1.12,.9);opacity:1}42%{transform:scale(.93,1.07)}58%{transform:scale(1.04,.97)}74%{transform:scale(.99,1.015)}100%{transform:scale(1,1)}}
 #mWs.on .sheet{animation:jelly 1.5s cubic-bezier(.3,.7,.4,1) both!important;transform-origin:center}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0 2px}.chips b{font-size:11px;font-weight:600;padding:3px 8px;border-radius:8px;background:var(--line);color:var(--muted);white-space:nowrap}.chips b.ok{background:#2fbf61;color:#fff}.chips b.cur{background:var(--accent);color:var(--accent-t)}.chips b.bl{background:#3b9bff;color:#fff}.chips b.or{background:#ff9f1c;color:#fff}.chips.big{gap:6px}.chips.big b{font-size:13px;padding:6px 10px;border-radius:10px}.chips b small{font-weight:500;opacity:.85;margin-left:4px}
 .mst{display:flex;gap:3px;margin:6px 0 2px}.mst i{flex:1;height:5px;border-radius:3px;background:var(--line)}.mst i.ok{background:#2fbf61}.mst i.cur{background:var(--accent)}.mst i.bl{background:#3b9bff}.mst i.or{background:#ff9f1c}
 .mstt{font-size:12px;color:var(--muted)}
 #msBody table{width:100%;border-collapse:collapse;margin:4px 0 14px;font-size:12px}#msBody th{white-space:nowrap}#msBody th,#msBody td{padding:6px 5px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}#msBody th{color:var(--muted);font-weight:600}
@@ -1159,7 +1160,16 @@ function msInfo(id){
   else{const prev=MS_ST[MS_ST.indexOf(cur)-1],p=prev&&s[prev[0]];t="Сейчас: "+cur[1]+(p?" · с "+msT(p.ts)+" · "+msName(p.m):(st.start?" · с "+msT(st.start.ts)+" · "+msName(st.start.m):" · ещё не начат"))}
   return{segs,t};
 }
-function msLine(o){const x=msInfo(o.id);if(!x)return"";return`<div class="mst">${x.segs.map(c=>`<i class="${c}"></i>`).join("")}</div><div class="mstt">${esc(x.t)}</div>`}
+const MS_LBL=["Распил","Склейка","Обработка","Готово","Установка","Частично завершён","Завершён"];
+function msStates(st){
+  const s=st.stages||{},i=st.ins,k=["rasp","skl","obr","gotov"],a=k.map(x=>s[x]?"ok":""),c=k.findIndex(x=>!s[x]);
+  if(c>=0)a[c]="cur";
+  a.push(i?((i.status==="done"||i.status==="tails")?"ok":"bl"):(c<0?"cur":""));
+  a.push(i&&i.status==="tails"?"or":"");a.push(i&&i.status==="done"?"ok":"");
+  return a;
+}
+const msChips=(st,big,dur)=>`<div class="chips${big?" big":""}">${msStates(st).map((c,n)=>`<b class="${c}">${MS_LBL[n]}${dur&&dur[n]?`<small>${esc(dur[n])}</small>`:""}</b>`).join("")}</div>`;
+function msLine(o){const x=msInfo(o.id);if(!x)return"";return msChips(mstg[o.id])+`<div class="mstt">${esc(x.t)}</div>`}
 const msYm=v=>v.replace("-","");
 const msFmtH=ms=>{const m=Math.round(ms/6e4);return Math.floor(m/60)+" ч "+String(m%60).padStart(2,"0")+" мин"};
 const msDays=(a,b)=>Math.max(1,Math.ceil((b-a)/864e5));
@@ -1198,7 +1208,7 @@ function msOrdersRows(mon){
     Object.values(s).forEach(x=>ts.push(x.ts));if(st.start)ts.push(st.start.ts);
     if(i)Object.values(i.conf||{}).forEach(c=>ts.push(c.ts));
     if(!ts.some(t=>t>=a&&t<b))return;
-    const o=orders.find(x=>x.id===id)||{};
+    const o=orders.find(x=>x.id===id)||{no:st.no};
     const st0=st.start?st.start.ts:null,seq=[st0,(s.rasp||{}).ts,(s.skl||{}).ts,(s.obr||{}).ts,(s.gotov||{}).ts];
     const dur=[];
     for(let k=1;k<5;k++)dur.push(seq[k]&&seq[k-1]?msDays(seq[k-1],seq[k])+" д":(seq[k]?"—":""));
@@ -1207,7 +1217,7 @@ function msOrdersRows(mon){
     if(i&&i.status==="done"){const e=Math.max(...cts);inst=seq[4]?msDays(seq[4],e)+" д":"";tot=st0?msDays(st0,e)+" д":""}
     else if(i)inst=i.status==="tails"?"хвосты":"выезд";
     else tot=st0?msDays(st0,Date.now())+"+ д":"";
-    rows.push({no:o.no||"?",name:((o.fn||"")+" "+(o.ln||"")).trim(),mt:o.mt||"",dur,inst,tot});
+    rows.push({no:o.no||"?",name:((o.fn||"")+" "+(o.ln||"")).trim(),mt:o.mt||"",dur,inst,tot,st});
   });
   return rows.sort((x,y)=>String(x.no).localeCompare(String(y.no),"ru",{numeric:true}));
 }
@@ -1230,8 +1240,8 @@ function msPaint(){
   $("msBody").innerHTML=`<h3>Выходы и часы</h3><table><tr><th>Мастер</th><th>Дней</th><th>Приход ~</th><th>Уход ~</th><th>Часов</th><th>Этапов</th><th>Выездов</th><th>Забыл</th></tr>
   ${mrows.map(r=>`<tr><td>${esc(r.n)}</td><td>${r.days}${r.instDays?` <span class="mstt">+${r.instDays} уст.</span>`:""}</td><td>${msAvg(r.ins)}</td><td>${msAvg(r.outs)}</td><td>${msFmtH(r.ms)}</td><td>${r.stages}</td><td>${r.inst}</td><td class="${r.forgot?"fg":""}">${r.forgot}</td></tr>`).join("")||'<tr><td colspan="8">Нет данных за этот месяц</td></tr>'}</table>
   ${fg.filter(x=>!x.has).length?`<h3>Забыли отметить уход</h3><table><tr><th>Мастер</th><th>День</th><th>Время ухода</th><th></th></tr>${fg.filter(x=>!x.has).map(({e})=>`<tr><td>${esc(msName(e.m))}</td><td>${esc(e.d)}</td><td><input class="tm" type="time" data-ev="${e.id}"></td><td><button class="ok2" data-evs="${e.id}">Сохранить</button></td></tr>`).join("")}</table>`:""}
-  <h3>Сколько дней делался каждый заказ</h3><table><tr><th>Заказ</th><th>Материал</th><th>Распил</th><th>Склейка</th><th>Обработка</th><th>Готово</th><th>Установка</th><th>Всего</th></tr>
-  ${orows.map(r=>`<tr><td>№${esc(r.no)} ${esc(r.name)}</td><td>${esc(r.mt)}</td>${r.dur.map(d=>`<td>${d}</td>`).join("")}<td>${esc(r.inst)}</td><td><b>${esc(r.tot)}</b></td></tr>`).join("")||'<tr><td colspan="8">Нет заказов с этапами за этот месяц</td></tr>'}</table>`;
+  <h3>Этапы заказов</h3><table><tr><th>Заказ</th><th>Материал</th><th>Этапы</th><th>Всего</th></tr>
+  ${orows.map(r=>`<tr><td>№${esc(r.no)} ${esc(r.name)}</td><td>${esc(r.mt)}</td><td>${msChips(r.st,true,[r.dur[0],r.dur[1],r.dur[2],r.dur[3],r.inst])}</td><td><b>${esc(r.tot)}</b></td></tr>`).join("")||'<tr><td colspan="4">Нет заказов с этапами за этот месяц</td></tr>'}</table>`;
   $("msBody").querySelectorAll("[data-evs]").forEach(b=>b.onclick=async()=>{
     const id=b.dataset.evs,v=$("msBody").querySelector('[data-ev="'+id+'"]').value;if(!v)return;
     const e=msEvs.find(x=>x.id===id);if(!e)return;
