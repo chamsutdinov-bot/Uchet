@@ -108,7 +108,8 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height
   .row .btn{padding:12px 16px;font-size:17px}
   h1{font-size:30px}
 }
-#app.home{overflow:hidden}
+#app.home{overflow-y:auto}
+#app.home::after{content:"";position:absolute;left:0;top:100%;width:1px;height:1px}
 #app.home .grid{min-height:0;grid-auto-rows:unset;flex:1 1 0;overflow:hidden}
 #app.home .tile{min-height:0;padding:6px;gap:4px;border-radius:min(28px,12%);container-type:size}
 #app.home .tile b{font-size:var(--tb,28px);font-size:clamp(14px,min(30cqh,15cqw),46px);line-height:1.1}
@@ -121,7 +122,7 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height
 .mt .plus{background:linear-gradient(180deg,rgba(76,196,110,.95),rgba(31,157,69,.9));color:#fff;font-size:24px;border-color:rgba(255,255,255,.4)}
 .mt.add{border-style:dashed}.mt.add input{font-weight:500}
 </style>
-<script>var BUILD="20261117213917"</script>
+<script>var BUILD="20261117214230"</script>
 <script>
 try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null");}catch(e){}
 </script>
@@ -498,7 +499,7 @@ async function refreshAll(){
   }catch(e){ptr.textContent="Не удалось обновить"}
   setTimeout(()=>{hidePtr();pbusy=false},800);
 }
-addEventListener("touchstart",e=>{pty=($("app").scrollTop<=0&&!pbusy&&!$("ov").innerHTML.trim())?e.touches[0].clientY:null;ppull=0},{passive:true});
+addEventListener("touchstart",e=>{pty=($("app").scrollTop<=1&&!pbusy&&!$("ov").innerHTML.trim())?e.touches[0].clientY:null;ppull=0},{passive:true});
 addEventListener("touchmove",e=>{
   if(pty==null)return;ppull=Math.max(0,e.touches[0].clientY-pty);
   if(ppull>0){const d=Math.min(ppull*.5,64);ptr.style.transition="none";ptr.textContent=d>=48?"Отпустите для обновления":"Потяните вниз";ptr.style.transform="translate(-50%,"+(d-40)+"px)";ptr.style.opacity=Math.min(1,d/36)}
