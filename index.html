@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<script>var BUILD="20261117115427";(function(){var d=document.documentElement,done=false;d.style.visibility="hidden";function show(){if(!done){done=true;d.style.visibility=""}}setTimeout(show,2000);try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b);return}}show()}).catch(show)}catch(e){show()}})();</script>
+<script>var BUILD="20261117115552";(function(){var d=document.documentElement,done=false;d.style.visibility="hidden";function show(){if(!done){done=true;d.style.visibility=""}}setTimeout(show,2000);try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b);return}}show()}).catch(show)}catch(e){show()}})();</script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -1084,7 +1084,7 @@ function hidePtr(){ptr.style.transition="";ptr.style.transform="translate(-50%,-
 async function refresh(){
   busy=true;$("bRef").classList.add("spin");ptr.style.transition="";ptr.textContent="Обновляю…";ptr.style.transform="translate(-50%,14px)";ptr.style.opacity=1;
   try{
-    try{const vr=await fetch("version.json?t="+Date.now(),{cache:"no-store"}),vj=await vr.json();if(vj&&vj.b&&vj.b!==BUILD){ptr.textContent="Новая версия…";location.replace(location.pathname+"?v="+vj.b);return}}catch(e){}
+    try{const vr=await fetch("version.json?t="+Date.now(),{cache:"no-store"}),vj=await vr.json();if(vj&&vj.b&&vj.b!==BUILD){ptr.textContent="Новая версия…";try{const k=Object.keys(WS).find(x=>WS[x]===W);if(k)sessionStorage.setItem("uchet_resume",JSON.stringify({w:k,pw:_entryPw}))}catch(e){}location.replace(location.pathname+"?v="+vj.b);return}}catch(e){}
     if(db){
       const [o,t,cl]=await Promise.all([db.collection("orders").get(),db.doc("settings/theme").get(),db.collection("clients").get()]);
       clients=cl.docs.map(d=>({id:d.id,...d.data()}));
@@ -1111,7 +1111,7 @@ $("bWs").onclick=()=>location.reload();
 (function(){const els=["mWs","mPw","mLogin"].map(id=>$(id)),h=document.documentElement;
   const upd=()=>{h.classList.toggle("pwlock",els.some(m=>m.classList.contains("on")))};
   els.forEach(m=>{new MutationObserver(upd).observe(m,{attributes:true,attributeFilter:["class"]});m.addEventListener("touchmove",e=>{if(e.target===m)e.preventDefault()},{passive:false})})})();
-function chooseWs(){return new Promise(res=>{const m=$("mWs");m.classList.add("on");m.onclick=async e=>{const b=e.target.closest&&e.target.closest("[data-w]");if(!b)return;const w=WS[b.dataset.w];m.classList.remove("on");if(!(await askPw(w.pw))){m.classList.add("on");return}_entryPw=$("pwIn").value.trim();try{document.activeElement&&document.activeElement.blur()}catch(e){}const fixTop=()=>{scrollTo(0,0);document.documentElement.scrollTop=0;document.body.scrollTop=0};fixTop();[80,300,700,1200].forEach(t=>setTimeout(fixTop,t));W=w;GH_REPO=W.repo;PWH=W.pw;document.title=W.n;$("wsN").textContent=W.n;if(W===WS.liderstone){const lg=document.querySelector("img.logo");if(lg){lg.alt="Liderstone";lg.src=LOGO_L;lg.style.height="38px"}}res()}})}
+function chooseWs(){return new Promise(res=>{const m=$("mWs");let RS=null;try{RS=JSON.parse(sessionStorage.getItem("uchet_resume")||"null");sessionStorage.removeItem("uchet_resume")}catch(e){}if(RS&&!WS[RS.w])RS=null;if(!RS)m.classList.add("on");m.onclick=async e=>{const b=e.target.closest&&e.target.closest("[data-w]");if(!b)return;const w=WS[b.dataset.w];m.classList.remove("on");if(!(RS||await askPw(w.pw))){m.classList.add("on");return}_entryPw=RS?RS.pw:$("pwIn").value.trim();try{document.activeElement&&document.activeElement.blur()}catch(e){}const fixTop=()=>{scrollTo(0,0);document.documentElement.scrollTop=0;document.body.scrollTop=0};fixTop();[80,300,700,1200].forEach(t=>setTimeout(fixTop,t));W=w;GH_REPO=W.repo;PWH=W.pw;document.title=W.n;$("wsN").textContent=W.n;if(W===WS.liderstone){const lg=document.querySelector("img.logo");if(lg){lg.alt="Liderstone";lg.src=LOGO_L;lg.style.height="38px"}}res()};if(RS)m.onclick({target:{closest:()=>({dataset:{w:RS.w}})}})})}
 const CANCEL={mO:"oCancel",mS:"sCancel",mC:"cCancel",mF:"bFclose",mK:"kClose",mKs:"ksClose",mFin:"fL"};
 let _navT=0;
 /* свайп назад для остальных окон: окно едет за пальцем, под ним видна предыдущая страница */
