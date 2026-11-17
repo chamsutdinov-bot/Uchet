@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<script>var BUILD="20261117113347";(function(){var d=document.documentElement,done=false;d.style.visibility="hidden";function show(){if(!done){done=true;d.style.visibility=""}}setTimeout(show,2000);try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b);return}}show()}).catch(show)}catch(e){show()}})();</script>
+<script>var BUILD="20261117113617";(function(){var d=document.documentElement,done=false;d.style.visibility="hidden";function show(){if(!done){done=true;d.style.visibility=""}}setTimeout(show,2000);try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b);return}}show()}).catch(show)}catch(e){show()}})();</script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -225,6 +225,7 @@ html,body{transition:background-color .25s ease}
     <div><label>Имя</label><input id="fFn"></div>
     <div><label>Телефон</label><input id="fPh" type="tel"></div>
     <div><label>Адрес</label><input id="fAd"></div>
+    <div><label>Материал</label><select id="fMt"><option value="">Выбрать</option><option value="Акрил">Акрил</option><option value="Кварц">Кварц</option></select></div>
     <div><label>Слэбов (1 или 0,5)</label><input id="fM" type="number" step="0.5" min="0" inputmode="decimal"></div>
     <div><label>Сумма</label><input id="fS" type="number" step="0.01" inputmode="decimal"></div>
     <div><label>Аванс, сумма</label><input id="fAvS" type="number" step="0.01" inputmode="decimal"></div>
@@ -657,14 +658,14 @@ function openForm(id){
   $("mT").textContent=id?"Изменить заказ":"Новый заказ";setTp(o.tp||(id?"r":(tab==="w"?"w":"r")),o.cl||(id?"":(curCl||"")));
   $("fNo").value=o.no||"";$("fDate").value=o.date||new Date().toISOString().slice(0,10);
   $("fFn").value=o.fn||"";$("fPh").value=o.ph||"";$("fAd").value=o.ad||"";
-  $("fM").value=o.sl??"";$("fS").value=o.s??"";$("fAvS").value=o.avs??"";$("fNt").value=o.nt||"";$("cAv").checked=!!o.av;$("cZm").checked=!!o.zm;$("cUs").checked=!!o.us;$("cOs").checked=!!o.os;ostCalc();
+  $("fMt").value=o.mt||"";$("fM").value=o.sl??"";$("fS").value=o.s??"";$("fAvS").value=o.avs??"";$("fNt").value=o.nt||"";$("cAv").checked=!!o.av;$("cZm").checked=!!o.zm;$("cUs").checked=!!o.us;$("cOs").checked=!!o.os;ostCalc();
   $("mO").classList.add("on");
 }
 async function save(){
   if(!db)return;
   if(fTp==="w"&&!$("fCl").value){$("fCl").style.borderColor="var(--danger)";return}
   if(!editId&&!(await askPw()))return;
-  const d={no:$("fNo").value.trim(),date:$("fDate").value,fn:$("fFn").value.trim(),ph:$("fPh").value.trim(),ad:$("fAd").value.trim(),sl:+String($("fM").value).replace(",",".")||0,s:+$("fS").value||0,avs:+$("fAvS").value||0,nt:$("fNt").value.trim(),tp:fTp,cl:fTp==="w"?$("fCl").value:"",av:$("cAv").checked,zm:$("cZm").checked,us:$("cUs").checked,os:$("cOs").checked,ts:Date.now()};
+  const d={no:$("fNo").value.trim(),date:$("fDate").value,fn:$("fFn").value.trim(),ph:$("fPh").value.trim(),ad:$("fAd").value.trim(),sl:+String($("fM").value).replace(",",".")||0,s:+$("fS").value||0,avs:+$("fAvS").value||0,nt:$("fNt").value.trim(),mt:$("fMt").value,tp:fTp,cl:fTp==="w"?$("fCl").value:"",av:$("cAv").checked,zm:$("cZm").checked,us:$("cUs").checked,os:$("cOs").checked,ts:Date.now()};
   try{
     if(editId)await db.doc("orders/"+editId).update(d);else await db.collection("orders").add(d);
     $("mO").classList.remove("on");
