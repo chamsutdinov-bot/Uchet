@@ -54,11 +54,17 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height
 .card .tx{flex-grow:1;min-width:0}
 .card .tx b{font-size:clamp(17px,2.1vmax,26px);font-weight:600}
 .card .tx div{font-size:clamp(13px,1.6vmax,19px);color:#a69f95;margin-top:3px}
-.stp{display:flex;gap:10px;flex:1 1 100%;flex-wrap:wrap}
-.stp button{flex:1 1 0;min-width:120px;padding:14px 12px;border-radius:16px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);color:#a69f95;font-weight:700;font-size:clamp(16px,1.9vmax,24px);font-family:inherit;cursor:pointer}.card .tx{flex:1 1 180px}
-.stp button.d{background:linear-gradient(180deg,rgba(76,196,110,.4),rgba(31,157,69,.28));border-color:rgba(76,196,110,.6);color:#c9f5d6}
-.stp button.c{border:2px solid #d6a36a;background:rgba(214,163,106,.18);color:#f1ece5}
-.stp button.i{border-color:rgba(64,170,255,.7);color:#bfe0ff;background:rgba(64,170,255,.14)}
+.card{flex-wrap:wrap}
+.card .tx{flex:1 1 200px}
+.stp{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;flex:1 1 100%}
+@media (max-width:1000px){.stp{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:600px){.stp{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stp button{min-height:clamp(64px,7.5vmax,92px);padding:8px 6px;border-radius:18px;border:1px solid rgba(255,255,255,.26);background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.04));box-shadow:inset 0 2px 0 rgba(255,255,255,.28),0 8px 20px -10px rgba(0,0,0,.6);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:#a69f95;font-weight:700;font-size:clamp(14px,1.7vmax,22px);line-height:1.15;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center}
+.stp button.d{background:linear-gradient(180deg,rgba(76,196,110,.5),rgba(31,157,69,.3));border-color:rgba(120,230,150,.6);color:#e3fbe9}
+.stp button.c{background:linear-gradient(180deg,rgba(214,163,106,.5),rgba(214,163,106,.2));border-color:rgba(214,163,106,.9);color:#fff}
+.stp button.i{background:linear-gradient(180deg,rgba(64,170,255,.5),rgba(30,90,235,.28));border-color:rgba(111,186,255,.7);color:#e4f2ff}
+.stp button.p{background:linear-gradient(180deg,rgba(255,159,28,.5),rgba(255,159,28,.22));border-color:rgba(255,184,77,.8);color:#fff2dd}
+.stp button.f{background:linear-gradient(180deg,rgba(76,196,110,.4),rgba(31,157,69,.2));border-color:rgba(120,230,150,.5);color:#d7f7e0}
 .stp button:disabled{cursor:default}
 .chip{padding:10px 20px;border-radius:999px;font-weight:700;font-size:clamp(14px,1.7vmax,21px);background:rgba(214,163,106,.25);color:#d6a36a;white-space:nowrap}
 .chip.n{background:rgba(255,255,255,.12);color:#a69f95}.chip.ok{background:rgba(76,196,110,.25);color:#7fe39c}.chip.bl{background:rgba(64,170,255,.22);color:#6fbaff}.chip.or{background:rgba(255,159,28,.25);color:#ffb84d}
@@ -115,7 +121,7 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height
 .mt .plus{background:linear-gradient(180deg,rgba(76,196,110,.95),rgba(31,157,69,.9));color:#fff;font-size:24px;border-color:rgba(255,255,255,.4)}
 .mt.add{border-style:dashed}.mt.add input{font-weight:500}
 </style>
-<script>var BUILD="20261117211500"</script>
+<script>var BUILD="20261117211836"</script>
 <script>
 try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null");}catch(e){}
 </script>
@@ -310,20 +316,21 @@ function drawHome(){
 }
 const SHORT={rasp:"Распил",skl:"Склейка",obr:"Обработка",gotov:"Готово"};
 function instPills(o){
-  const m=V.m,i=(L.stage[o]||{}).ins;
-  if(pendingConf(m).includes(o))return`<button class="d" data-a="conf" data-o="${o}">✓ Завершил</button><button class="c" data-a="tails" data-o="${o}">◐ Завершил частично</button>`;
-  if(i&&i.status==="done")return`<button class="d" disabled>✓ Установлено</button>`;
-  if(i&&i.out&&i.out[m]&&i.status!=="tails"&&!(i.conf&&i.conf[m]))return`<button class="i" disabled>🚚 На установке</button>`;
-  return`<button class="i" data-a="instone" data-o="${o}">☐ Установка</button>`;
+  const m=V.m,i=(L.stage[o]||{}).ins,done=i&&i.status==="done",tails=i&&i.status==="tails";
+  const out=i&&i.out&&i.out[m]&&!(i.conf&&i.conf[m]);
+  const a=done?`<button class="d" disabled>✓ Установка</button>`:(out||(i&&i.status==="out"))?`<button class="i" ${out?"disabled":`data-a="instone" data-o="${o}"`}>${out?"На установке":"Установка"}</button>`:`<button data-a="instone" data-o="${o}">Установка</button>`;
+  const b=done?`<button disabled>Частично завершён</button>`:tails?`<button class="p" disabled>Частично завершён</button>`:`<button data-a="tails" data-o="${o}">Частично завершён</button>`;
+  const c=done?`<button class="d" disabled>✓ Завершён</button>`:`<button class="f" data-a="conf" data-o="${o}">Завершён</button>`;
+  return a+b+c;
 }
 function cardHtml(o){
   const st=L.stage[o]||{},sg=st.stages||{},cur=curStage(o);
   const strip=STAGES.map(([k])=>{
     if(sg[k])return`<button class="d" disabled>✓ ${SHORT[k]}</button>`;
-    if(k===cur)return`<button class="c" data-a="qstage" data-o="${o}" data-k="${k}">${k==="rasp"&&!st.start?"▶ Начать распил":"☐ "+SHORT[k]}</button>`;
-    return`<button disabled>☐ ${SHORT[k]}</button>`;
+    if(k===cur)return`<button class="c" data-a="qstage" data-o="${o}" data-k="${k}">${k==="rasp"&&!st.start?"Начать распил":SHORT[k]}</button>`;
+    return`<button disabled>${SHORT[k]}</button>`;
   }).join("")+instPills(o);
-  return`<div class="card glass"><div class="no">${esc((L.orders[o]||{}).no||"")}</div><div class="tx"><b>${esc(ordName(o).replace(/^№[^·]*· /,""))}</b><div>${esc(ordSub(o))}</div></div><button class="btn glass" data-a="open" data-o="${o}">Подробнее</button><div class="stp">${strip}</div></div>`;
+  return`<div class="card glass"><div class="no">${esc((L.orders[o]||{}).no||"")}</div><div class="tx"><b>${esc(ordName(o).replace(/^№[^·]*· /,""))}</b><div>${esc(ordSub(o))}</div></div><div class="stp">${strip}</div></div>`;
 }
 function fitGrid(){
   const g=document.querySelector("#app.home .grid");if(!g)return;const t=g.querySelectorAll(".tile"),n=t.length;if(!n)return;
