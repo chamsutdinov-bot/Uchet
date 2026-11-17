@@ -113,7 +113,7 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height
 .mt .plus{background:linear-gradient(180deg,rgba(76,196,110,.95),rgba(31,157,69,.9));color:#fff;font-size:24px;border-color:rgba(255,255,255,.4)}
 .mt.add{border-style:dashed}.mt.add input{font-weight:500}
 </style>
-<script>var BUILD="20261117210524"</script>
+<script>var BUILD="20261117210627"</script>
 <script>
 try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null");}catch(e){}
 </script>
@@ -342,7 +342,7 @@ function drawMaster(){
   <div class="bar"><button class="btn glass" data-a="home">← Назад</button>${s.s==="in"?'<button class="btn r" data-a="leave">Я ушёл</button>':s.s!=="inst"?'<button class="btn g" data-a="arrive">Я пришёл</button>':""}</div></div>
   ${false?`<div class="list">${pc.map(o=>`<div class="card glass" style="border-color:#ff9f1c"><div class="no">${esc((L.orders[o]||{}).no||"")}</div><div class="tx"><b>Подтвердите установку · ${esc(ordName(o))}</b><div>Вы выезжали на этот заказ. Всё установлено?</div></div><button class="btn g" data-a="conf" data-o="${o}">Установлено</button><button class="btn o" data-a="tails" data-o="${o}">Не полностью</button></div>`).join("")}</div>`:""}
   <button class="btn a" data-a="addo" style="align-self:flex-start">＋ Добавить заказ</button>
-  <div class="list">${list.map(cardHtml).join("")||'<div class="hint">Заказов пока нет. Нажмите «Добавить заказ» и впишите номер, который прислал менеджер.</div>'}</div>`;
+  <div class="list">${list.map(cardHtml).join("")||'<div class="hint">Заказов пока нет.</div>'}</div>`;
 }
 function drawMasterList(){ const pc=pendingConf(V.m); // перерисовка списка без потери фокуса
   const keep=document.activeElement===$("q");const c=$("app").querySelectorAll(".list");const l=c[c.length-1];if(!l)return;
@@ -384,11 +384,13 @@ function drawInst(){
 const instList=(list,sel)=>list.map(o=>`<div class="card glass sel ${sel[o]?"on":""}" data-a="pick" data-o="${o}"><div class="ck">${sel[o]?"✓":""}</div><div class="no">${esc((L.orders[o]||{}).no||"")}</div><div class="tx"><b>${esc(ordName(o).replace(/^№[^·]*· /,""))}</b><div>${esc(ordSub(o))}</div></div><span class="chip ${statusOf(o)[1]}">${statusOf(o)[0]}</span></div>`).join("")||'<div class="hint">Заказов не найдено</div>';
 function drawAdd(){
   $("app").innerHTML=`<div class="top"><div><div class="cap">${esc((L.staff[V.m]||{}).n||"")}</div><h1>Добавить заказ</h1></div><button class="btn glass" data-a="mback">← Назад</button></div>
-  <div class="hint" style="font-size:clamp(15px,1.9vmax,22px)">Впишите номер заказа, который прислал менеджер.</div>
   <input class="srch" id="an" inputmode="numeric" autocomplete="off" placeholder="Номер заказа" value="${esc(V.v||"")}">
+  <div id="an2" style="min-height:1.6em;font-size:clamp(20px,2.6vmax,32px);font-weight:700;color:#7fe39c"></div>
   <div class="err" id="ae" style="color:#f2a39e;min-height:1.4em;font-size:clamp(15px,1.9vmax,22px)">${esc(V.e||"")}</div>
   <button class="btn g" data-a="addgo" style="align-self:flex-start">Добавить</button>`;
-  const i=$("an");i.oninput=()=>{V.v=i.value};i.onkeydown=e=>{if(e.key==="Enter")act("addgo")};
+  const i=$("an");const find=v=>Object.keys(L.orders).find(k=>String(L.orders[k].no||"").trim().toLowerCase()===String(v).trim().toLowerCase().replace(/^№\s*/,""));
+  const show=()=>{const o=find(i.value);$("an2").textContent=o?ordName(o):""};
+  i.oninput=()=>{V.v=i.value;V.e="";$("ae").textContent="";show()};show();i.onkeydown=e=>{if(e.key==="Enter")act("addgo")};
   setTimeout(()=>i.focus(),50);
 }
 function drawTails(){
