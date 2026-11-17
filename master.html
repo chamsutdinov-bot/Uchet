@@ -113,7 +113,7 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height
 .mt .plus{background:linear-gradient(180deg,rgba(76,196,110,.95),rgba(31,157,69,.9));color:#fff;font-size:24px;border-color:rgba(255,255,255,.4)}
 .mt.add{border-style:dashed}.mt.add input{font-weight:500}
 </style>
-<script>var BUILD="20261117210627"</script>
+<script>var BUILD="20261117210745"</script>
 <script>
 try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null");}catch(e){}
 </script>
@@ -205,6 +205,7 @@ async function flush(){
       else if(op.k==="ms0")await mutate("mstage",o=>{delete o[op.o]});
       else if(op.k==="st")await mutate("mstaff",o=>{if(op.d===null)delete o[op.id];else o[op.id]=op.d});
       pend.shift();savePend();netErr="";
+      if(cache.mstaff)staff=cache.mstaff.obj;if(cache.mstage)stage=cache.mstage.obj;if(op.k==="ev"&&cache["mlog_"+op.ym])logs[op.ym]=cache["mlog_"+op.ym].obj;
     }
   }catch(e){netErr=e.auth?"auth":"net";if(e.auth){try{localStorage.removeItem(KEYN)}catch(x){}login("Войдите снова")}}
   flushing=false;rebuild();paintSync();
@@ -548,16 +549,15 @@ function adminPw(){
   });
 }
 async function staffEditor(){
-  if(!(await adminPw()))return;
   const paint=()=>{
     const ids=Object.keys(L.staff).sort((a,b)=>(L.staff[a].o||0)-(L.staff[b].o||0));
     $("ov").innerHTML=`<div class="ov" style="align-items:flex-start;overflow:auto"><div class="box" style="width:min(96vw,760px);text-align:left;gap:12px"><div style="display:flex;justify-content:space-between;align-items:center"><h1 style="font-size:28px;margin:0">Мастера</h1><button class="btn a" id="sd" style="padding:10px 22px">Готово</button></div>
     <div class="mg">${ids.map(id=>`<div class="mt"><input data-r="${id}" value="${esc(L.staff[id].n)}"><button class="x" data-del="${id}" title="Удалить">✕</button></div>`).join("")}
     <div class="mt add"><input id="nn" placeholder="Имя"><button class="plus" id="na" title="Добавить">＋</button></div></div></div></div>`;
     $("sd").onclick=()=>{$("ov").innerHTML="";draw()};
-    $("nn").onkeydown=e=>{if(e.key==="Enter")$("na").click()};$("na").onclick=()=>{const n=$("nn").value.trim();if(!n)return;const id=newId();push({k:"st",id,d:{n,o:Date.now()}});paint()};
+    $("nn").onkeydown=e=>{if(e.key==="Enter")$("na").click()};$("na").onclick=async()=>{const n=$("nn").value.trim();if(!n)return;if(!(await adminPw())){paint();return}const id=newId();push({k:"st",id,d:{n,o:Date.now()}});paint()};
     $("ov").querySelectorAll("[data-r]").forEach(i=>i.onchange=()=>{const id=i.dataset.r,n=i.value.trim();if(n)push({k:"st",id,d:{...L.staff[id],n}})});
-    $("ov").querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{if(confirm("Удалить мастера? Его записи в отчётах останутся."))  {push({k:"st",id:b.dataset.del,d:null});paint()}});
+    $("ov").querySelectorAll("[data-del]").forEach(b=>b.onclick=async()=>{if(!(await adminPw())){paint();return}push({k:"st",id:b.dataset.del,d:null});paint()});
   };
   paint();
 }
