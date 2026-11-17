@@ -121,7 +121,7 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height
 .mt .plus{background:linear-gradient(180deg,rgba(76,196,110,.95),rgba(31,157,69,.9));color:#fff;font-size:24px;border-color:rgba(255,255,255,.4)}
 .mt.add{border-style:dashed}.mt.add input{font-weight:500}
 </style>
-<script>var BUILD="20261117212001"</script>
+<script>var BUILD="20261117212231"</script>
 <script>
 try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null");}catch(e){}
 </script>
@@ -263,7 +263,7 @@ function statusOf(o){
 const ordName=o=>{const x=L.orders[o]||{};return"№"+(x.no||"?")+" · "+((x.fn||"")+" "+(x.ln||"")).trim()};
 const ordSub=o=>{const x=L.orders[o]||{};return[x.mt,x.sl?x.sl+" слэб.":"",x.date].filter(Boolean).join(" · ")};
 function workOrders(){ // заказы, добавленные мастерами и ещё не закрытые установкой
-  return Object.keys(L.stage).filter(o=>L.orders[o]&&!((L.stage[o].ins||{}).status==="done")).sort((a,b)=>(((L.stage[b]||{}).added||{}).ts||0)-(((L.stage[a]||{}).added||{}).ts||0));
+  return Object.keys(L.stage).filter(o=>L.orders[o]).sort((a,b)=>(((L.stage[b]||{}).added||{}).ts||0)-(((L.stage[a]||{}).added||{}).ts||0));
 }
 function openOrders(q){
   const lim=Date.now()-120*864e5;q=(q||"").toLowerCase().trim();
@@ -327,7 +327,7 @@ function cardHtml(o){
   const st=L.stage[o]||{},sg=st.stages||{},cur=curStage(o);
   const strip=STAGES.map(([k])=>{
     if(sg[k])return`<button class="d" disabled>✓ ${SHORT[k]}</button>`;
-    if(k===cur)return`<button class="c" data-a="qstage" data-o="${o}" data-k="${k}">${k==="rasp"&&!st.start?"Начать распил":SHORT[k]}</button>`;
+    if(k===cur)return`<button class="c" data-a="qstage" data-o="${o}" data-k="${k}">${SHORT[k]}</button>`;
     return`<button disabled>${SHORT[k]}</button>`;
   }).join("")+instPills(o);
   return`<div class="card glass"><div class="no">${esc((L.orders[o]||{}).no||"")}</div><div class="tx"><b>${esc(ordName(o).replace(/^№[^·]*· /,""))}</b><div>${esc(ordSub(o))}</div></div><div class="stp">${strip}</div></div>`;
@@ -458,7 +458,7 @@ function act(a,el){
     push(evOp({m,ty:"stage",o,st:k}),{k:"ms",o,m:{stages:{[k]:{ts:t,m}}}});
     if(k==="gotov"){V={n:"master",m};draw()}return}
   if(a==="qstage"){const o=el.dataset.o,k=el.dataset.k,t=Date.now(),st=L.stage[o]||{};
-    if(k==="rasp"&&!st.start)push(evOp({m,ty:"start",o}),{k:"ms",o,m:{start:{ts:t,m}}});
+    if(k==="rasp"&&!st.start)push(evOp({m,ty:"start",o}),evOp({m,ty:"stage",o,st:k}),{k:"ms",o,m:{start:{ts:t,m},stages:{[k]:{ts:t,m}}}});
     else push(evOp({m,ty:"stage",o,st:k}),{k:"ms",o,m:{stages:{[k]:{ts:t,m}}}});
     return}
   if(a==="undo"){const o=V.o,k=el.dataset.k;push(evOp({m,ty:"unstage",o,st:k}),{k:"ms",o,m:{stages:{[k]:null}}});return}
