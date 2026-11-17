@@ -15,10 +15,12 @@
 <title>Цех · Interstone</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;height:100%}
-body{background:#141312;color:#f1ece5;font-family:-apple-system,system-ui,"Segoe UI",sans-serif;-webkit-user-select:none;user-select:none;overscroll-behavior:none;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+html{background:#141312;min-height:100%}
+html,body{margin:0}
+body{min-height:100vh;min-height:100dvh;min-height:-webkit-fill-available}
+body{background:#141312;color:#f1ece5;font-family:-apple-system,system-ui,"Segoe UI",sans-serif;-webkit-user-select:none;user-select:none;overscroll-behavior:none}
 button{font:inherit;color:inherit;border:0;cursor:pointer;touch-action:manipulation}
-#app{min-height:100%;padding:3vh 4vw;display:flex;flex-direction:column;gap:2.4vh}
+#app{min-height:100vh;min-height:100dvh;box-sizing:border-box;padding:calc(3vh + env(safe-area-inset-top)) 4vw calc(3vh + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:2.4vh}
 .top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px}
 .cap{font-size:clamp(14px,1.8vmax,22px);color:#a69f95;letter-spacing:.04em;text-transform:uppercase}
 h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height:1.1}
@@ -113,7 +115,7 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height
 .mt .plus{background:linear-gradient(180deg,rgba(76,196,110,.95),rgba(31,157,69,.9));color:#fff;font-size:24px;border-color:rgba(255,255,255,.4)}
 .mt.add{border-style:dashed}.mt.add input{font-weight:500}
 </style>
-<script>var BUILD="20261117210745"</script>
+<script>var BUILD="20261117211018"</script>
 <script>
 try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null");}catch(e){}
 </script>
@@ -185,7 +187,7 @@ const savePend=()=>{try{localStorage.setItem("m_q",JSON.stringify(pend))}catch(e
 function deepMerge(t,s){for(const k in s){const v=s[k];if(v===null)delete t[k];else if(typeof v==="object"&&!Array.isArray(v)){if(typeof t[k]!=="object"||t[k]===null||Array.isArray(t[k]))t[k]={};deepMerge(t[k],v)}else t[k]=v}return t}
 let L={staff:{},orders:{},stage:{},log:{}};     // с учётом ещё не отправленного
 function rebuild(){
-  L.staff=JSON.parse(JSON.stringify(staff));L.orders=orders;L.stage=JSON.parse(JSON.stringify(stage));
+  L.staff=JSON.parse(JSON.stringify(staff));L.orders={...orders};L.stage=JSON.parse(JSON.stringify(stage));
   L.log={};for(const c in logs)Object.assign(L.log,logs[c]);
   for(const op of pend){
     if(op.k==="ev"){const o=L.log[op.id]||(L.log[op.id]={});Object.assign(o,op.d)}
@@ -193,6 +195,7 @@ function rebuild(){
     else if(op.k==="ms0"){delete L.stage[op.o]}
     else if(op.k==="st"){if(op.d===null)delete L.staff[op.id];else L.staff[op.id]=op.d}
   }
+  for(const k in L.stage){if(!L.orders[k]&&L.stage[k].no)L.orders[k]={no:L.stage[k].no,fn:"",ln:"",v:1}}
 }
 let flushing=false,netErr="";
 async function flush(){
@@ -332,7 +335,7 @@ function fitGrid(){
   g.style.setProperty("--tb",tb+"px");g.style.setProperty("--ts",Math.max(10,Math.min(22,tb*.48))+"px");
   document.getElementById("app").style.setProperty("--tb",tb+"px");document.getElementById("app").style.setProperty("--ts",Math.max(10,Math.min(22,tb*.48))+"px");
 }
-addEventListener("resize",fitGrid);addEventListener("orientationchange",()=>setTimeout(fitGrid,200));
+addEventListener("resize",fitGrid);addEventListener("pageshow",()=>{window.scrollTo(0,0);fitGrid()});addEventListener("orientationchange",()=>setTimeout(fitGrid,200));
 function openMaster(id){V={n:"master",m:id};q="";draw();window.scrollTo(0,0)}
 function drawMaster(){
   const id=V.m,m=L.staff[id];if(!m){V={n:"home"};return draw()}
@@ -390,7 +393,7 @@ function drawAdd(){
   <div class="err" id="ae" style="color:#f2a39e;min-height:1.4em;font-size:clamp(15px,1.9vmax,22px)">${esc(V.e||"")}</div>
   <button class="btn g" data-a="addgo" style="align-self:flex-start">Добавить</button>`;
   const i=$("an");const find=v=>Object.keys(L.orders).find(k=>String(L.orders[k].no||"").trim().toLowerCase()===String(v).trim().toLowerCase().replace(/^№\s*/,""));
-  const show=()=>{const o=find(i.value);$("an2").textContent=o?ordName(o):""};
+  const show=()=>{const o=find(i.value);$("an2").textContent=i.value.trim()?(o?ordName(o):"Новый заказ №"+i.value.trim().replace(/^№\s*/,"")):""};
   i.oninput=()=>{V.v=i.value;V.e="";$("ae").textContent="";show()};show();i.onkeydown=e=>{if(e.key==="Enter")act("addgo")};
   setTimeout(()=>i.focus(),50);
 }
@@ -412,11 +415,12 @@ function act(a,el){
   if(a==="back"){V={n:"master",m};draw();return}
   if(a==="addo"){V={n:"add",m,v:"",e:""};draw();return}
   if(a==="addgo"){
-    const v=($("an").value||"").trim().toLowerCase();V.v=v;
+    const v=($("an").value||"").trim().replace(/^№\s*/,"");V.v=v;
     if(!v){V.e="Впишите номер заказа";return draw()}
-    const o=Object.keys(L.orders).find(k=>String(L.orders[k].no||"").trim().toLowerCase()===v.replace(/^№\s*/,""));
-    if(!o){V.e="Заказ с номером «"+v+"» не найден";return draw()}
-    if(!L.stage[o])push({k:"ms",o,m:{added:{ts:Date.now(),m}}});
+    const lv=v.toLowerCase(),o=Object.keys(L.orders).find(k=>!L.orders[k].v&&String(L.orders[k].no||"").trim().toLowerCase()===lv);
+    const vk="n"+v,known=o||vk;
+    const has=L.stage[o]||L.stage[vk]||Object.keys(L.stage).some(k=>L.orders[k]&&String(L.orders[k].no||"").trim().toLowerCase()===lv);
+    if(!has)push({k:"ms",o:known,m:{added:{ts:Date.now(),m},...(o?{}:{no:v})}});
     V={n:"master",m};draw();return;
   }
   if(a==="instone"){V.sel={[el.dataset.o]:1};return act("instgo",el)}

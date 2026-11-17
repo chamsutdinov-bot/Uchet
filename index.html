@@ -3,7 +3,7 @@
 <head>
 <meta name="color-scheme" content="dark">
 <style>html{background:#141312}</style>
-<script>var BUILD="20261117210745";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){};try{Object.keys(localStorage).filter(function(k){return k.indexOf("bio_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){};try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null")||{bg:"#1c1a18",dark:true},_r=document.documentElement,_d=!!_t.dark;if(_t.bg){_r.style.setProperty("--bg",_t.bg);_r.style.backgroundColor=_t.bg;_r.dataset.theme=_d?"dark":"light";if(_d){var _v={"--surface":"#25221f","--text":"#f1ece5","--muted":"#a69f95","--line":"#3d3833","--accent":"#d6a36a","--accent-t":"#1b1713","--danger":"#f2a39e"};for(var _k in _v)_r.style.setProperty(_k,_v[_k]);_r.style.setProperty("--logo-f","none")}}if(_t.photo==="none"&&!_t.pn)delete _t.photo;if(_t.photo==="none")_r.style.setProperty("--bgimg","none");else if(_t.photo)_r.style.setProperty("--bgimg","url(\""+_t.photo+"\")");if(_t.font)_r.style.setProperty("--font",_t.font)}catch(e){}</script>
+<script>var BUILD="20261117211018";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){};try{Object.keys(localStorage).filter(function(k){return k.indexOf("bio_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){};try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null")||{bg:"#1c1a18",dark:true},_r=document.documentElement,_d=!!_t.dark;if(_t.bg){_r.style.setProperty("--bg",_t.bg);_r.style.backgroundColor=_t.bg;_r.dataset.theme=_d?"dark":"light";if(_d){var _v={"--surface":"#25221f","--text":"#f1ece5","--muted":"#a69f95","--line":"#3d3833","--accent":"#d6a36a","--accent-t":"#1b1713","--danger":"#f2a39e"};for(var _k in _v)_r.style.setProperty(_k,_v[_k]);_r.style.setProperty("--logo-f","none")}}if(_t.photo==="none"&&!_t.pn)delete _t.photo;if(_t.photo==="none")_r.style.setProperty("--bgimg","none");else if(_t.photo)_r.style.setProperty("--bgimg","url(\""+_t.photo+"\")");if(_t.font)_r.style.setProperty("--font",_t.font)}catch(e){}</script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -1143,8 +1143,11 @@ let mstg={},mstaffD={},msLog={},msEvs=[];
 const MS_ST=[["rasp","Распил"],["skl","Склейка"],["obr","Обработка"],["gotov","Готово к выдаче"]];
 const msName=id=>(mstaffD[id]||{}).n||"—";
 const msT=t=>{const d=new Date(t);return d.getDate()+" "+["янв","фев","мар","апр","мая","июн","июл","авг","сен","окт","ноя","дек"][d.getMonth()]+", "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")};
+function msAlias(){ // заказ, добавленный мастером по номеру до появления в учёте, привязываем по номеру
+  Object.keys(mstg).forEach(k=>{if(k[0]!=="n"||orders.some(x=>x.id===k))return;const no=k.slice(1),o=orders.find(x=>String(x.no||"").trim().toLowerCase()===no.toLowerCase());if(o){if(!mstg[o.id])mstg[o.id]=mstg[k];delete mstg[k]}});
+}
 function msInfo(id){
-  const st=mstg[id];if(!st)return null;
+  msAlias();const st=mstg[id];if(!st)return null;
   const s=st.stages||{},i=st.ins;let t="",cls="",segs=MS_ST.map(([k])=>s[k]?"ok":"");
   const cur=MS_ST.find(([k])=>!s[k]);
   if(cur)segs[MS_ST.indexOf(cur)]="cur";
@@ -1188,6 +1191,7 @@ function msCalc(){
 }
 const msAvg=a=>{if(!a.length)return"—";const m=Math.round(a.reduce((x,y)=>x+y,0)/a.length);return String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0")};
 function msOrdersRows(mon){
+  msAlias();
   const [Y,M]=mon.split("-").map(Number),a=new Date(Y,M-1,1).getTime(),b=new Date(Y,M,1).getTime(),rows=[];
   Object.keys(mstg).forEach(id=>{
     const st=mstg[id],s=st.stages||{},i=st.ins,ts=[];
