@@ -1,4 +1,4 @@
-const C="uchet-shell-v1",SHELL=["./","index.html","manifest.webmanifest","icon-192.png","icon-512.png","apple-touch-icon.png"];
+const C="uchet-shell-v2",SHELL=["./","index.html","master.html","manifest.webmanifest","manifest-master.webmanifest","icon-192.png","icon-512.png","apple-touch-icon.png","apple-touch-icon-master.png","icon-master-192.png","icon-master-512.png"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(C).then(c=>Promise.all(SHELL.map(u=>fetch(u,{cache:"reload"}).then(r=>r.ok&&c.put(u==="./"?"index.html":u,r)).catch(()=>0)))).then(()=>self.skipWaiting()))});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
 async function fresh(req,key){const c=await caches.open(C);try{const r=await fetch(req,{cache:"no-store"});if(r.ok)c.put(key,r.clone());return r}catch(e){return null}}
@@ -9,10 +9,10 @@ self.addEventListener("fetch",e=>{
   if(p.endsWith("/version.json")||p.includes("access"))return;
   if(isNav){
     e.respondWith((async()=>{
-      const key="index.html",c=await caches.open(C);
+      const base=p.split("/").pop(),file=(base==="master.html")?"master.html":"index.html",key=file,c=await caches.open(C);
       if(u.searchParams.has("v")){const n=await fresh(r.url.split("?")[0],key);if(n)return n}
       const hit=await c.match(key);
-      if(hit){e.waitUntil(fresh(u.origin+u.pathname.replace(/[^/]*$/,"index.html"),key));return hit}
+      if(hit){e.waitUntil(fresh(u.origin+u.pathname.replace(/[^/]*$/,file),key));return hit}
       return (await fresh(r,key))||new Response("Нет связи",{status:503})
     })());return}
   if(/\.(png|webmanifest)$/.test(p)){
