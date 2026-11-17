@@ -3,7 +3,7 @@
 <head>
 <meta name="color-scheme" content="dark">
 <style>html{background:#141312}</style>
-<script>var BUILD="20261117212231";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){};try{Object.keys(localStorage).filter(function(k){return k.indexOf("bio_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){};try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null")||{bg:"#1c1a18",dark:true},_r=document.documentElement,_d=!!_t.dark;if(_t.bg){_r.style.setProperty("--bg",_t.bg);_r.style.backgroundColor=_t.bg;_r.dataset.theme=_d?"dark":"light";if(_d){var _v={"--surface":"#25221f","--text":"#f1ece5","--muted":"#a69f95","--line":"#3d3833","--accent":"#d6a36a","--accent-t":"#1b1713","--danger":"#f2a39e"};for(var _k in _v)_r.style.setProperty(_k,_v[_k]);_r.style.setProperty("--logo-f","none")}}if(_t.photo==="none"&&!_t.pn)delete _t.photo;if(_t.photo==="none")_r.style.setProperty("--bgimg","none");else if(_t.photo)_r.style.setProperty("--bgimg","url(\""+_t.photo+"\")");if(_t.font)_r.style.setProperty("--font",_t.font)}catch(e){}</script>
+<script>var BUILD="20261117212431";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){};try{Object.keys(localStorage).filter(function(k){return k.indexOf("bio_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){};try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null")||{bg:"#1c1a18",dark:true},_r=document.documentElement,_d=!!_t.dark;if(_t.bg){_r.style.setProperty("--bg",_t.bg);_r.style.backgroundColor=_t.bg;_r.dataset.theme=_d?"dark":"light";if(_d){var _v={"--surface":"#25221f","--text":"#f1ece5","--muted":"#a69f95","--line":"#3d3833","--accent":"#d6a36a","--accent-t":"#1b1713","--danger":"#f2a39e"};for(var _k in _v)_r.style.setProperty(_k,_v[_k]);_r.style.setProperty("--logo-f","none")}}if(_t.photo==="none"&&!_t.pn)delete _t.photo;if(_t.photo==="none")_r.style.setProperty("--bgimg","none");else if(_t.photo)_r.style.setProperty("--bgimg","url(\""+_t.photo+"\")");if(_t.font)_r.style.setProperty("--font",_t.font)}catch(e){}</script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -1168,8 +1168,19 @@ function msStates(st){
   a.push(i&&i.status==="tails"?"or":"");a.push(i&&i.status==="done"?"ok":"");
   return a;
 }
-const msChips=(st,big,dur)=>`<div class="chips${big?" big":""}">${msStates(st).map((c,n)=>`<b class="${c}">${MS_LBL[n]}${dur&&dur[n]?`<small>${esc(dur[n])}</small>`:""}</b>`).join("")}</div>`;
-function msLine(o){const x=msInfo(o.id);if(!x)return"";return msChips(mstg[o.id])+`<div class="mstt">${esc(x.t)}</div>`}
+const msChips=(st,big,dur,id)=>`<div class="chips${big?" big":""}">${msStates(st).map((c,n)=>`<b class="${c}"${c==="or"&&id?` data-mr="${esc(id)}" style="cursor:pointer"`:""}>${MS_LBL[n]}${dur&&dur[n]?`<small>${esc(dur[n])}</small>`:""}</b>`).join("")}</div>`;
+function msReason(id){
+  msAlias();const st=mstg[id]||{},i=st.ins||{},o=orders.find(x=>x.id===id)||{no:st.no};
+  const list=Object.entries(i.conf||{}).filter(([m,c])=>!c.full);
+  const old=document.getElementById("msRs");if(old)old.remove();
+  const d=document.createElement("div");d.id="msRs";
+  d.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;padding:16px;z-index:60";
+  d.innerHTML=`<div style="background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:18px;padding:20px;width:min(92vw,460px);max-height:80vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.5)"><div style="font-size:13px;color:var(--muted)">Частично завершён</div><div style="font-size:20px;font-weight:700;margin:2px 0 12px">№${esc(o.no||"?")} ${esc(((o.fn||"")+" "+(o.ln||"")).trim())}</div>${list.length?list.map(([m,c])=>`<div style="padding:10px 0;border-top:1px solid var(--line)"><div style="font-size:13px;color:var(--muted)">${esc(msName(m))} · ${msT(c.ts)}</div><div style="font-size:17px;margin-top:4px">${c.note?esc(c.note):'<span style="color:var(--muted)">Причина не указана</span>'}</div></div>`).join(""):'<div style="color:var(--muted)">Нет данных</div>'}<button id="msRsX" style="margin-top:14px;width:100%;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--text);font:inherit;font-weight:600;cursor:pointer">Закрыть</button></div>`;
+  d.onclick=e=>{if(e.target===d||e.target.id==="msRsX")d.remove()};
+  document.body.appendChild(d);
+}
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-mr]");if(b){e.stopPropagation();e.preventDefault();msReason(b.dataset.mr)}},true);
+function msLine(o){const x=msInfo(o.id);if(!x)return"";return msChips(mstg[o.id],false,null,o.id)+`<div class="mstt">${esc(x.t)}</div>`}
 const msYm=v=>v.replace("-","");
 const msFmtH=ms=>{const m=Math.round(ms/6e4);return Math.floor(m/60)+" ч "+String(m%60).padStart(2,"0")+" мин"};
 const msDays=(a,b)=>Math.max(1,Math.ceil((b-a)/864e5));
@@ -1217,7 +1228,7 @@ function msOrdersRows(mon){
     if(i&&i.status==="done"){const e=Math.max(...cts);inst=seq[4]?msDays(seq[4],e)+" д":"";tot=st0?msDays(st0,e)+" д":""}
     else if(i)inst=i.status==="tails"?"хвосты":"выезд";
     else tot=st0?msDays(st0,Date.now())+"+ д":"";
-    rows.push({no:o.no||"?",name:((o.fn||"")+" "+(o.ln||"")).trim(),mt:o.mt||"",dur,inst,tot,st});
+    rows.push({id,no:o.no||"?",name:((o.fn||"")+" "+(o.ln||"")).trim(),mt:o.mt||"",dur,inst,tot,st});
   });
   return rows.sort((x,y)=>String(x.no).localeCompare(String(y.no),"ru",{numeric:true}));
 }
@@ -1241,7 +1252,7 @@ function msPaint(){
   ${mrows.map(r=>`<tr><td>${esc(r.n)}</td><td>${r.days}${r.instDays?` <span class="mstt">+${r.instDays} уст.</span>`:""}</td><td>${msAvg(r.ins)}</td><td>${msAvg(r.outs)}</td><td>${msFmtH(r.ms)}</td><td>${r.stages}</td><td>${r.inst}</td><td class="${r.forgot?"fg":""}">${r.forgot}</td></tr>`).join("")||'<tr><td colspan="8">Нет данных за этот месяц</td></tr>'}</table>
   ${fg.filter(x=>!x.has).length?`<h3>Забыли отметить уход</h3><table><tr><th>Мастер</th><th>День</th><th>Время ухода</th><th></th></tr>${fg.filter(x=>!x.has).map(({e})=>`<tr><td>${esc(msName(e.m))}</td><td>${esc(e.d)}</td><td><input class="tm" type="time" data-ev="${e.id}"></td><td><button class="ok2" data-evs="${e.id}">Сохранить</button></td></tr>`).join("")}</table>`:""}
   <h3>Этапы заказов</h3><table><tr><th>Заказ</th><th>Материал</th><th>Этапы</th><th>Всего</th></tr>
-  ${orows.map(r=>`<tr><td>№${esc(r.no)} ${esc(r.name)}</td><td>${esc(r.mt)}</td><td>${msChips(r.st,true,[r.dur[0],r.dur[1],r.dur[2],r.dur[3],r.inst])}</td><td><b>${esc(r.tot)}</b></td></tr>`).join("")||'<tr><td colspan="4">Нет заказов с этапами за этот месяц</td></tr>'}</table>`;
+  ${orows.map(r=>`<tr><td>№${esc(r.no)} ${esc(r.name)}</td><td>${esc(r.mt)}</td><td>${msChips(r.st,true,[r.dur[0],r.dur[1],r.dur[2],r.dur[3],r.inst],r.id)}</td><td><b>${esc(r.tot)}</b></td></tr>`).join("")||'<tr><td colspan="4">Нет заказов с этапами за этот месяц</td></tr>'}</table>`;
   $("msBody").querySelectorAll("[data-evs]").forEach(b=>b.onclick=async()=>{
     const id=b.dataset.evs,v=$("msBody").querySelector('[data-ev="'+id+'"]').value;if(!v)return;
     const e=msEvs.find(x=>x.id===id);if(!e)return;

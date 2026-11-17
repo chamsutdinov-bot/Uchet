@@ -121,7 +121,7 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height
 .mt .plus{background:linear-gradient(180deg,rgba(76,196,110,.95),rgba(31,157,69,.9));color:#fff;font-size:24px;border-color:rgba(255,255,255,.4)}
 .mt.add{border-style:dashed}.mt.add input{font-weight:500}
 </style>
-<script>var BUILD="20261117212231"</script>
+<script>var BUILD="20261117212431"</script>
 <script>
 try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null");}catch(e){}
 </script>
@@ -414,8 +414,9 @@ function showAdd(m){
 }
 function drawTails(){
   $("app").innerHTML=`<div class="top"><div><div class="cap">${esc((L.staff[V.m]||{}).n||"")}</div><h1>Не всё установлено</h1></div></div>
-  <div class="hint" style="font-size:clamp(16px,2vmax,24px)">${esc(ordName(V.o))}. Что осталось? Можно не писать.</div>
-  <textarea class="note" id="tn" placeholder="Например: не поставили мойку, нужна герметизация"></textarea>
+  <div class="hint" style="font-size:clamp(16px,2vmax,24px)">${esc(ordName(V.o))}. Что осталось?</div>
+  <div class="stp rs" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))"><button data-a="rs" data-t="Нет мойки">Нет мойки</button><button data-a="rs" data-t="Нет плинтуса">Нет плинтуса</button></div>
+  <textarea class="note" id="tn" placeholder="Причина: что не установлено"></textarea>
   <div class="bar"><button class="btn o" data-a="tailsgo">Отправить</button><button class="btn glass" data-a="mback">Отмена</button></div>`;
 }
 
@@ -447,11 +448,12 @@ function act(a,el){
   if(a==="conf"||a==="tailsgo"){
     const o=a==="conf"?el.dataset.o:V.o,full=a==="conf",note=a==="tailsgo"?($("tn").value||"").trim():"";
     const i=(L.stage[o]||{}).ins||{},conf={...(i.conf||{}),[m]:{ts:Date.now(),full,note}};
-    const outs=Object.keys(i.out||{}),all=outs.every(x=>conf[x]);
-    const status=all?(outs.every(x=>conf[x].full)?"done":"tails"):"out";
+    const outs=Object.keys(i.out||{}),ks=outs.length?outs:Object.keys(conf),all=ks.every(x=>conf[x]);
+    const status=all?(ks.every(x=>conf[x].full)?"done":"tails"):"out";
     push(evOp({m,ty:"inst_conf",o,full,note}),{k:"ms",o,m:{ins:{conf:{[m]:{ts:Date.now(),full,note}},status}}});
     V={n:"master",m};draw();return;
   }
+  if(a==="rs"){const t=$("tn"),x=el.dataset.t;if(!t.value.includes(x))t.value=(t.value.trim()?t.value.trim()+", ":"")+x;return}
   if(a==="tails"){V={n:"tails",m,o:el.dataset.o};draw();return}
   if(a==="start"){const o=V.o,t=Date.now();push(evOp({m,ty:"start",o}),{k:"ms",o,m:{start:{ts:t,m}}});return}
   if(a==="stage"){const o=V.o,k=el.dataset.k,t=Date.now();
