@@ -52,6 +52,11 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height
 .card .tx{flex-grow:1;min-width:0}
 .card .tx b{font-size:clamp(17px,2.1vmax,26px);font-weight:600}
 .card .tx div{font-size:clamp(13px,1.6vmax,19px);color:#a69f95;margin-top:3px}
+.stp{display:flex;gap:10px;flex:1 1 100%;flex-wrap:wrap}
+.stp button{flex:1 1 0;min-width:120px;padding:14px 12px;border-radius:16px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);color:#a69f95;font-weight:700;font-size:clamp(16px,1.9vmax,24px);font-family:inherit;cursor:pointer}.card .tx{flex:1 1 180px}
+.stp button.d{background:linear-gradient(180deg,rgba(76,196,110,.4),rgba(31,157,69,.28));border-color:rgba(76,196,110,.6);color:#c9f5d6}
+.stp button.c{border:2px solid #d6a36a;background:rgba(214,163,106,.18);color:#f1ece5}
+.stp button:disabled{cursor:default}
 .chip{padding:10px 20px;border-radius:999px;font-weight:700;font-size:clamp(14px,1.7vmax,21px);background:rgba(214,163,106,.25);color:#d6a36a;white-space:nowrap}
 .chip.n{background:rgba(255,255,255,.12);color:#a69f95}.chip.ok{background:rgba(76,196,110,.25);color:#7fe39c}.chip.bl{background:rgba(64,170,255,.22);color:#6fbaff}.chip.or{background:rgba(255,159,28,.25);color:#ffb84d}
 .srch{width:100%;padding:16px 20px;border-radius:16px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.08);color:#f1ece5;font-size:clamp(16px,2vmax,24px);-webkit-user-select:text;user-select:text}
@@ -94,8 +99,13 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height
   .row .btn{padding:12px 16px;font-size:17px}
   h1{font-size:30px}
 }
+#app.home{height:100vh;height:100dvh;min-height:0;box-sizing:border-box;overflow:hidden}
+#app.home .grid{min-height:0;grid-auto-rows:unset;flex:1 1 0;overflow:hidden}
+#app.home .tile{min-height:0;padding:6px;gap:4px;border-radius:min(28px,12%)}
+#app.home .tile b{font-size:var(--tb,28px);line-height:1.1}
+#app.home .tile small{font-size:var(--ts,14px)}
 </style>
-<script>var BUILD="20261117205150"</script>
+<script>var BUILD="20261117205546"</script>
 <script>
 try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null");}catch(e){}
 </script>
@@ -262,6 +272,7 @@ function autoClose(){
 let V={n:"home"},tapT=null,tapM=null,q="";
 const draw=()=>{if(!key())return;
   const a=$("app"),f=document.activeElement;if(f&&(f.tagName==="INPUT"||f.tagName==="TEXTAREA")&&V.n!=="home")return;
+  $("app").className=V.n==="home"?"home":"";
   ({home:drawHome,master:drawMaster,order:drawOrder,inst:drawInst,tails:drawTails})[V.n]();
 };
 const days=["воскресенье","понедельник","вторник","среда","четверг","пятница","суббота"],mon=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
@@ -279,7 +290,29 @@ function drawHome(){
   $("app").innerHTML=`<div class="top"><div><div class="cap">Цех · Interstone</div><h1>Нажмите своё имя</h1></div><div class="clock"><b id="clk">${hm(Date.now())}</b><span>${dateStr()}</span></div></div>
   <div class="grid">${tiles||'<div class="hint">Мастеров пока нет. Нажмите ⚙︎ внизу справа и добавьте имена.</div>'}</div>
   <div class="hint">Один раз — «Я пришёл», плитка станет зелёной. Два раза подряд — ваша страница с заказами.</div>`;
+  fitGrid();
 }
+const SHORT={rasp:"Распил",skl:"Склейка",obr:"Обработка",gotov:"Готово"};
+function cardHtml(o){
+  const st=L.stage[o]||{},sg=st.stages||{},cur=curStage(o);
+  const strip=STAGES.map(([k])=>{
+    if(sg[k])return`<button class="d" disabled>✓ ${SHORT[k]}</button>`;
+    if(k===cur)return`<button class="c" data-a="qstage" data-o="${o}" data-k="${k}">${k==="rasp"&&!st.start?"▶ Начать распил":"☐ "+SHORT[k]}</button>`;
+    return`<button disabled>☐ ${SHORT[k]}</button>`;
+  }).join("");
+  return`<div class="card glass"><div class="no">${esc((L.orders[o]||{}).no||"")}</div><div class="tx"><b>${esc(ordName(o).replace(/^№[^·]*· /,""))}</b><div>${esc(ordSub(o))}</div></div><button class="btn glass" data-a="open" data-o="${o}">Подробнее</button><div class="stp">${strip}</div></div>`;
+}
+function fitGrid(){
+  const g=document.querySelector("#app.home .grid");if(!g)return;const t=g.querySelectorAll(".tile"),n=t.length;if(!n)return;
+  const cs=getComputedStyle(g),gx=parseFloat(cs.columnGap)||0,gy=parseFloat(cs.rowGap)||0,W=g.clientWidth,H=g.clientHeight;if(!W||!H)return;
+  let best=null;
+  for(let c=1;c<=n;c++){const r=Math.ceil(n/c),tw=(W-gx*(c-1))/c,th=(H-gy*(r-1))/r,sc=Math.min(tw/1.25,th);if(!best||sc>best.sc)best={c,r,tw,th,sc}}
+  g.style.gridTemplateColumns="repeat("+best.c+",minmax(0,1fr))";g.style.gridTemplateRows="repeat("+best.r+",minmax(0,1fr))";
+  const tb=Math.max(14,Math.min(46,best.th*.3,best.tw*.15));
+  g.style.setProperty("--tb",tb+"px");g.style.setProperty("--ts",Math.max(10,Math.min(22,tb*.48))+"px");
+  document.getElementById("app").style.setProperty("--tb",tb+"px");document.getElementById("app").style.setProperty("--ts",Math.max(10,Math.min(22,tb*.48))+"px");
+}
+addEventListener("resize",fitGrid);addEventListener("orientationchange",()=>setTimeout(fitGrid,200));
 function openMaster(id){V={n:"master",m:id};q="";draw();window.scrollTo(0,0)}
 function drawMaster(){
   const id=V.m,m=L.staff[id];if(!m){V={n:"home"};return draw()}
@@ -290,13 +323,13 @@ function drawMaster(){
   <div class="bar"><button class="btn glass" data-a="home">← Назад</button>${s.s==="in"?'<button class="btn r" data-a="leave">Я ушёл</button>':s.s!=="inst"?'<button class="btn g" data-a="arrive">Я пришёл</button>':""}<button class="btn b" data-a="inst">Установка</button></div></div>
   ${pc.length?`<div class="list">${pc.map(o=>`<div class="card glass" style="border-color:#ff9f1c"><div class="no">${esc((L.orders[o]||{}).no||"")}</div><div class="tx"><b>Подтвердите установку · ${esc(ordName(o))}</b><div>Вы выезжали на этот заказ. Всё установлено?</div></div><button class="btn g" data-a="conf" data-o="${o}">Установлено</button><button class="btn o" data-a="tails" data-o="${o}">Не полностью</button></div>`).join("")}</div>`:""}
   <input class="srch" id="q" placeholder="Поиск заказа: номер, имя, телефон" value="${esc(q)}">
-  <div class="list">${list.map(o=>{const[t,c]=statusOf(o);return`<div class="card glass"><div class="no">${esc((L.orders[o]||{}).no||"")}</div><div class="tx"><b>${esc(ordName(o).replace(/^№[^·]*· /,""))}</b><div>${esc(ordSub(o))}</div></div><span class="chip ${c}">${t}</span><button class="btn a" data-a="open" data-o="${o}">Открыть</button></div>`}).join("")||'<div class="hint">Заказов не найдено</div>'}</div>`;
+  <div class="list">${list.map(cardHtml).join("")||'<div class="hint">Заказов не найдено</div>'}</div>`;
   const qi=$("q");qi.oninput=()=>{q=qi.value;clearTimeout(qi._t);qi._t=setTimeout(()=>{const pos=qi.selectionStart;drawMasterList();},250)};
 }
 function drawMasterList(){ // перерисовка списка без потери фокуса
   const keep=document.activeElement===$("q");const c=$("app").querySelectorAll(".list");const l=c[c.length-1];if(!l)return;
   const list=openOrders(q).slice(0,40);
-  l.innerHTML=list.map(o=>{const[t,cl]=statusOf(o);return`<div class="card glass"><div class="no">${esc((L.orders[o]||{}).no||"")}</div><div class="tx"><b>${esc(ordName(o).replace(/^№[^·]*· /,""))}</b><div>${esc(ordSub(o))}</div></div><span class="chip ${cl}">${t}</span><button class="btn a" data-a="open" data-o="${o}">Открыть</button></div>`}).join("")||'<div class="hint">Заказов не найдено</div>';
+  l.innerHTML=list.map(cardHtml).join("")||'<div class="hint">Заказов не найдено</div>';
 }
 function drawOrder(){
   const o=V.o,st=L.stage[o]||{},s=st.stages||{},cur=curStage(o);
@@ -374,6 +407,10 @@ function act(a,el){
   if(a==="stage"){const o=V.o,k=el.dataset.k,t=Date.now();
     push(evOp({m,ty:"stage",o,st:k}),{k:"ms",o,m:{stages:{[k]:{ts:t,m}}}});
     if(k==="gotov"){V={n:"master",m};draw()}return}
+  if(a==="qstage"){const o=el.dataset.o,k=el.dataset.k,t=Date.now(),st=L.stage[o]||{};
+    if(k==="rasp"&&!st.start)push(evOp({m,ty:"start",o}),{k:"ms",o,m:{start:{ts:t,m}}});
+    else push(evOp({m,ty:"stage",o,st:k}),{k:"ms",o,m:{stages:{[k]:{ts:t,m}}}});
+    return}
   if(a==="undo"){const o=V.o,k=el.dataset.k;push(evOp({m,ty:"unstage",o,st:k}),{k:"ms",o,m:{stages:{[k]:null}}});return}
 }
 document.addEventListener("click",e=>{
