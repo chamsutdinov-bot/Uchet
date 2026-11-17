@@ -107,7 +107,7 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height
 #app.home .tile small{font-size:var(--ts,14px)}
 #ptr{position:fixed;top:calc(env(safe-area-inset-top,0px) + 6px);left:50%;transform:translate(-50%,-70px);opacity:0;background:rgba(40,36,32,.95);color:#f1ece5;border:1px solid rgba(255,255,255,.22);border-radius:22px;padding:9px 18px;font-size:16px;font-weight:600;z-index:60;pointer-events:none;transition:transform .2s,opacity .2s;box-shadow:0 6px 18px rgba(0,0,0,.4);white-space:nowrap}
 </style>
-<script>var BUILD="20261117210039"</script>
+<script>var BUILD="20261117210411"</script>
 <script>
 try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null");}catch(e){}
 </script>
@@ -246,6 +246,9 @@ function statusOf(o){
 }
 const ordName=o=>{const x=L.orders[o]||{};return"№"+(x.no||"?")+" · "+((x.fn||"")+" "+(x.ln||"")).trim()};
 const ordSub=o=>{const x=L.orders[o]||{};return[x.mt,x.sl?x.sl+" слэб.":"",x.date].filter(Boolean).join(" · ")};
+function workOrders(){ // заказы, добавленные мастерами и ещё не закрытые установкой
+  return Object.keys(L.stage).filter(o=>L.orders[o]&&!((L.stage[o].ins||{}).status==="done")).sort((a,b)=>(((L.stage[b]||{}).added||{}).ts||0)-(((L.stage[a]||{}).added||{}).ts||0));
+}
 function openOrders(q){
   const lim=Date.now()-120*864e5;q=(q||"").toLowerCase().trim();
   return Object.keys(L.orders).filter(o=>{
@@ -273,10 +276,10 @@ function autoClose(){
 
 /* ===== экраны ===== */
 let V={n:"home"},tapT=null,tapM=null,q="";
-const draw=()=>{if(!key())return;
+const draw=()=>{if(!key())return;if(V.n==="add"&&V.e&&document.activeElement&&document.activeElement.id==="an")document.activeElement.blur();
   const a=$("app"),f=document.activeElement;if(f&&(f.tagName==="INPUT"||f.tagName==="TEXTAREA")&&V.n!=="home")return;
   $("app").className=V.n==="home"?"home":"";
-  ({home:drawHome,master:drawMaster,order:drawOrder,inst:drawInst,tails:drawTails})[V.n]();
+  ({home:drawHome,master:drawMaster,order:drawOrder,inst:drawInst,tails:drawTails,add:drawAdd})[V.n]();
 };
 const days=["воскресенье","понедельник","вторник","среда","четверг","пятница","суббота"],mon=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
 const dateStr=()=>{const d=new Date();return days[d.getDay()]+", "+d.getDate()+" "+mon[d.getMonth()]};
@@ -328,13 +331,12 @@ function drawMaster(){
   const id=V.m,m=L.staff[id];if(!m){V={n:"home"};return draw()}
   const today=ymd(Date.now()),s=dayState(id,today),pc=pendingConf(id);
   const stTxt=s.s==="in"?"Пришёл в "+hm(s.ts):s.s==="out"?(s.auto?"Забыл отметить уход":"Ушёл в "+hm(s.ts)):s.s==="inst"?"Сегодня установка":"Приход не отмечен";
-  const list=openOrders(q).slice(0,40).sort((a,b)=>pc.includes(b)-pc.includes(a));
+  const list=workOrders().sort((a,b)=>pc.includes(b)-pc.includes(a));
   $("app").innerHTML=`<div class="top"><div><div class="cap">${esc(stTxt)}</div><h1>${esc(m.n)}</h1></div>
   <div class="bar"><button class="btn glass" data-a="home">← Назад</button>${s.s==="in"?'<button class="btn r" data-a="leave">Я ушёл</button>':s.s!=="inst"?'<button class="btn g" data-a="arrive">Я пришёл</button>':""}</div></div>
   ${false?`<div class="list">${pc.map(o=>`<div class="card glass" style="border-color:#ff9f1c"><div class="no">${esc((L.orders[o]||{}).no||"")}</div><div class="tx"><b>Подтвердите установку · ${esc(ordName(o))}</b><div>Вы выезжали на этот заказ. Всё установлено?</div></div><button class="btn g" data-a="conf" data-o="${o}">Установлено</button><button class="btn o" data-a="tails" data-o="${o}">Не полностью</button></div>`).join("")}</div>`:""}
-  <input class="srch" id="q" placeholder="Поиск заказа: номер, имя, телефон" value="${esc(q)}">
-  <div class="list">${list.map(cardHtml).join("")||'<div class="hint">Заказов не найдено</div>'}</div>`;
-  const qi=$("q");qi.oninput=()=>{q=qi.value;clearTimeout(qi._t);qi._t=setTimeout(()=>{const pos=qi.selectionStart;drawMasterList();},250)};
+  <button class="btn a" data-a="addo" style="align-self:flex-start">＋ Добавить заказ</button>
+  <div class="list">${list.map(cardHtml).join("")||'<div class="hint">Заказов пока нет. Нажмите «Добавить заказ» и впишите номер, который прислал менеджер.</div>'}</div>`;
 }
 function drawMasterList(){ const pc=pendingConf(V.m); // перерисовка списка без потери фокуса
   const keep=document.activeElement===$("q");const c=$("app").querySelectorAll(".list");const l=c[c.length-1];if(!l)return;
@@ -374,6 +376,15 @@ function drawInst(){
   const qi=$("q");qi.oninput=()=>{q=qi.value;clearTimeout(qi._t);qi._t=setTimeout(()=>{$("il").innerHTML=instList(openOrders(q).slice(0,40),V.sel)},250)};
 }
 const instList=(list,sel)=>list.map(o=>`<div class="card glass sel ${sel[o]?"on":""}" data-a="pick" data-o="${o}"><div class="ck">${sel[o]?"✓":""}</div><div class="no">${esc((L.orders[o]||{}).no||"")}</div><div class="tx"><b>${esc(ordName(o).replace(/^№[^·]*· /,""))}</b><div>${esc(ordSub(o))}</div></div><span class="chip ${statusOf(o)[1]}">${statusOf(o)[0]}</span></div>`).join("")||'<div class="hint">Заказов не найдено</div>';
+function drawAdd(){
+  $("app").innerHTML=`<div class="top"><div><div class="cap">${esc((L.staff[V.m]||{}).n||"")}</div><h1>Добавить заказ</h1></div><button class="btn glass" data-a="mback">← Назад</button></div>
+  <div class="hint" style="font-size:clamp(15px,1.9vmax,22px)">Впишите номер заказа, который прислал менеджер.</div>
+  <input class="srch" id="an" inputmode="numeric" autocomplete="off" placeholder="Номер заказа" value="${esc(V.v||"")}">
+  <div class="err" id="ae" style="color:#f2a39e;min-height:1.4em;font-size:clamp(15px,1.9vmax,22px)">${esc(V.e||"")}</div>
+  <button class="btn g" data-a="addgo" style="align-self:flex-start">Добавить</button>`;
+  const i=$("an");i.oninput=()=>{V.v=i.value};i.onkeydown=e=>{if(e.key==="Enter")act("addgo")};
+  setTimeout(()=>i.focus(),50);
+}
 function drawTails(){
   $("app").innerHTML=`<div class="top"><div><div class="cap">${esc((L.staff[V.m]||{}).n||"")}</div><h1>Не всё установлено</h1></div></div>
   <div class="hint" style="font-size:clamp(16px,2vmax,24px)">${esc(ordName(V.o))}. Что осталось? Можно не писать.</div>
@@ -390,6 +401,15 @@ function act(a,el){
   if(a==="leave"){push(evOp({m,ty:"out"}));V={n:"home"};draw();return}
   if(a==="open"){V={n:"order",m,o:el.dataset.o};draw();return}
   if(a==="back"){V={n:"master",m};draw();return}
+  if(a==="addo"){V={n:"add",m,v:"",e:""};draw();return}
+  if(a==="addgo"){
+    const v=($("an").value||"").trim().toLowerCase();V.v=v;
+    if(!v){V.e="Впишите номер заказа";return draw()}
+    const o=Object.keys(L.orders).find(k=>String(L.orders[k].no||"").trim().toLowerCase()===v.replace(/^№\s*/,""));
+    if(!o){V.e="Заказ с номером «"+v+"» не найден";return draw()}
+    if(!L.stage[o])push({k:"ms",o,m:{added:{ts:Date.now(),m}}});
+    V={n:"master",m};draw();return;
+  }
   if(a==="instone"){V.sel={[el.dataset.o]:1};return act("instgo",el)}
   if(a==="inst"){V={n:"inst",m,sel:{}};q="";draw();return}
   if(a==="pick"){const o=el.dataset.o;if(V.sel[o])delete V.sel[o];else V.sel[o]=1;draw();return}
