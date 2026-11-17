@@ -20,25 +20,25 @@ body{background:#141312;color:#f1ece5;font-family:-apple-system,system-ui,"Segoe
 button{font:inherit;color:inherit;border:0;cursor:pointer;touch-action:manipulation}
 #app{min-height:100%;padding:3vh 4vw;display:flex;flex-direction:column;gap:2.4vh}
 .top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px}
-.cap{font-size:clamp(14px,1.8vw,22px);color:#a69f95;letter-spacing:.04em;text-transform:uppercase}
-h1{margin:4px 0 0;font-size:clamp(28px,4.6vw,56px);font-weight:700;line-height:1.1}
+.cap{font-size:clamp(14px,1.8vmax,22px);color:#a69f95;letter-spacing:.04em;text-transform:uppercase}
+h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height:1.1}
 .clock{text-align:right}
-.clock b{display:block;font-size:clamp(40px,7vw,84px);line-height:1;color:#d6a36a}
-.clock span{font-size:clamp(14px,1.8vw,22px);color:#a69f95}
+.clock b{display:block;font-size:clamp(40px,7vmax,84px);line-height:1;color:#d6a36a}
+.clock span{font-size:clamp(14px,1.8vmax,22px);color:#a69f95}
 .glass{border:1px solid rgba(255,255,255,.28);background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.05));box-shadow:inset 0 2px 0 rgba(255,255,255,.35),0 10px 24px -10px rgba(0,0,0,.6);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:2vh 2vw;flex-grow:1;align-content:stretch}
 .tile{border-radius:28px;min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px;text-align:center;position:relative;transition:transform .12s}
 .tile:active{transform:scale(.97)}
-.tile b{font-size:clamp(28px,3.6vw,46px)}
-.tile small{font-size:clamp(14px,1.7vw,22px);color:#a69f95}
+.tile b{font-size:clamp(28px,3.6vmax,46px)}
+.tile small{font-size:clamp(14px,1.7vmax,22px);color:#a69f95}
 .tile.in{background:linear-gradient(180deg,rgba(76,196,110,.92),rgba(31,157,69,.88));border-color:rgba(255,255,255,.45);box-shadow:inset 0 2px 0 rgba(255,255,255,.5),0 14px 30px -10px rgba(0,0,0,.6)}
 .tile.in small,.tile.in b{color:#fff}
 .tile.inst{background:linear-gradient(180deg,rgba(64,170,255,.92),rgba(30,90,235,.88));border-color:rgba(255,255,255,.45)}
 .tile.inst small,.tile.inst b{color:#fff}
 .tile.out{opacity:.62}
-.badge{position:absolute;top:12px;right:14px;background:#ff9f1c;color:#1b1713;font-weight:700;border-radius:999px;padding:6px 14px;font-size:clamp(13px,1.5vw,19px)}
-.hint{font-size:clamp(13px,1.6vw,20px);color:#a69f95}
-.btn{padding:14px 26px;border-radius:18px;font-weight:700;font-size:clamp(16px,2vw,24px)}
+.badge{position:absolute;top:12px;right:14px;background:#ff9f1c;color:#1b1713;font-weight:700;border-radius:999px;padding:6px 14px;font-size:clamp(13px,1.5vmax,19px)}
+.hint{font-size:clamp(13px,1.6vmax,20px);color:#a69f95}
+.btn{padding:14px 26px;border-radius:18px;font-weight:700;font-size:clamp(16px,2vmax,24px)}
 .btn.g{background:linear-gradient(180deg,rgba(76,196,110,.95),rgba(31,157,69,.9));color:#fff;border:1px solid rgba(255,255,255,.4);box-shadow:inset 0 2px 0 rgba(255,255,255,.45)}
 .btn.r{background:linear-gradient(180deg,rgba(255,110,90,.95),rgba(205,50,40,.9));color:#fff;border:1px solid rgba(255,255,255,.4);box-shadow:inset 0 2px 0 rgba(255,255,255,.45)}
 .btn.b{background:linear-gradient(180deg,rgba(64,170,255,.95),rgba(30,90,235,.9));color:#fff;border:1px solid rgba(255,255,255,.4);box-shadow:inset 0 2px 0 rgba(255,255,255,.45)}
@@ -48,23 +48,23 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vw,56px);font-weight:700;line-height:1
 .bar{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
 .list{display:flex;flex-direction:column;gap:14px}
 .card{display:flex;align-items:center;gap:20px;padding:18px 24px;border-radius:22px}
-.card .no{font-size:clamp(24px,3vw,38px);font-weight:700;min-width:110px}
+.card .no{font-size:clamp(24px,3vmax,38px);font-weight:700;min-width:110px}
 .card .tx{flex-grow:1;min-width:0}
-.card .tx b{font-size:clamp(17px,2.1vw,26px);font-weight:600}
-.card .tx div{font-size:clamp(13px,1.6vw,19px);color:#a69f95;margin-top:3px}
-.chip{padding:10px 20px;border-radius:999px;font-weight:700;font-size:clamp(14px,1.7vw,21px);background:rgba(214,163,106,.25);color:#d6a36a;white-space:nowrap}
+.card .tx b{font-size:clamp(17px,2.1vmax,26px);font-weight:600}
+.card .tx div{font-size:clamp(13px,1.6vmax,19px);color:#a69f95;margin-top:3px}
+.chip{padding:10px 20px;border-radius:999px;font-weight:700;font-size:clamp(14px,1.7vmax,21px);background:rgba(214,163,106,.25);color:#d6a36a;white-space:nowrap}
 .chip.n{background:rgba(255,255,255,.12);color:#a69f95}.chip.ok{background:rgba(76,196,110,.25);color:#7fe39c}.chip.bl{background:rgba(64,170,255,.22);color:#6fbaff}.chip.or{background:rgba(255,159,28,.25);color:#ffb84d}
-.srch{width:100%;padding:16px 20px;border-radius:16px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.08);color:#f1ece5;font-size:clamp(16px,2vw,24px);-webkit-user-select:text;user-select:text}
+.srch{width:100%;padding:16px 20px;border-radius:16px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.08);color:#f1ece5;font-size:clamp(16px,2vmax,24px);-webkit-user-select:text;user-select:text}
 .row{display:flex;align-items:center;gap:20px;padding:18px 26px;border-radius:22px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05)}
 .row.done{background:linear-gradient(180deg,rgba(76,196,110,.33),rgba(31,157,69,.22));border-color:rgba(76,196,110,.6)}
 .row.cur{background:linear-gradient(180deg,rgba(214,163,106,.3),rgba(214,163,106,.14));border:2px solid #d6a36a}
 .row .ck{width:48px;height:48px;border-radius:13px;border:3px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700;flex-shrink:0}
 .row.done .ck{background:#2fbf61;border-color:#2fbf61;color:#fff}.row.cur .ck{border-color:#d6a36a}
-.row .nm{flex-grow:1;font-size:clamp(20px,2.6vw,32px);font-weight:700}
-.row .nm small{display:block;font-size:clamp(13px,1.5vw,19px);font-weight:500;color:#a69f95;margin-top:3px}
+.row .nm{flex-grow:1;font-size:clamp(20px,2.6vmax,32px);font-weight:700}
+.row .nm small{display:block;font-size:clamp(13px,1.5vmax,19px);font-weight:500;color:#a69f95;margin-top:3px}
 .row.done .nm small{color:#9fe3b3}
 .mut{color:#a69f95}
-.note{width:100%;min-height:120px;padding:16px;border-radius:16px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.08);color:#f1ece5;font:inherit;font-size:clamp(16px,2vw,24px);-webkit-user-select:text;user-select:text}
+.note{width:100%;min-height:120px;padding:16px;border-radius:16px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.08);color:#f1ece5;font:inherit;font-size:clamp(16px,2vmax,24px);-webkit-user-select:text;user-select:text}
 .sync{position:fixed;left:14px;bottom:calc(10px + env(safe-area-inset-bottom));font-size:14px;color:#a69f95;pointer-events:none}
 .gear{position:fixed;right:10px;bottom:calc(6px + env(safe-area-inset-bottom));background:none;font-size:22px;opacity:.35;padding:10px}
 .ov{position:fixed;inset:0;background:#141312;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px}
@@ -76,9 +76,24 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vw,56px);font-weight:700;line-height:1
 .sel{display:flex;align-items:center;gap:18px}
 .sel .ck{width:44px;height:44px;border-radius:12px;border:3px solid rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;flex-shrink:0}
 .card.on{border-color:#6fbaff;background:rgba(64,170,255,.18)}.card.on .ck{background:#3b9bff;border-color:#3b9bff;color:#fff}
-.sm{font-size:clamp(14px,1.7vw,21px)}
+.sm{font-size:clamp(14px,1.7vmax,21px)}
 .st{display:flex;gap:16px;align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.1)}
 .st input{flex:1;padding:12px 14px;font-size:20px;text-align:left}
+.grid{grid-auto-rows:minmax(110px,1fr)}
+@media (max-width:600px){
+  #app{padding:2vh 14px}
+  .top{flex-wrap:wrap;align-items:flex-start}
+  .clock b{font-size:44px}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tile{min-height:110px;padding:10px}.tile b{font-size:24px}.tile small{font-size:14px}.badge{font-size:12px;padding:4px 10px;top:8px;right:8px}
+  .bar{width:100%}.bar .btn{flex:1 1 auto;padding:12px 14px;font-size:17px}
+  .card{flex-wrap:wrap;gap:8px 12px;padding:14px 16px}
+  .card .no{min-width:0;font-size:24px}.card .tx{flex:1 1 55%}.card .tx b{font-size:18px}.card .tx div{font-size:13px}
+  .card .btn{flex:1 1 auto;padding:12px 14px;font-size:17px}.chip{font-size:14px;padding:8px 14px}
+  .row{padding:14px 16px;gap:12px}.row .ck{width:38px;height:38px;font-size:24px}.row .nm{font-size:20px}.row .nm small{font-size:13px}
+  .row .btn{padding:12px 16px;font-size:17px}
+  h1{font-size:30px}
+}
 </style>
 <script>
 try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null");}catch(e){}
@@ -302,7 +317,7 @@ function drawOrder(){
     cls=i.status==="done"?"done":"cur";
   }
   $("app").innerHTML=`<div class="top"><div><div class="cap">${esc(ordSub(V.o))}</div><h1>${esc(ordName(V.o))}</h1></div><button class="btn glass" data-a="back">← К заказам</button></div>
-  <div class="hint" style="font-size:clamp(15px,1.9vw,22px)">Нажмите «Готово», когда этап закончен. Время запишется само, менеджер увидит сразу.</div>
+  <div class="hint" style="font-size:clamp(15px,1.9vmax,22px)">Нажмите «Готово», когда этап закончен. Время запишется само, менеджер увидит сразу.</div>
   <div class="list">${rows}<div class="row ${cls}"><div class="ck">${i&&i.status==="done"?"✓":""}</div><div class="nm">Установка у клиента<small style="${i&&i.status==="done"?"":"color:#a69f95"}">${insTxt}</small></div></div></div>`;
 }
 function drawInst(){
@@ -317,7 +332,7 @@ function drawInst(){
 const instList=(list,sel)=>list.map(o=>`<div class="card glass sel ${sel[o]?"on":""}" data-a="pick" data-o="${o}"><div class="ck">${sel[o]?"✓":""}</div><div class="no">${esc((L.orders[o]||{}).no||"")}</div><div class="tx"><b>${esc(ordName(o).replace(/^№[^·]*· /,""))}</b><div>${esc(ordSub(o))}</div></div><span class="chip ${statusOf(o)[1]}">${statusOf(o)[0]}</span></div>`).join("")||'<div class="hint">Заказов не найдено</div>';
 function drawTails(){
   $("app").innerHTML=`<div class="top"><div><div class="cap">${esc((L.staff[V.m]||{}).n||"")}</div><h1>Не всё установлено</h1></div></div>
-  <div class="hint" style="font-size:clamp(16px,2vw,24px)">${esc(ordName(V.o))}. Что осталось? Можно не писать.</div>
+  <div class="hint" style="font-size:clamp(16px,2vmax,24px)">${esc(ordName(V.o))}. Что осталось? Можно не писать.</div>
   <textarea class="note" id="tn" placeholder="Например: не поставили мойку, нужна герметизация"></textarea>
   <div class="bar"><button class="btn o" data-a="tailsgo">Отправить</button><button class="btn glass" data-a="mback">Отмена</button></div>`;
 }
