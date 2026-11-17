@@ -3,7 +3,7 @@
 <head>
 <meta name="color-scheme" content="dark">
 <style>html{background:#141312}</style>
-<script>var BUILD="20261117214350";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){};try{Object.keys(localStorage).filter(function(k){return k.indexOf("bio_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){};try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null")||{bg:"#1c1a18",dark:true},_r=document.documentElement,_d=!!_t.dark;if(_t.bg){_r.style.setProperty("--bg",_t.bg);_r.style.backgroundColor=_t.bg;_r.dataset.theme=_d?"dark":"light";if(_d){var _v={"--surface":"#25221f","--text":"#f1ece5","--muted":"#a69f95","--line":"#3d3833","--accent":"#d6a36a","--accent-t":"#1b1713","--danger":"#f2a39e"};for(var _k in _v)_r.style.setProperty(_k,_v[_k]);_r.style.setProperty("--logo-f","none")}}if(_t.photo==="none"&&!_t.pn)delete _t.photo;if(_t.photo==="none")_r.style.setProperty("--bgimg","none");else if(_t.photo)_r.style.setProperty("--bgimg","url(\""+_t.photo+"\")");if(_t.font)_r.style.setProperty("--font",_t.font)}catch(e){}</script>
+<script>var BUILD="20261117214941";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){};try{Object.keys(localStorage).filter(function(k){return k.indexOf("bio_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){};try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null")||{bg:"#1c1a18",dark:true},_r=document.documentElement,_d=!!_t.dark;if(_t.bg){_r.style.setProperty("--bg",_t.bg);_r.style.backgroundColor=_t.bg;_r.dataset.theme=_d?"dark":"light";if(_d){var _v={"--surface":"#25221f","--text":"#f1ece5","--muted":"#a69f95","--line":"#3d3833","--accent":"#d6a36a","--accent-t":"#1b1713","--danger":"#f2a39e"};for(var _k in _v)_r.style.setProperty(_k,_v[_k]);_r.style.setProperty("--logo-f","none")}}if(_t.photo==="none"&&!_t.pn)delete _t.photo;if(_t.photo==="none")_r.style.setProperty("--bgimg","none");else if(_t.photo)_r.style.setProperty("--bgimg","url(\""+_t.photo+"\")");if(_t.font)_r.style.setProperty("--font",_t.font)}catch(e){}</script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -839,7 +839,7 @@ $("wipeGo").onclick=async()=>{
 };
 $("bLogout").onclick=()=>{try{localStorage.removeItem(W.key)}catch(e){}location.reload()};
 $("bFiles").onclick=()=>$("mF").classList.add("on");
-function applyRole(){isAdmin=canAdmin&&mode!=="manager";$("bDedupe").style.display=isAdmin?"":"none";$("bLogout").style.display=(typeof GH_REPO!=="undefined"&&GH_REPO&&SRV)?"":"none";$("bWipe").style.display=isAdmin?"":"none";$("bKalc").style.display="none";$("bFin").style.display=W.fin?"flex":"none";$("bMst").style.display=W.fin?"flex":"none";$("kGear").style.display=(isAdmin||LOCAL)?"flex":"none";render()}
+function applyRole(){isAdmin=canAdmin&&mode!=="manager";$("bDedupe").style.display=isAdmin?"":"none";$("bLogout").style.display=(typeof GH_REPO!=="undefined"&&GH_REPO&&SRV)?"":"none";$("bWipe").style.display=isAdmin?"":"none";$("bKalc").style.display="none";$("bFin").style.display=W.fin?"flex":"none";$("bMst").style.display=W.fin?"flex":"none";newFeat();$("kGear").style.display=(isAdmin||LOCAL)?"flex":"none";render()}
 [$("mF")].forEach(m=>m.onclick=e=>{if(e.target===m)m.classList.remove("on")});
 $("bFclose").onclick=()=>$("mF").classList.remove("on");
 $("fFile").onchange=e=>{const f=e.target.files[0];e.target.value="";if(f)importFile(f)};
@@ -1169,6 +1169,19 @@ function msStates(st){
   return a;
 }
 const msChips=(st,big,dur,id)=>`<div class="chips${big?" big":""}">${msStates(st).map((c,n)=>`<b class="${c}"${c==="or"&&id?` data-mr="${esc(id)}" style="cursor:pointer"`:""}>${MS_LBL[n]}${dur&&dur[n]?`<small>${esc(dur[n])}</small>`:""}</b>`).join("")}</div>`;
+function newFeat(){
+  if(!W.fin||document.getElementById("nfCeh"))return;
+  try{if(localStorage.getItem("nf_ceh1"))return}catch(e){}
+  setTimeout(()=>{
+    if(document.getElementById("nfCeh"))return;
+    try{if(localStorage.getItem("nf_ceh1"))return}catch(e){}
+    const d=document.createElement("div");d.id="nfCeh";
+    d.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:90";
+    d.innerHTML=`<div style="background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:20px;padding:24px 20px 20px;width:min(92vw,380px);text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)"><div style="width:64px;height:64px;margin:0 auto 12px;border-radius:18px;background:var(--bg);border:1px solid var(--line);display:flex;align-items:center;justify-content:center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.4"/><path d="M16.5 14.2c2.6.2 4.5 2.4 4.5 5.1"/></svg></div><div style="font-size:20px;font-weight:700;margin-bottom:8px">Попробуйте нашу новую функцию</div><div style="font-size:15px;color:var(--muted);line-height:1.4">В приложении появился раздел «Мастера» — значок с двумя людьми вверху. Загляните, посмотрите и оцените.</div><button id="nfCehOk" style="margin-top:18px;width:100%;padding:14px 0;font-size:17px;font-weight:700;border-radius:14px">ОК</button></div>`;
+    d.querySelector("#nfCehOk").onclick=()=>{try{localStorage.setItem("nf_ceh1","1")}catch(e){}d.remove()};
+    document.body.appendChild(d);
+  },700);
+}
 function msReason(id){
   msAlias();const st=mstg[id]||{},i=st.ins||{},o=orders.find(x=>x.id===id)||{no:st.no};
   const list=Object.entries(i.conf||{}).filter(([m,c])=>!c.full);
