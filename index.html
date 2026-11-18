@@ -3,7 +3,7 @@
 <head>
 <meta name="color-scheme" content="dark">
 <style>html{background:#141312}</style>
-<script>var BUILD="20261118080844";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){};try{Object.keys(localStorage).filter(function(k){return k.indexOf("bio_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){};try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null")||{bg:"#1c1a18",dark:true},_r=document.documentElement,_d=!!_t.dark;if(_t.bg){_r.style.setProperty("--bg",_t.bg);_r.style.backgroundColor=_t.bg;_r.dataset.theme=_d?"dark":"light";if(_d){var _v={"--surface":"#25221f","--text":"#f1ece5","--muted":"#a69f95","--line":"#3d3833","--accent":"#d6a36a","--accent-t":"#1b1713","--danger":"#f2a39e"};for(var _k in _v)_r.style.setProperty(_k,_v[_k]);_r.style.setProperty("--logo-f","none")}}if(_t.photo==="none"&&!_t.pn)delete _t.photo;if(_t.photo==="none")_r.style.setProperty("--bgimg","none");else if(_t.photo)_r.style.setProperty("--bgimg","url(\""+_t.photo+"\")");if(_t.font)_r.style.setProperty("--font",_t.font)}catch(e){}</script>
+<script>var BUILD="20261118081312";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){};try{Object.keys(localStorage).filter(function(k){return k.indexOf("bio_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){};try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null")||{bg:"#1c1a18",dark:true},_r=document.documentElement,_d=!!_t.dark;if(_t.bg){_r.style.setProperty("--bg",_t.bg);_r.style.backgroundColor=_t.bg;_r.dataset.theme=_d?"dark":"light";if(_d){var _v={"--surface":"#25221f","--text":"#f1ece5","--muted":"#a69f95","--line":"#3d3833","--accent":"#d6a36a","--accent-t":"#1b1713","--danger":"#f2a39e"};for(var _k in _v)_r.style.setProperty(_k,_v[_k]);_r.style.setProperty("--logo-f","none")}}if(_t.photo==="none"&&!_t.pn)delete _t.photo;if(_t.photo==="none")_r.style.setProperty("--bgimg","none");else if(_t.photo)_r.style.setProperty("--bgimg","url(\""+_t.photo+"\")");if(_t.font)_r.style.setProperty("--font",_t.font)}catch(e){}</script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -435,7 +435,7 @@ function remoteDb(){
    Данные лежат в закрытом репозитории GH_REPO (папка data/). Доступ даёт «ключ доступа» (токен), его вводят один раз на устройстве. */
 const WS={
   interstone:{n:"Interstone",repo:"chamsutdinov-bot/uchet-data",key:"uchet_gh",acc:"access.json",pw:"d17f25ecfbcc7857f7bebea469308be0b2580943e96d13a3ad98a13675c4bfc2",fin:1},
-  liderstone:{n:"Liderstone",repo:"chamsutdinov-bot/liderstone-data",key:"uchet_gh_l",acc:"access-liderstone.json",pw:"cc399d73903f06ee694032ab0538f05634ff7e1ce5e8e50ac330a871484f34cf",fin:0}
+  liderstone:{n:"Liderstone",repo:"chamsutdinov-bot/liderstone-data",key:"uchet_gh_l",acc:"access-liderstone.json",pw:"cc399d73903f06ee694032ab0538f05634ff7e1ce5e8e50ac330a871484f34cf",fin:0,mst:1}
 };
 const LOGO_L="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjEuNSAtNjYuNiAzNjkuNyA3MS40Ij48cGF0aCBkPSJNOS4xOTYyODkwNjI1IC02Mi41NjgzNTkzNzVINS41MDA5NzY1NjI1VjAuMEg5LjE5NjI4OTA2MjVaTTIzLjE5ODI0MjE4NzUgMC4wSDI2Ljg5MzU1NDY4NzVWLTQ0LjM0Mzc1SDIzLjE5ODI0MjE4NzVaTTI1LjA0NTg5ODQzNzUgLTU0LjkyNTc4MTI1QzI2LjY4MzU5Mzc1IC01NC45MjU3ODEyNSAyNy45ODUzNTE1NjI1IC01Ni4yMjc1MzkwNjI1IDI3Ljk4NTM1MTU2MjUgLTU3Ljg2NTIzNDM3NUMyNy45ODUzNTE1NjI1IC01OS41MDI5Mjk2ODc1IDI2LjY4MzU5Mzc1IC02MC44MDQ2ODc1IDI1LjA0NTg5ODQzNzUgLTYwLjgwNDY4NzVDMjMuNDA4MjAzMTI1IC02MC44MDQ2ODc1IDIyLjEwNjQ0NTMxMjUgLTU5LjUwMjkyOTY4NzUgMjIuMTA2NDQ1MzEyNSAtNTcuODY1MjM0Mzc1QzIyLjEwNjQ0NTMxMjUgLTU2LjIyNzUzOTA2MjUgMjMuNDA4MjAzMTI1IC01NC45MjU3ODEyNSAyNS4wNDU4OTg0Mzc1IC01NC45MjU3ODEyNVpNNTcuNjUwMzkwNjI1IDAuNzEzODY3MTg3NUM2NS4yMDg5ODQzNzUgMC43MTM4NjcxODc1IDcxLjQyMzgyODEyNSAtMy42OTUzMTI1IDczLjczMzM5ODQzNzUgLTEwLjA3ODEyNUg3My43NzUzOTA2MjVWMC4wSDc3LjM4NjcxODc1Vi02Mi41NjgzNTkzNzVINzMuNzMzMzk4NDM3NVYtMzQuMTM5NjQ4NDM3NUg3My42NDk0MTQwNjI1QzcxLjYzMzc4OTA2MjUgLTQwLjUyMjQ2MDkzNzUgNjUuMjA4OTg0Mzc1IC00NS4wNTc2MTcxODc1IDU3LjY1MDM5MDYyNSAtNDUuMDU3NjE3MTg3NUM0Ni40ODA0Njg3NSAtNDUuMDU3NjE3MTg3NSAzOC4yNSAtMzUuOTAzMzIwMzEyNSAzOC4yNSAtMjIuMTcxODc1QzM4LjI1IC04LjM1NjQ0NTMxMjUgNDYuMzk2NDg0Mzc1IDAuNzEzODY3MTg3NSA1Ny42NTAzOTA2MjUgMC43MTM4NjcxODc1Wk01OC4wMjgzMjAzMTI1IC0yLjY4NzVDNDguODMyMDMxMjUgLTIuNjg3NSA0MS45NDUzMTI1IC05Ljk5NDE0MDYyNSA0MS45NDUzMTI1IC0yMi4xNzE4NzVDNDEuOTQ1MzEyNSAtMzQuMzQ5NjA5Mzc1IDQ4LjgzMjAzMTI1IC00MS42NTYyNSA1OC4wMjgzMjAzMTI1IC00MS42NTYyNUM2Ny42MDI1MzkwNjI1IC00MS42NTYyNSA3My45MDEzNjcxODc1IC0zNC4wOTc2NTYyNSA3My45MDEzNjcxODc1IC0yMi4xNzE4NzVDNzMuOTAxMzY3MTg3NSAtMTAuMjQ2MDkzNzUgNjcuNjAyNTM5MDYyNSAtMi42ODc1IDU4LjAyODMyMDMxMjUgLTIuNjg3NVpNMTA4LjYwNTQ2ODc1IDAuNzk3ODUxNTYyNUMxMTcuNTkxNzk2ODc1IDAuNzk3ODUxNTYyNSAxMjUuMjM0Mzc1IC00LjgyOTEwMTU2MjUgMTI3LjE2NjAxNTYyNSAtMTMuMjY5NTMxMjVIMTIzLjQyODcxMDkzNzVDMTIxLjcwNzAzMTI1IC02Ljg0NDcyNjU2MjUgMTE1LjcwMjE0ODQzNzUgLTIuNjQ1NTA3ODEyNSAxMDguNjA1NDY4NzUgLTIuNjQ1NTA3ODEyNUM5OC45NDcyNjU2MjUgLTIuNjQ1NTA3ODEyNSA5Mi41MjI0NjA5Mzc1IC0xMC40MTQwNjI1IDkyLjM5NjQ4NDM3NSAtMjEuNUgxMjcuOTIxODc1Vi0yMi44MDE3NTc4MTI1QzEyNy45MjE4NzUgLTM1LjY1MTM2NzE4NzUgMTIwLjExMTMyODEyNSAtNDUuMTQxNjAxNTYyNSAxMDguNDM3NSAtNDUuMTQxNjAxNTYyNUM5Ni44NDc2NTYyNSAtNDUuMTQxNjAxNTYyNSA4OC43NDMxNjQwNjI1IC0zNS40NDE0MDYyNSA4OC43NDMxNjQwNjI1IC0yMi4xMjk4ODI4MTI1Qzg4Ljc0MzE2NDA2MjUgLTguODYwMzUxNTYyNSA5Ni41OTU3MDMxMjUgMC43OTc4NTE1NjI1IDEwOC42MDU0Njg3NSAwLjc5Nzg1MTU2MjVaTTkyLjQzODQ3NjU2MjUgLTI0LjgxNzM4MjgxMjVDOTMuMTUyMzQzNzUgLTM0Ljg5NTUwNzgxMjUgOTkuNTM1MTU2MjUgLTQxLjY5ODI0MjE4NzUgMTA4LjQzNzUgLTQxLjY5ODI0MjE4NzVDMTE3LjI5Nzg1MTU2MjUgLTQxLjY5ODI0MjE4NzUgMTIzLjg0ODYzMjgxMjUgLTM0LjgxMTUyMzQzNzUgMTI0LjIyNjU2MjUgLTI0LjgxNzM4MjgxMjVaTTEzOS4xMTAzNTE1NjI1IDAuMEgxNDIuODA1NjY0MDYyNVYtMjguMTM0NzY1NjI1QzE0Mi44MDU2NjQwNjI1IC0zNi4xMTMyODEyNSAxNDguMjIyNjU2MjUgLTQxLjE1MjM0Mzc1IDE1NS4zNjEzMjgxMjUgLTQxLjE1MjM0Mzc1QzE1Ni4zNjkxNDA2MjUgLTQxLjE1MjM0Mzc1IDE1Ny4wODMwMDc4MTI1IC00MS4wMjYzNjcxODc1IDE1Ny41MDI5Mjk2ODc1IC00MC45ODQzNzVWLTQ0LjYzNzY5NTMxMjVDMTU2Ljk1NzAzMTI1IC00NC42Nzk2ODc1IDE1Ni41NzkxMDE1NjI1IC00NC43MjE2Nzk2ODc1IDE1NS44MjMyNDIxODc1IC00NC43MjE2Nzk2ODc1QzE0OS42OTIzODI4MTI1IC00NC43MjE2Nzk2ODc1IDE0NC43NzkyOTY4NzUgLTQxLjUzMDI3MzQzNzUgMTQyLjc2MzY3MTg3NSAtMzYuNDkxMjEwOTM3NUgxNDIuNjc5Njg3NVYtNDQuMzQzNzVIMTM5LjExMDM1MTU2MjVaTTE4MC43MDExNzE4NzUgMC43MTM4NjcxODc1QzE5MC4zNTkzNzUgMC43MTM4NjcxODc1IDE5Ni44NjgxNjQwNjI1IC00LjM2NzE4NzUgMTk2Ljg2ODE2NDA2MjUgLTEyLjIxOTcyNjU2MjVDMTk2Ljg2ODE2NDA2MjUgLTE4LjI2NjYwMTU2MjUgMTkyLjk2Mjg5MDYyNSAtMjEuMTY0MDYyNSAxODUuMzIwMzEyNSAtMjIuOTI3NzM0Mzc1TDE3Ny43NjE3MTg3NSAtMjQuNjkxNDA2MjVDMTcyLjAwODc4OTA2MjUgLTI2LjAzNTE1NjI1IDE2OC44MTczODI4MTI1IC0yOC4xNzY3NTc4MTI1IDE2OC44MTczODI4MTI1IC0zMi41NDM5NDUzMTI1QzE2OC44MTczODI4MTI1IC0zOC4wMDI5Mjk2ODc1IDE3My40Nzg1MTU2MjUgLTQxLjc0MDIzNDM3NSAxODAuNTc1MTk1MzEyNSAtNDEuNzQwMjM0Mzc1QzE4Ny43OTc4NTE1NjI1IC00MS43NDAyMzQzNzUgMTkxLjk1NTA3ODEyNSAtMzcuODM0OTYwOTM3NSAxOTIuNTAwOTc2NTYyNSAtMzEuMDc0MjE4NzVIMTk2LjExMjMwNDY4NzVDMTk1LjYwODM5ODQzNzUgLTM5Ljg1MDU4NTkzNzUgMTg5LjY0NTUwNzgxMjUgLTQ1LjA1NzYxNzE4NzUgMTgwLjU3NTE5NTMxMjUgLTQ1LjA1NzYxNzE4NzVDMTcxLjQyMDg5ODQzNzUgLTQ1LjA1NzYxNzE4NzUgMTY1LjE2NDA2MjUgLTQwLjAxODU1NDY4NzUgMTY1LjE2NDA2MjUgLTMyLjU0Mzk0NTMxMjVDMTY1LjE2NDA2MjUgLTI2LjQ5NzA3MDMxMjUgMTY5LjIzNzMwNDY4NzUgLTIzLjIyMTY3OTY4NzUgMTc3LjA0Nzg1MTU2MjUgLTIxLjM3NDAyMzQzNzVMMTg0LjU2NDQ1MzEyNSAtMTkuNjEwMzUxNTYyNUMxOTAuMDIzNDM3NSAtMTguMzA4NTkzNzUgMTkzLjE3Mjg1MTU2MjUgLTE2LjUwMjkyOTY4NzUgMTkzLjE3Mjg1MTU2MjUgLTEyLjEzNTc0MjE4NzVDMTkzLjE3Mjg1MTU2MjUgLTYuNTA4Nzg5MDYyNSAxODguMzg1NzQyMTg3NSAtMi42MDM1MTU2MjUgMTgwLjY1OTE3OTY4NzUgLTIuNjAzNTE1NjI1QzE3Mi44MDY2NDA2MjUgLTIuNjAzNTE1NjI1IDE2OC4yNzE0ODQzNzUgLTYuNjc2NzU3ODEyNSAxNjcuODUxNTYyNSAtMTMuMjY5NTMxMjVIMTY0LjI0MDIzNDM3NUMxNjQuNjYwMTU2MjUgLTQuNDkzMTY0MDYyNSAxNzEuMDQyOTY4NzUgMC43MTM4NjcxODc1IDE4MC43MDExNzE4NzUgMC43MTM4NjcxODc1Wk0yMjMuNzE5NzI2NTYyNSAtNDQuMzQzNzVIMjE0LjIyOTQ5MjE4NzVWLTU2LjQzNzVIMjEwLjU3NjE3MTg3NVYtNDQuMzQzNzVIMjAzLjM1MzUxNTYyNVYtNDEuMDI2MzY3MTg3NUgyMTAuNTc2MTcxODc1Vi04Ljk0NDMzNTkzNzVDMjEwLjU3NjE3MTg3NSAtMy4wNjU0Mjk2ODc1IDIxMy43Njc1NzgxMjUgMC4wIDIxOS45NDA0Mjk2ODc1IDAuMEgyMjMuNzE5NzI2NTYyNVYtMy4zMTczODI4MTI1SDIyMC4xOTIzODI4MTI1QzIxNi4wMzUxNTYyNSAtMy4zMTczODI4MTI1IDIxNC4yMjk0OTIxODc1IC01LjA4MTA1NDY4NzUgMjE0LjIyOTQ5MjE4NzUgLTkuMTk2Mjg5MDYyNVYtNDEuMDI2MzY3MTg3NUgyMjMuNzE5NzI2NTYyNVpNMjUwLjk5MTIxMDkzNzUgMC43OTc4NTE1NjI1QzI2Mi43MDcwMzEyNSAwLjc5Nzg1MTU2MjUgMjcwLjc2OTUzMTI1IC04LjgxODM1OTM3NSAyNzAuNzY5NTMxMjUgLTIyLjEyOTg4MjgxMjVDMjcwLjc2OTUzMTI1IC0zNS40ODMzOTg0Mzc1IDI2Mi43MDcwMzEyNSAtNDUuMTQxNjAxNTYyNSAyNTAuOTkxMjEwOTM3NSAtNDUuMTQxNjAxNTYyNUMyMzkuMjMzMzk4NDM3NSAtNDUuMTQxNjAxNTYyNSAyMzEuMTI4OTA2MjUgLTM1LjQ4MzM5ODQzNzUgMjMxLjEyODkwNjI1IC0yMi4xMjk4ODI4MTI1QzIzMS4xMjg5MDYyNSAtOC44MTgzNTkzNzUgMjM5LjIzMzM5ODQzNzUgMC43OTc4NTE1NjI1IDI1MC45OTEyMTA5Mzc1IDAuNzk3ODUxNTYyNVpNMjUwLjk5MTIxMDkzNzUgLTIuNjQ1NTA3ODEyNUMyNDEuMzMzMDA3ODEyNSAtMi42NDU1MDc4MTI1IDIzNC44MjQyMTg3NSAtMTAuNjI0MDIzNDM3NSAyMzQuODI0MjE4NzUgLTIyLjEyOTg4MjgxMjVDMjM0LjgyNDIxODc1IC0zMy43MTk3MjY1NjI1IDI0MS4zMzMwMDc4MTI1IC00MS42OTgyNDIxODc1IDI1MC45OTEyMTA5Mzc1IC00MS42OTgyNDIxODc1QzI2MC42MDc0MjE4NzUgLTQxLjY5ODI0MjE4NzUgMjY3LjA3NDIxODc1IC0zMy42Nzc3MzQzNzUgMjY3LjA3NDIxODc1IC0yMi4xMjk4ODI4MTI1QzI2Ny4wNzQyMTg3NSAtMTAuNjI0MDIzNDM3NSAyNjAuNjA3NDIxODc1IC0yLjY0NTUwNzgxMjUgMjUwLjk5MTIxMDkzNzUgLTIuNjQ1NTA3ODEyNVpNMjg1LjgyMTI4OTA2MjUgLTI3LjkyNDgwNDY4NzVDMjg1LjgyMTI4OTA2MjUgLTM2LjM2NTIzNDM3NSAyOTEuOTEwMTU2MjUgLTQxLjYxNDI1NzgxMjUgMjk5Ljg4ODY3MTg3NSAtNDEuNjE0MjU3ODEyNUMzMDcuNzgzMjAzMTI1IC00MS42MTQyNTc4MTI1IDMxMy4wMzIyMjY1NjI1IC0zNi41MzMyMDMxMjUgMzEzLjAzMjIyNjU2MjUgLTI4LjI2MDc0MjE4NzVWMC4wSDMxNi42ODU1NDY4NzVWLTI4LjQyODcxMDkzNzVDMzE2LjY4NTU0Njg3NSAtMzguODAwNzgxMjUgMzA5LjcxNDg0Mzc1IC00NS4wNTc2MTcxODc1IDMwMC4zNTA1ODU5Mzc1IC00NS4wNTc2MTcxODc1QzI5NC4wOTM3NSAtNDUuMDU3NjE3MTg3NSAyODguNTUwNzgxMjUgLTQyLjI4NjEzMjgxMjUgMjg1LjczNzMwNDY4NzUgLTM2LjU3NTE5NTMxMjVWLTQ0LjM0Mzc1SDI4Mi4xMjU5NzY1NjI1VjAuMEgyODUuODIxMjg5MDYyNVpNMzQ3LjkwNDI5Njg3NSAwLjc5Nzg1MTU2MjVDMzU2Ljg5MDYyNSAwLjc5Nzg1MTU2MjUgMzY0LjUzMzIwMzEyNSAtNC44MjkxMDE1NjI1IDM2Ni40NjQ4NDM3NSAtMTMuMjY5NTMxMjVIMzYyLjcyNzUzOTA2MjVDMzYxLjAwNTg1OTM3NSAtNi44NDQ3MjY1NjI1IDM1NS4wMDA5NzY1NjI1IC0yLjY0NTUwNzgxMjUgMzQ3LjkwNDI5Njg3NSAtMi42NDU1MDc4MTI1QzMzOC4yNDYwOTM3NSAtMi42NDU1MDc4MTI1IDMzMS44MjEyODkwNjI1IC0xMC40MTQwNjI1IDMzMS42OTUzMTI1IC0yMS41SDM2Ny4yMjA3MDMxMjVWLTIyLjgwMTc1NzgxMjVDMzY3LjIyMDcwMzEyNSAtMzUuNjUxMzY3MTg3NSAzNTkuNDEwMTU2MjUgLTQ1LjE0MTYwMTU2MjUgMzQ3LjczNjMyODEyNSAtNDUuMTQxNjAxNTYyNUMzMzYuMTQ2NDg0Mzc1IC00NS4xNDE2MDE1NjI1IDMyOC4wNDE5OTIxODc1IC0zNS40NDE0MDYyNSAzMjguMDQxOTkyMTg3NSAtMjIuMTI5ODgyODEyNUMzMjguMDQxOTkyMTg3NSAtOC44NjAzNTE1NjI1IDMzNS44OTQ1MzEyNSAwLjc5Nzg1MTU2MjUgMzQ3LjkwNDI5Njg3NSAwLjc5Nzg1MTU2MjVaTTMzMS43MzczMDQ2ODc1IC0yNC44MTczODI4MTI1QzMzMi40NTExNzE4NzUgLTM0Ljg5NTUwNzgxMjUgMzM4LjgzMzk4NDM3NSAtNDEuNjk4MjQyMTg3NSAzNDcuNzM2MzI4MTI1IC00MS42OTgyNDIxODc1QzM1Ni41OTY2Nzk2ODc1IC00MS42OTgyNDIxODc1IDM2My4xNDc0NjA5Mzc1IC0zNC44MTE1MjM0Mzc1IDM2My41MjUzOTA2MjUgLTI0LjgxNzM4MjgxMjVaIiBmaWxsPSIjZmZmIi8+PC9zdmc+";
 let W=WS.interstone,GH_REPO=W.repo;
@@ -489,21 +489,21 @@ function needKey(msg){
   });
   return _keyWait;
 }
-function ghDb(){
-  const API="https://api.github.com/repos/"+GH_REPO+"/contents/data/";
+function ghDb(R,KF){
+  const API="https://api.github.com/repos/"+(R||GH_REPO)+"/contents/data/";
   const b64e=s=>btoa(unescape(encodeURIComponent(s)));
   const b64d=s=>decodeURIComponent(escape(atob(s.replace(/\s/g,""))));
-  const H=(extra)=>({Authorization:"Bearer "+ghKey(),Accept:"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28",...(extra||{})});
+  const H=(extra)=>({Authorization:"Bearer "+(KF||ghKey)(),Accept:"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28",...(extra||{})});
   const cache={},subs={},timers={},queue={};
   // загрузка коллекции: {obj, sha, etag}; changed=false если не изменилась (304)
   async function load(c,force){
-    await needKey();
+    if(!KF)await needKey();
     const cur=cache[c];
     const h=H();if(cur&&cur.etag&&!force)h["If-None-Match"]=cur.etag;
     const r=await fetch(API+encodeURIComponent(c)+".json",{headers:h,cache:"no-store"});
     if(r.status===304)return{...cur,changed:false};
     if(r.status===404){const e={obj:{},sha:null,etag:null};const ch=!cur||Object.keys(cur.obj).length>0;cache[c]=e;return{...e,changed:ch}}
-    if(r.status===401){try{localStorage.removeItem(W.key)}catch(e){}await needKey("Войдите снова");return load(c,true)}
+    if(r.status===401){if(KF)throw new Error("HTTP 401");try{localStorage.removeItem(W.key)}catch(e){}await needKey("Войдите снова");return load(c,true)}
     if(!r.ok)throw new Error("HTTP "+r.status);
     const j=await r.json();let txt;
     if(j.content&&j.encoding==="base64")txt=b64d(j.content);
@@ -842,7 +842,7 @@ $("wipeGo").onclick=async()=>{
 };
 $("bLogout").onclick=()=>{try{localStorage.removeItem(W.key)}catch(e){}location.reload()};
 $("bFiles").onclick=()=>$("mF").classList.add("on");
-function applyRole(){isAdmin=canAdmin&&mode!=="manager";$("bDedupe").style.display=isAdmin?"":"none";$("bLogout").style.display=(typeof GH_REPO!=="undefined"&&GH_REPO&&SRV)?"":"none";$("bWipe").style.display=isAdmin?"":"none";$("bKalc").style.display="none";$("bFin").style.display=W.fin?"flex":"none";$("bMst").style.display=W.fin?"flex":"none";newFeat();$("kGear").style.display=(isAdmin||LOCAL)?"flex":"none";render()}
+function applyRole(){isAdmin=canAdmin&&mode!=="manager";$("bDedupe").style.display=isAdmin?"":"none";$("bLogout").style.display=(typeof GH_REPO!=="undefined"&&GH_REPO&&SRV)?"":"none";$("bWipe").style.display=isAdmin?"":"none";$("bKalc").style.display="none";$("bFin").style.display=W.fin?"flex":"none";$("bMst").style.display=(W.fin||W.mst)?"flex":"none";newFeat();$("kGear").style.display=(isAdmin||LOCAL)?"flex":"none";render()}
 [$("mF")].forEach(m=>m.onclick=e=>{if(e.target===m)m.classList.remove("on")});
 $("bFclose").onclick=()=>$("mF").classList.remove("on");
 $("fFile").onchange=e=>{const f=e.target.files[0];e.target.value="";if(f)importFile(f)};
@@ -1143,12 +1143,14 @@ $("bWs").onclick=()=>location.reload();
 function chooseWs(){return new Promise(res=>{const m=$("mWs");let RS=null;try{RS=JSON.parse(sessionStorage.getItem("uchet_resume")||"null");sessionStorage.removeItem("uchet_resume")}catch(e){}if(RS&&!WS[RS.w])RS=null;if(RS)m.classList.remove("on");else m.classList.add("on");m.onclick=async e=>{const b=e.target.closest&&e.target.closest("[data-w]");if(!b)return;const w=WS[b.dataset.w];m.classList.remove("on");if(!(RS||await askPw(w.pw))){m.classList.add("on");return}_entryPw=RS?RS.pw:$("pwIn").value.trim();try{document.activeElement&&document.activeElement.blur()}catch(e){}const fixTop=()=>{scrollTo(0,0);document.documentElement.scrollTop=0;document.body.scrollTop=0};fixTop();[80,300,700,1200].forEach(t=>setTimeout(fixTop,t));W=w;GH_REPO=W.repo;PWH=W.pw;document.title=W.n;$("wsN").textContent=W.n;if(W===WS.liderstone){const lg=document.querySelector("img.logo");if(lg){lg.alt="Liderstone";lg.src=LOGO_L;lg.style.height="38px"}}res()};if(RS)m.onclick({target:{closest:()=>({dataset:{w:RS.w}})}})})}
 
 /* ===== МАСТЕРА: стадии заказов и отчёт (данные пишет планшет master.html) ===== */
-let mstg={},mstaffD={},msLog={},msEvs=[];
+let mstg={},mstaffD={},msLog={},msEvs=[],mdb=null,mOrd=[];
+const msO=()=>W.fin?orders:mOrd,msDb=()=>W.fin?db:mdb;
+async function msKey(){let t="";try{t=localStorage.getItem("uchet_gh_lm")||""}catch(e){}if(t)return t;try{const A=await (await fetch(W.acc,{cache:"no-store"})).json();if(A.m)t=await openAccess(A.m,_entryPw)||""}catch(e){}if(t)try{localStorage.setItem("uchet_gh_lm",t)}catch(e){}return t}
 const MS_ST=[["rasp","Распил"],["skl","Склейка"],["obr","Обработка"],["gotov","Готово к выдаче"]];
 const msName=id=>(mstaffD[id]||{}).n||"—";
 const msT=t=>{const d=new Date(t);return d.getDate()+" "+["янв","фев","мар","апр","мая","июн","июл","авг","сен","окт","ноя","дек"][d.getMonth()]+", "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")};
 function msAlias(){ // заказ, добавленный мастером по номеру до появления в учёте, привязываем по номеру
-  Object.keys(mstg).forEach(k=>{if(k[0]!=="n"||orders.some(x=>x.id===k))return;const no=k.slice(1),o=orders.find(x=>String(x.no||"").trim().toLowerCase()===no.toLowerCase());if(o){if(!mstg[o.id])mstg[o.id]=mstg[k];delete mstg[k]}});
+  Object.keys(mstg).forEach(k=>{if(k[0]!=="n"||msO().some(x=>x.id===k))return;const no=k.slice(1),o=msO().find(x=>String(x.no||"").trim().toLowerCase()===no.toLowerCase());if(o){if(!mstg[o.id])mstg[o.id]=mstg[k];delete mstg[k]}});
 }
 function msInfo(id){
   msAlias();const st=mstg[id];if(!st)return null;
@@ -1186,7 +1188,7 @@ function newFeat(){
   },700);
 }
 function msReason(id){
-  msAlias();const st=mstg[id]||{},i=st.ins||{},o=orders.find(x=>x.id===id)||{no:st.no};
+  msAlias();const st=mstg[id]||{},i=st.ins||{},o=msO().find(x=>x.id===id)||{no:st.no};
   const list=Object.entries(i.conf||{}).filter(([m,c])=>!c.full);
   const old=document.getElementById("msRs");if(old)old.remove();
   const d=document.createElement("div");d.id="msRs";
@@ -1235,7 +1237,7 @@ function msOrdersRows(mon){
     Object.values(s).forEach(x=>ts.push(x.ts));if(st.start)ts.push(st.start.ts);
     if(i)Object.values(i.conf||{}).forEach(c=>ts.push(c.ts));
     if(!ts.some(t=>t>=a&&t<b))return;
-    const o=orders.find(x=>x.id===id)||{no:st.no};
+    const o=msO().find(x=>x.id===id)||{no:st.no};
     const st0=st.start?st.start.ts:null,seq=[st0,(s.rasp||{}).ts,(s.skl||{}).ts,(s.obr||{}).ts,(s.gotov||{}).ts];
     const dur=[];
     for(let k=1;k<5;k++)dur.push(seq[k]&&seq[k-1]?msDays(seq[k-1],seq[k])+" д":(seq[k]?"—":""));
@@ -1249,9 +1251,9 @@ function msOrdersRows(mon){
   return rows.sort((x,y)=>String(x.no).localeCompare(String(y.no),"ru",{numeric:true}));
 }
 async function msLoad(){
-  const mon=$("msMon").value;if(!mon||!db)return;
+  const mon=$("msMon").value;if(!mon||!msDb())return;
   const c="mlog_"+msYm(mon);
-  try{const r=await db.collection(c).get();msEvs=r.docs.map(d=>({id:d.id,...d.data()}))}catch(e){msEvs=[]}
+  try{const r=await msDb().collection(c).get();msEvs=r.docs.map(d=>({id:d.id,...d.data()}))}catch(e){msEvs=[]}
   msPaint();
 }
 function msPaint(){
@@ -1274,7 +1276,7 @@ function msPaint(){
     const e=msEvs.find(x=>x.id===id);if(!e)return;
     const [h,mi]=v.split(":").map(Number),t=new Date(e.d+"T00:00:00");t.setHours(h,mi,0,0);
     b.disabled=true;
-    try{await db.doc("mlog_"+msYm($("msMon").value)+"/"+id).update({ty:"out",ts:t.getTime(),edited:1});await msLoad()}catch(x){b.disabled=false}
+    try{await msDb().doc("mlog_"+msYm($("msMon").value)+"/"+id).update({ty:"out",ts:t.getTime(),edited:1});await msLoad()}catch(x){b.disabled=false}
   });
   msState.mrows=mrows;msState.orows=orows;
 }
@@ -1336,6 +1338,7 @@ addEventListener("popstate",()=>{
   db.collection("stones").onSnapshot(s=>{stones=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(a.name).localeCompare(String(b.name),"ru"));kFill()});
   db.doc("settings/calc").onSnapshot(s=>{if(s.exists){calcP={fig:0,cut:0,rad:0,joint:0,ledge:0,...s.data()};kPrFill();kCalcRun()}});
   if(W.fin){db.collection("mstage").onSnapshot(s=>{mstg={};s.docs.forEach(d=>mstg[d.id]=d.data());render()});db.collection("mstaff").onSnapshot(s=>{mstaffD={};s.docs.forEach(d=>mstaffD[d.id]=d.data());render()})}
+  else if(W.mst){msKey().then(t=>{if(!t)return;mdb=ghDb("chamsutdinov-bot/uchet-data",()=>t);mdb.collection("mstage").onSnapshot(s=>{mstg={};s.docs.forEach(d=>mstg[d.id]=d.data());if($("mMs").classList.contains("on"))msPaint()});mdb.collection("mstaff").onSnapshot(s=>{mstaffD={};s.docs.forEach(d=>mstaffD[d.id]=d.data());if($("mMs").classList.contains("on"))msPaint()});mdb.collection("orders").onSnapshot(s=>{mOrd=s.docs.map(d=>({id:d.id,...d.data()}))})})}
   db.collection("orders").onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>
