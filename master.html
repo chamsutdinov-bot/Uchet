@@ -127,7 +127,7 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height
 .mt .plus{background:linear-gradient(180deg,rgba(76,196,110,.95),rgba(31,157,69,.9));color:#fff;font-size:24px;border-color:rgba(255,255,255,.4)}
 .mt.add{border-style:dashed}.mt.add input{font-weight:500}
 </style>
-<script>var BUILD="20261119164736"</script>
+<script>var BUILD="20261119165120"</script>
 <script>
 try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null");}catch(e){}
 </script>
@@ -209,7 +209,7 @@ function rebuild(){
     else if(op.k==="st"){if(op.d===null)delete L.staff[op.id];else L.staff[op.id]=op.d}
     else if(op.k==="fd"){L.feed[op.id]={...(L.feed[op.id]||{}),...op.d}}
   }
-  for(const k in L.stage){if(!L.orders[k]&&L.stage[k].no)L.orders[k]={no:L.stage[k].no,fn:"",ln:"",v:1}}
+  for(const k in L.stage){if(!L.orders[k]&&L.stage[k].no)L.orders[k]={no:L.stage[k].no,fn:"",ln:"",mt:L.stage[k].mt||"",v:1}}
 }
 let flushing=false,netErr="";
 async function flush(){
@@ -420,6 +420,7 @@ function showEnv(sel){
   $("egive").onclick=()=>{if(!sel)return;
     const oid=e.oid,t=Date.now(),ops=[{k:"fd",id,d:{to:sel,at:t}}];
     if(oid&&L.orders[oid])ops.push({k:"ms",o:oid,m:{to:sel,...(L.stage[oid]?{}:{added:{ts:t,m:sel}})}});
+    else{const no=String(e.no||"").trim(),k=Object.keys(L.stage).find(x=>L.orders[x]&&String(L.orders[x].no||"").trim().toLowerCase()===no.toLowerCase())||"n"+no;if(no)ops.push({k:"ms",o:k,m:{to:sel,tk:null,...(L.stage[k]?{}:{added:{ts:t,m:sel},no,mt:e.mt||""})}})}
     push(...ops);
     if(pendFeed().length)showEnv();else{$("ov").innerHTML="";draw()}
   };

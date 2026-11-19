@@ -3,7 +3,7 @@
 <head>
 <meta name="color-scheme" content="dark">
 <style>html{background:#141312}</style>
-<script>var BUILD="20261119164736";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){};try{Object.keys(localStorage).filter(function(k){return k.indexOf("bio_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){};try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null")||{bg:"#1c1a18",dark:true},_r=document.documentElement,_d=!!_t.dark;if(_t.bg){_r.style.setProperty("--bg",_t.bg);_r.style.backgroundColor=_t.bg;_r.dataset.theme=_d?"dark":"light";if(_d){var _v={"--surface":"#25221f","--text":"#f1ece5","--muted":"#a69f95","--line":"#3d3833","--accent":"#d6a36a","--accent-t":"#1b1713","--danger":"#f2a39e"};for(var _k in _v)_r.style.setProperty(_k,_v[_k]);_r.style.setProperty("--logo-f","none")}}if(_t.photo==="none"&&!_t.pn)delete _t.photo;if(_t.photo==="none")_r.style.setProperty("--bgimg","none");else if(_t.photo)_r.style.setProperty("--bgimg","url(\""+_t.photo+"\")");if(_t.font)_r.style.setProperty("--font",_t.font)}catch(e){}</script>
+<script>var BUILD="20261119165120";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){};try{Object.keys(localStorage).filter(function(k){return k.indexOf("bio_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){};try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null")||{bg:"#1c1a18",dark:true},_r=document.documentElement,_d=!!_t.dark;if(_t.bg){_r.style.setProperty("--bg",_t.bg);_r.style.backgroundColor=_t.bg;_r.dataset.theme=_d?"dark":"light";if(_d){var _v={"--surface":"#25221f","--text":"#f1ece5","--muted":"#a69f95","--line":"#3d3833","--accent":"#d6a36a","--accent-t":"#1b1713","--danger":"#f2a39e"};for(var _k in _v)_r.style.setProperty(_k,_v[_k]);_r.style.setProperty("--logo-f","none")}}if(_t.photo==="none"&&!_t.pn)delete _t.photo;if(_t.photo==="none")_r.style.setProperty("--bgimg","none");else if(_t.photo)_r.style.setProperty("--bgimg","url(\""+_t.photo+"\")");if(_t.font)_r.style.setProperty("--font",_t.font)}catch(e){}</script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -706,7 +706,7 @@ async function save(){
   try{
     const prev=editId&&orders.find(x=>x.id===editId);let nid=editId;
     if(editId)await db.doc("orders/"+editId).update(d);else nid=(await db.collection("orders").add(d)).id;
-    if(d.zm&&!(prev&&prev.zs)&&W.fin)await sendZm({...(prev||{}),...d,id:nid});
+    if(d.zm&&!(prev&&prev.zs)&&(W.fin||W.mst))await sendZm({...(prev||{}),...d,id:nid});
     $("mO").classList.remove("on");
   }catch(e){alert("Не удалось сохранить: "+(e.message||e.code))}
 }
@@ -732,14 +732,14 @@ $("list").onclick=async e=>{
   if(b.dataset.ec){if(await askPw())openClient(b.dataset.ec);return}
   if(b.dataset.ac){openClient(null);return}
   if(b.dataset.e){if(await askPw())openForm(b.dataset.e);return}
-  if(b.dataset.t&&db){if(!(await askPw()))return;const o=orders.find(x=>x.id===b.dataset.t),k=b.dataset.k;if(o){o[k]=!o[k];render();try{await db.doc("orders/"+o.id).update({[k]:o[k]});if(k==="zm"&&o.zm&&!o.zs&&W.fin)await sendZm(o)}catch(x){o[k]=!o[k];render();try{await db.doc("orders/"+o.id).update({[k]:o[k]})}catch(y){}}}}
+  if(b.dataset.t&&db){if(!(await askPw()))return;const o=orders.find(x=>x.id===b.dataset.t),k=b.dataset.k;if(o){o[k]=!o[k];render();try{await db.doc("orders/"+o.id).update({[k]:o[k]});if(k==="zm"&&o.zm&&!o.zs&&(W.fin||W.mst))await sendZm(o)}catch(x){o[k]=!o[k];render();try{await db.doc("orders/"+o.id).update({[k]:o[k]})}catch(y){}}}}
   if(b.dataset.d&&isAdmin){if(!(await askPw()))return;try{await db.doc("orders/"+b.dataset.d).delete()}catch(x){}}
 };
 $("bAdd").onclick=()=>openForm(null);
 $("oSave").onclick=save;
 async function sendZm(o){
-  const t=Date.now();
-  await db.doc("mfeed/"+o.id).set({ts:t,oid:o.id,no:o.no||"",mt:o.mt||"",ad:o.ad||"",ph:o.ph||""});
+  const t=Date.now(),md=msDb();if(!md)throw new Error("нет связи с цехом");
+  await md.doc("mfeed/"+o.id).set({ts:t,oid:W.fin?o.id:"",no:o.no||"",mt:o.mt||"",ad:o.ad||"",ph:o.ph||""});
   await db.doc("orders/"+o.id).update({zs:t});o.zs=t;
 }$("oCancel").onclick=()=>$("mO").classList.remove("on");
 function readPhoto(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{let w=900,q=.62,out="";for(let t=0;t<6;t++){const sc=Math.min(1,w/im.width);const c=document.createElement("canvas");c.width=Math.round(im.width*sc);c.height=Math.round(im.height*sc);c.getContext("2d").drawImage(im,0,0,c.width,c.height);out=c.toDataURL("image/jpeg",q);if(out.length<180000)break;w=Math.round(w*.8);q=Math.max(.45,q-.05)}res(out)};im.onerror=rej;im.src=r.result};r.onerror=rej;r.readAsDataURL(f)})}
