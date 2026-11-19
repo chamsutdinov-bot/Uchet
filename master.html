@@ -127,7 +127,7 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height
 .mt .plus{background:linear-gradient(180deg,rgba(76,196,110,.95),rgba(31,157,69,.9));color:#fff;font-size:24px;border-color:rgba(255,255,255,.4)}
 .mt.add{border-style:dashed}.mt.add input{font-weight:500}
 </style>
-<script>var BUILD="20261119165120"</script>
+<script>var BUILD="20261119172126"</script>
 <script>
 try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null");}catch(e){}
 </script>
@@ -333,6 +333,8 @@ function instPills(o){
   const a=done?`<button class="d" disabled>✓ Установка</button>`:(out||(i&&i.status==="out"))?`<button class="i" ${out?"disabled":`data-a="instone" data-o="${o}"`}>${out?"На установке":"Установка"}</button>`:`<button data-a="instone" data-o="${o}">Установка</button>`;
   const b=done?`<button disabled>Частично завершён</button>`:tails?`<button class="p" disabled>Частично завершён</button>`:`<button data-a="tails" data-o="${o}">Частично завершён</button>`;
   const c=done?`<button class="d" disabled>✓ Завершён</button>`:`<button class="f" data-a="conf" data-o="${o}">Завершён</button>`;
+  const mine=!done&&i&&i.conf&&i.conf[V.m]&&i.conf[V.m].full&&i.status==="out";
+  if(mine)return`<button class="d" disabled>✓ Установка</button>`+b+`<button class="d" disabled>✓ Завершён · ждём остальных</button>`;
   return a+b+c;
 }
 function cardHtml(o){
@@ -484,7 +486,7 @@ function act(a,el){
     const outs=Object.keys(i.out||{}),ks=outs.length?outs:Object.keys(conf),all=ks.every(x=>conf[x]);
     const status=all?(ks.every(x=>conf[x].full)?"done":"tails"):"out";
     push(evOp({m,ty:"inst_conf",o,full,note}),{k:"ms",o,m:{ins:{conf:{[m]:{ts:Date.now(),full,note}},status}}});
-    V={n:"master",m};draw();return;
+    V=a==="conf"?{n:"home"}:{n:"master",m};draw();return;
   }
   if(a==="rs"){const t=$("tn"),x=el.dataset.t;if(!t.value.includes(x))t.value=(t.value.trim()?t.value.trim()+", ":"")+x;return}
   if(a==="tails"){V={n:"tails",m,o:el.dataset.o};draw();return}
