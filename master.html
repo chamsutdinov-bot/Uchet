@@ -127,7 +127,7 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height
 .mt .plus{background:linear-gradient(180deg,rgba(76,196,110,.95),rgba(31,157,69,.9));color:#fff;font-size:24px;border-color:rgba(255,255,255,.4)}
 .mt.add{border-style:dashed}.mt.add input{font-weight:500}
 </style>
-<script>var BUILD="20261119173104"</script>
+<script>var BUILD="20261119181613"</script>
 <script>
 try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null");}catch(e){}
 </script>
@@ -249,10 +249,11 @@ async function pull(){
 /* ===== вычисления ===== */
 const mEvents=(mid,d)=>Object.values(L.log).filter(e=>e.m===mid&&e.d===d).sort((a,b)=>a.ts-b.ts);
 function dayState(mid,d){
-  const ev=mEvents(mid,d).filter(e=>["in","out","autoout","inst_out"].includes(e.ty));
+  const ev=mEvents(mid,d).filter(e=>["in","out","autoout","inst_out","inst_conf"].includes(e.ty));
   const last=ev[ev.length-1];if(!last)return{s:"none"};
   if(last.ty==="in")return{s:"in",ts:last.ts};
   if(last.ty==="inst_out")return{s:"inst",ts:last.ts};
+  if(last.ty==="inst_conf")return{s:"idone",ts:last.ts};
   return{s:"out",ts:last.ts,auto:last.ty==="autoout"};
 }
 function pendingConf(mid){
@@ -318,6 +319,7 @@ function drawHome(){
     let cls="glass",sub="Нажмите — «Я пришёл»";
     if(s.s==="in"){cls="in";sub="Пришёл в "+hm(s.ts)}
     else if(s.s==="inst"){cls="inst";sub="На установке"}
+    else if(s.s==="idone"){cls="in";sub="Установка завершена в "+hm(s.ts)}
     else if(s.s==="out"){cls="glass out";sub=s.auto?"Забыл отметить уход":"Ушёл в "+hm(s.ts)}
     return`<button class="tile ${cls}" data-m="${id}">${pc?`<span class="badge">Подтвердить установку: ${pc}</span>`:""}${nw?`<span class="badge nwb">🆕 Новый заказ: ${nw}</span>`:""}<b>${esc(m.n)}</b><small>${sub}</small></button>`;
   }).join("");
@@ -362,10 +364,10 @@ function openMaster(id){V={n:"master",m:id};q="";draw();scrollTo(0,0)}
 function drawMaster(){
   const id=V.m,m=L.staff[id];if(!m){V={n:"home"};return draw()}
   const today=ymd(Date.now()),s=dayState(id,today),pc=pendingConf(id);
-  const stTxt=s.s==="in"?"Пришёл в "+hm(s.ts):s.s==="out"?(s.auto?"Забыл отметить уход":"Ушёл в "+hm(s.ts)):s.s==="inst"?"Сегодня установка":"Приход не отмечен";
+  const stTxt=s.s==="in"?"Пришёл в "+hm(s.ts):s.s==="out"?(s.auto?"Забыл отметить уход":"Ушёл в "+hm(s.ts)):s.s==="inst"?"Сегодня установка":s.s==="idone"?"Установка завершена в "+hm(s.ts):"Приход не отмечен";
   const nwL=newFor(id),list=workOrders().sort((a,b)=>(nwL.includes(b)-nwL.includes(a))||(pc.includes(b)-pc.includes(a)));
   $("app").innerHTML=`<div class="top"><div><div class="cap">${esc(stTxt)}</div><h1>${esc(m.n)}</h1></div>
-  <div class="bar"><button class="btn glass" data-a="home">← Назад</button>${s.s==="in"?'<button class="btn r" data-a="leave">Я ушёл</button>':s.s!=="inst"?'<button class="btn g" data-a="arrive">Я пришёл</button>':""}</div></div>
+  <div class="bar"><button class="btn glass" data-a="home">← Назад</button>${s.s==="in"?'<button class="btn r" data-a="leave">Я ушёл</button>':s.s!=="inst"&&s.s!=="idone"?'<button class="btn g" data-a="arrive">Я пришёл</button>':""}</div></div>
   ${false?`<div class="list">${pc.map(o=>`<div class="card glass" style="border-color:#ff9f1c"><div class="no">${esc((L.orders[o]||{}).no||"")}</div><div class="tx"><b>Подтвердите установку · ${esc(ordName(o))}</b><div>Вы выезжали на этот заказ. Всё установлено?</div></div><button class="btn g" data-a="conf" data-o="${o}">Установлено</button><button class="btn o" data-a="tails" data-o="${o}">Не полностью</button></div>`).join("")}</div>`:""}
   <button class="btn a" data-a="addo" style="align-self:flex-start">＋ Добавить заказ</button>
   <div class="list">${list.map(cardHtml).join("")||'<div class="hint">Заказов пока нет.</div>'}</div>`;
@@ -508,7 +510,7 @@ document.addEventListener("click",e=>{
     clearTimeout(tapT);tapM=id;
     tapT=setTimeout(()=>{tapT=null;tapM=null;
       const s=dayState(id,ymd(Date.now()));
-      if(s.s==="in")return;                                  // уже отмечен
+      if(s.s==="in"||s.s==="idone")return;                    // уже отмечен
       push(evOp({m:id,ty:"in"}));
     },320);
     return;
