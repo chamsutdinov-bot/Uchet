@@ -127,7 +127,7 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height
 .mt .plus{background:linear-gradient(180deg,rgba(76,196,110,.95),rgba(31,157,69,.9));color:#fff;font-size:24px;border-color:rgba(255,255,255,.4)}
 .mt.add{border-style:dashed}.mt.add input{font-weight:500}
 </style>
-<script>var BUILD="20261119163435"</script>
+<script>var BUILD="20261119164311"</script>
 <script>
 try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null");}catch(e){}
 </script>
@@ -411,7 +411,7 @@ function showEnv(sel){
   const id=ids[0],e=L.feed[id],ms=Object.keys(L.staff).sort((a,b)=>(L.staff[a].o||0)-(L.staff[b].o||0));
   const row=(t,v)=>v?`<div style="margin:4px 0"><span style="color:#a69f95">${t}</span> ${esc(v)}</div>`:"";
   $("ov").innerHTML=`<div class="ov" style="background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);overflow:auto"><div class="box" style="width:min(94vw,880px);padding:26px;border-radius:28px;background:#25221f;border:1px solid rgba(255,255,255,.22);box-shadow:0 30px 80px rgba(0,0,0,.6);text-align:left"><h1 style="font-size:clamp(24px,3.4vmax,40px)">✉ Заказ №${esc(e.no||"?")} · ${esc(((e.fn||"")+" "+(e.ln||"")).trim())}</h1>
-  <div style="font-size:clamp(16px,2vmax,24px);line-height:1.5">${row("Материал:",e.mt)}${row("Слэбов:",e.sl)}${row("Адрес:",e.ad)}${row("Дата:",e.date)}${row("Заметка:",e.nt)}${ids.length>1?`<div style="margin-top:8px;color:#a69f95">Ещё конвертов: ${ids.length-1}</div>`:""}</div>
+  <div style="font-size:clamp(16px,2vmax,24px);line-height:1.5">${row("Камень:",e.mt)}${row("Слэбов:",e.sl)}${row("Адрес:",e.ad)}${row("Дата:",e.date)}${row("Заметка:",e.nt)}${ids.length>1?`<div style="margin-top:8px;color:#a69f95">Ещё конвертов: ${ids.length-1}</div>`:""}</div>
   <div style="color:#a69f95;margin-top:6px">Кому отдать</div>
   <div class="evm">${ms.map(m=>`<button class="glass${sel===m?" on":""}" data-pm="${m}">${esc(L.staff[m].n)}</button>`).join("")||'<span style="color:#a69f95">Мастеров нет — добавьте в ⚙︎</span>'}</div>
   <div class="bar" style="gap:12px;margin-top:6px"><button class="btn g" id="egive" ${sel?"":"disabled"}>${sel?"Отдать мастеру "+esc(L.staff[sel].n):"Выберите мастера"}</button><button class="btn glass" id="eclose">Закрыть</button></div></div></div>`;

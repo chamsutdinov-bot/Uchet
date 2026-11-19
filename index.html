@@ -3,7 +3,7 @@
 <head>
 <meta name="color-scheme" content="dark">
 <style>html{background:#141312}</style>
-<script>var BUILD="20261119163435";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){};try{Object.keys(localStorage).filter(function(k){return k.indexOf("bio_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){};try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null")||{bg:"#1c1a18",dark:true},_r=document.documentElement,_d=!!_t.dark;if(_t.bg){_r.style.setProperty("--bg",_t.bg);_r.style.backgroundColor=_t.bg;_r.dataset.theme=_d?"dark":"light";if(_d){var _v={"--surface":"#25221f","--text":"#f1ece5","--muted":"#a69f95","--line":"#3d3833","--accent":"#d6a36a","--accent-t":"#1b1713","--danger":"#f2a39e"};for(var _k in _v)_r.style.setProperty(_k,_v[_k]);_r.style.setProperty("--logo-f","none")}}if(_t.photo==="none"&&!_t.pn)delete _t.photo;if(_t.photo==="none")_r.style.setProperty("--bgimg","none");else if(_t.photo)_r.style.setProperty("--bgimg","url(\""+_t.photo+"\")");if(_t.font)_r.style.setProperty("--font",_t.font)}catch(e){}</script>
+<script>var BUILD="20261119164311";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){};try{Object.keys(localStorage).filter(function(k){return k.indexOf("bio_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){};try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null")||{bg:"#1c1a18",dark:true},_r=document.documentElement,_d=!!_t.dark;if(_t.bg){_r.style.setProperty("--bg",_t.bg);_r.style.backgroundColor=_t.bg;_r.dataset.theme=_d?"dark":"light";if(_d){var _v={"--surface":"#25221f","--text":"#f1ece5","--muted":"#a69f95","--line":"#3d3833","--accent":"#d6a36a","--accent-t":"#1b1713","--danger":"#f2a39e"};for(var _k in _v)_r.style.setProperty(_k,_v[_k]);_r.style.setProperty("--logo-f","none")}}if(_t.photo==="none"&&!_t.pn)delete _t.photo;if(_t.photo==="none")_r.style.setProperty("--bgimg","none");else if(_t.photo)_r.style.setProperty("--bgimg","url(\""+_t.photo+"\")");if(_t.font)_r.style.setProperty("--font",_t.font)}catch(e){}</script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -271,12 +271,12 @@ html,body{transition:none}
   </div>
   <div class="chk">
     <label><input type="checkbox" id="cAv">Аванс</label>
-    <label><input type="checkbox" id="cZm">Замер</label>
+    <label><input type="checkbox" id="cZm">Замер снят</label>
     <label><input type="checkbox" id="cUs">Установка</label>
     <label><input type="checkbox" id="cOs">Остаток</label>
   </div>
   <div style="height:12px"></div>
-  <div class="acts"><button class="p" id="oSave">Сохранить</button><button id="oZm" style="display:none">📐 Замер снят — в цех</button><button id="oCancel">Отмена</button></div>
+  <div class="acts"><button class="p" id="oSave">Сохранить</button><button id="oCancel">Отмена</button></div>
 </div></div>
 
 <div class="modal" id="mK"><div class="sheet" style="max-width:460px">
@@ -629,7 +629,7 @@ function updateStrip(){
 }
 const MN=["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"];
 function ym(o){const d=String(o.date||"");let m=d.match(/^(\d{4})-(\d{2})/);if(m)return[+m[1],+m[2]];m=d.match(/(\d{1,2})[.\/](\d{1,2})[.\/](\d{2,4})/);if(m){let y=+m[3];if(y<100)y+=2000;return[y,+m[2]]}return[0,0]}
-const STEPS=[["av","Аванс"],["zm","Замер"],["us","Установка"],["os","Остаток"]];
+const STEPS=[["av","Аванс"],["zm","Замер снят"],["us","Установка"],["os","Остаток"]];
 let PWH=WS.interstone.pw;
 async function sha(t){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
 const FINH="8c1cdb9cb4dbac6dbb6ebd118ec8f9523d22e4e4cb8cc9df5f7e1e499bba3c10";
@@ -696,7 +696,6 @@ function openForm(id){
   $("fNo").value=o.no||"";$("fDate").value=o.date||new Date().toISOString().slice(0,10);
   $("fFn").value=o.fn||"";$("fPh").value=o.ph||"";$("fAd").value=o.ad||"";
   setMt(o.mt||"");$("fM").value=o.sl??"";$("fS").value=o.s??"";$("fAvS").value=o.avs??"";$("fNt").value=o.nt||"";$("cAv").checked=!!o.av;$("cZm").checked=!!o.zm;$("cUs").checked=!!o.us;$("cOs").checked=!!o.os;ostCalc();
-  {const zb=$("oZm"),sent=!!o.zs;zb.style.display=(id&&W.fin)?"":"none";zb.disabled=sent;zb.textContent=sent?"✓ Замер отправлен в цех":"📐 Замер снят — в цех"}
   $("mO").classList.add("on");
 }
 async function save(){
@@ -705,7 +704,9 @@ async function save(){
   if(!editId&&!(await askPw()))return;
   const d={no:$("fNo").value.trim(),date:$("fDate").value,fn:$("fFn").value.trim(),ph:$("fPh").value.trim(),ad:$("fAd").value.trim(),sl:+String($("fM").value).replace(",",".")||0,s:+$("fS").value||0,avs:+$("fAvS").value||0,nt:$("fNt").value.trim(),mt:$("fMt").value,tp:fTp,cl:fTp==="w"?$("fCl").value:"",av:$("cAv").checked,zm:$("cZm").checked,us:$("cUs").checked,os:$("cOs").checked,ts:Date.now()};
   try{
-    if(editId)await db.doc("orders/"+editId).update(d);else await db.collection("orders").add(d);
+    const prev=editId&&orders.find(x=>x.id===editId);let nid=editId;
+    if(editId)await db.doc("orders/"+editId).update(d);else nid=(await db.collection("orders").add(d)).id;
+    if(d.zm&&!(prev&&prev.zs)&&W.fin)await sendZm({...(prev||{}),...d,id:nid});
     $("mO").classList.remove("on");
   }catch(e){alert("Не удалось сохранить: "+(e.message||e.code))}
 }
@@ -731,20 +732,16 @@ $("list").onclick=async e=>{
   if(b.dataset.ec){if(await askPw())openClient(b.dataset.ec);return}
   if(b.dataset.ac){openClient(null);return}
   if(b.dataset.e){if(await askPw())openForm(b.dataset.e);return}
-  if(b.dataset.t&&db){if(!(await askPw()))return;const o=orders.find(x=>x.id===b.dataset.t),k=b.dataset.k;if(o){o[k]=!o[k];render();try{await db.doc("orders/"+o.id).update({[k]:o[k]})}catch(x){o[k]=!o[k];render()}}}
+  if(b.dataset.t&&db){if(!(await askPw()))return;const o=orders.find(x=>x.id===b.dataset.t),k=b.dataset.k;if(o){o[k]=!o[k];render();try{await db.doc("orders/"+o.id).update({[k]:o[k]});if(k==="zm"&&o.zm&&!o.zs&&W.fin)await sendZm(o)}catch(x){o[k]=!o[k];render();try{await db.doc("orders/"+o.id).update({[k]:o[k]})}catch(y){}}}}
   if(b.dataset.d&&isAdmin){if(!(await askPw()))return;try{await db.doc("orders/"+b.dataset.d).delete()}catch(x){}}
 };
 $("bAdd").onclick=()=>openForm(null);
 $("oSave").onclick=save;
-$("oZm").onclick=async()=>{
-  if(!editId||!db)return;const zb=$("oZm");zb.disabled=true;
-  const t=Date.now(),v=i=>$(i).value.trim(),fn=v("fFn");
-  try{
-    await db.doc("mfeed/"+editId).set({ts:t,oid:editId,no:v("fNo"),fn,ln:(orders.find(x=>x.id===editId)||{}).ln||"",mt:v("fMt"),sl:+String($("fM").value).replace(",",".")||0,ad:v("fAd"),nt:v("fNt"),date:v("fDate")});
-    $("cZm").checked=true;await save();
-    await db.doc("orders/"+editId).update({zs:t});
-  }catch(e){zb.disabled=false;alert("Не удалось отправить в цех: "+(e.message||e.code))}
-};$("oCancel").onclick=()=>$("mO").classList.remove("on");
+async function sendZm(o){
+  const t=Date.now();
+  await db.doc("mfeed/"+o.id).set({ts:t,oid:o.id,no:o.no||"",fn:o.fn||"",ln:o.ln||"",mt:o.mt||"",sl:o.sl||0,ad:o.ad||"",nt:o.nt||"",date:o.date||""});
+  await db.doc("orders/"+o.id).update({zs:t});o.zs=t;
+}$("oCancel").onclick=()=>$("mO").classList.remove("on");
 function readPhoto(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{let w=900,q=.62,out="";for(let t=0;t<6;t++){const sc=Math.min(1,w/im.width);const c=document.createElement("canvas");c.width=Math.round(im.width*sc);c.height=Math.round(im.height*sc);c.getContext("2d").drawImage(im,0,0,c.width,c.height);out=c.toDataURL("image/jpeg",q);if(out.length<180000)break;w=Math.round(w*.8);q=Math.max(.45,q-.05)}res(out)};im.onerror=rej;im.src=r.result};r.onerror=rej;r.readAsDataURL(f)})}
 $("phFile").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;try{const d=await readPhoto(f);settings={...settings,photo:d};applyTheme()}catch(x){}};
 $("phDef").onclick=()=>{settings={...settings};delete settings.photo;applyTheme()};
