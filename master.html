@@ -39,7 +39,7 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height
 .tile.inst{background:linear-gradient(180deg,rgba(64,170,255,.92),rgba(30,90,235,.88));border-color:rgba(255,255,255,.45)}
 .tile.inst small,.tile.inst b{color:#fff}
 .tile.out{opacity:.62}
-.env{position:relative;flex:none;width:clamp(64px,9vmax,110px);height:clamp(48px,6.6vmax,80px);border-radius:18px;background:linear-gradient(180deg,#4ed17d,#2a9453);border:1px solid #b4f2c9;color:#fff;font-size:clamp(26px,4vmax,46px);display:flex;align-items:center;justify-content:center;box-shadow:0 0 24px #3ddc7acc,inset 0 2px 0 rgba(255,255,255,.45);animation:envp 1.6s ease-in-out infinite}
+.env{--eh:clamp(36px,4.6vmax,72px);position:relative;vertical-align:middle;margin:calc((22px - var(--eh))/2) 0 calc((22px - var(--eh))/2) 14px;display:inline-flex;width:calc(var(--eh)*1.45);height:var(--eh);border-radius:14px;background:linear-gradient(180deg,#4ed17d,#2a9453);border:1px solid #b4f2c9;color:#fff;font-size:calc(var(--eh)*.62);align-items:center;justify-content:center;text-transform:none;box-shadow:0 0 24px #3ddc7acc,inset 0 2px 0 rgba(255,255,255,.45);animation:envp 1.6s ease-in-out infinite}
 .env u{position:absolute;top:-9px;right:-9px;background:#e23d3d;color:#fff;border-radius:50%;min-width:28px;height:28px;font-size:16px;text-decoration:none;display:flex;align-items:center;justify-content:center;font-weight:700}
 @keyframes envp{50%{transform:scale(1.07);box-shadow:0 0 40px #3ddc7a}}
 .evm{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:8px 0 14px}.evm button{padding:clamp(14px,2vmax,24px);border-radius:18px;font-size:clamp(17px,2.2vmax,26px);font-weight:600}.evm button.on{background:linear-gradient(180deg,rgba(76,196,110,.95),rgba(31,157,69,.9));color:#fff;border-color:rgba(255,255,255,.45)}
@@ -127,7 +127,7 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height
 .mt .plus{background:linear-gradient(180deg,rgba(76,196,110,.95),rgba(31,157,69,.9));color:#fff;font-size:24px;border-color:rgba(255,255,255,.4)}
 .mt.add{border-style:dashed}.mt.add input{font-weight:500}
 </style>
-<script>var BUILD="20261119172126"</script>
+<script>var BUILD="20261119172544"</script>
 <script>
 try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null");}catch(e){}
 </script>
@@ -321,7 +321,7 @@ function drawHome(){
     else if(s.s==="out"){cls="glass out";sub=s.auto?"Забыл отметить уход":"Ушёл в "+hm(s.ts)}
     return`<button class="tile ${cls}" data-m="${id}">${pc?`<span class="badge">Подтвердить установку: ${pc}</span>`:""}${nw?`<span class="badge nwb">🆕 Новый заказ: ${nw}</span>`:""}<b>${esc(m.n)}</b><small>${sub}</small></button>`;
   }).join("");
-  $("app").innerHTML=`<div class="top"><div><div class="cap">Цех · Interstone</div><h1>Нажмите своё имя</h1></div><div style="display:flex;align-items:center;gap:clamp(12px,2vw,28px)">${pendFeed().length?`<button class="env" data-a="env" aria-label="Новый заказ">✉<u>${pendFeed().length}</u></button>`:""}<div class="clock"><b id="clk">${hm(Date.now())}</b><span>${dateStr()}</span></div></div></div>
+  $("app").innerHTML=`<div class="top"><div><div class="cap">Цех · Interstone${pendFeed().length?`<button class="env" data-a="env" aria-label="Новый заказ">✉<u>${pendFeed().length}</u></button>`:""}</div><h1>Нажмите своё имя</h1></div><div class="clock"><b id="clk">${hm(Date.now())}</b><span>${dateStr()}</span></div></div>
   <div class="grid">${tiles||'<div class="hint">Мастеров пока нет. Нажмите ⚙︎ внизу справа и добавьте имена.</div>'}</div>
   <div class="hint">Один раз — «Я пришёл», плитка станет зелёной. Два раза подряд — ваша страница с заказами.</div>`;
   fitGrid();
