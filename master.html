@@ -155,7 +155,7 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height
 .anote{font-size:14px;color:#ffc39b}
 @media (max-width:900px){.cv2,.cv2.noact{grid-template-columns:auto minmax(0,1fr)}.cv2 .trk,.cv2 .cact{grid-column:1/-1}}
 </style>
-<script>var BUILD="20261124113500"</script>
+<script>var BUILD="20261124115000"</script>
 <script>
 try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null");}catch(e){}
 </script>
@@ -702,7 +702,7 @@ async function staffEditor(){
     <button class="btn g" id="na">＋ Добавить мастера</button></div></div>`;
     $("sd").onclick=()=>{$("ov").innerHTML="";draw()};
     $("na").onclick=addForm;
-    $("ov").querySelectorAll("[data-r]").forEach(i=>i.onchange=()=>{const id=i.dataset.r,n=i.value.trim();if(n)push({k:"st",id,d:{...L.staff[id],n}})});
+    $("ov").querySelectorAll("[data-r]").forEach(i=>i.onchange=async()=>{const id=i.dataset.r,n=i.value.trim();if(!n||n===(L.staff[id]||{}).n)return;if(!(await adminPw())){paint();return}push({k:"st",id,d:{...L.staff[id],n}});paint()});
     $("ov").querySelectorAll("[data-del]").forEach(b=>b.onclick=async()=>{if(!(await adminPw())){paint();return}push({k:"st",id:b.dataset.del,d:null});paint()});
   };
   const addForm=()=>{
@@ -714,7 +714,7 @@ async function staffEditor(){
   };
   paint();
 }
-$("gear").onclick=staffEditor;
+$("gear").onclick=async()=>{if(!(await adminPw()))return;staffEditor()}; /* шестерёнка — пароль при каждом входе (24.11.2026) */
 
 const SNAPK="m_snap";
 function saveSnap(){try{const o={};for(const k in orders){const x=orders[k];o[k]={no:x.no,fn:x.fn,ln:x.ln,mt:x.mt,sl:x.sl,date:x.date,ts:x.ts,us:x.us}}localStorage.setItem(SNAPK,JSON.stringify({staff,orders:o,stage,logs,feed}))}catch(e){}}
