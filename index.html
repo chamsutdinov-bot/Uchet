@@ -221,6 +221,34 @@ html,body{transition:none}
 #mS .sheet{padding:12px 14px;max-width:360px}#mS h2{font-size:16px;margin:0 0 8px}#mS .sw{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;justify-items:center}#mS .sw button{width:32px;height:32px}#mS label{font-size:12px;margin:6px 0 2px;display:block}#mS .upl{margin:0!important}#mS #phDef,#mS #phNone{font-size:13px;padding:7px 4px;min-height:0}#mS .note{font-size:11px;margin:6px 0}#mS .acts{margin-top:8px}#mS .acts button{padding:7px 16px}
 #cGrid{display:grid;grid-template-columns:repeat(12,1fr);gap:0;border-radius:8px;overflow:hidden}#cGrid button{border:0;border-radius:0;padding:0;min-height:0;height:17px}
 #wsN{display:none!important}
+
+/* «Мастера» v2 */
+#mMs .sheet{max-width:980px!important}
+.lvms{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px;margin:0 0 6px}
+.lvm{padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);display:flex;flex-direction:column;gap:3px;min-width:0}
+.lvm b{font-size:15px}.lvm small{font-size:11px;opacity:.7;overflow-wrap:anywhere}
+.lvp{align-self:flex-start;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:rgba(255,255,255,.14)}
+.lvm.in .lvp{background:#22a35a;color:#fff}.lvm.ins .lvp{background:#2d6fd6;color:#fff}.lvm.out .lvp{opacity:.75}
+.lvg{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px;margin:12px 0 6px}
+.lvg em,.lvdone summary em{font-style:normal;font-size:12px;padding:1px 8px;border-radius:999px;background:rgba(255,255,255,.14)}
+.lvg.g-wait{color:#7fe39c}.lvg.g-given{color:#c9b8ff}.lvg.g-work{color:#e8b36f}.lvg.g-ready{color:#9fd0ff}.lvg.g-out{color:#7db4ff}.lvg.g-tails{color:#ffab8f}
+.lvc{padding:10px 12px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);margin-bottom:8px}
+.lvc.g-wait{border-color:rgba(127,227,156,.5)}.lvc.g-tails{border-color:rgba(255,150,110,.55)}
+.lvh{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-bottom:6px}
+.lvh b{font-size:15px}.lvh span{display:block;font-size:12px;opacity:.7}
+.lvst{font-size:13px;opacity:.9;text-align:right;max-width:60%}
+.lvt{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));position:relative}
+.lvt::before{content:'';position:absolute;left:10%;right:10%;top:13px;height:3px;border-radius:2px;background:rgba(255,255,255,.15)}
+.lvf{position:absolute;left:10%;top:13px;height:3px;border-radius:2px;background:#35b866}
+.lvs{display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px;position:relative;z-index:1;min-width:0}
+.lvs i{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:800;font-size:13px;background:#2b2826;border:2px solid #4a4541;color:#8d857b}
+.lvs.ok i{background:#2f9e57;border-color:#7fe39c;color:#fff}.lvs.cur i{background:#d6a36a;border-color:#f3cf9f;color:#1d140b;box-shadow:0 0 0 5px rgba(214,163,106,.22)}
+.lvs.out i{background:#2d6fd6;border-color:#9fc4ff;color:#fff}.lvs.tl i{background:#d9722f;border-color:#ffc39b;color:#fff}
+.lvs b{font-size:12px;font-weight:600}.lvs small{font-size:10.5px;opacity:.7;overflow-wrap:anywhere}
+.lvdone{margin:12px 0}.lvdone summary{cursor:pointer;font-weight:700;font-size:14px;opacity:.8;display:flex;align-items:center;gap:8px;list-style:none;margin-bottom:8px}.lvdone summary::-webkit-details-marker{display:none}
+.lvrep{margin-top:16px;border-top:1px solid rgba(255,255,255,.15);padding-top:6px}
+.lvrep>summary{cursor:pointer;font-weight:700;font-size:15px;list-style:none;padding:6px 0}.lvrep>summary::-webkit-details-marker{display:none}
+@media (max-width:699px){.lvst{text-align:left;max-width:none}.lvs small{font-size:9.5px}.lvs b{font-size:10.5px}}
 </style>
 </head>
 <body>
@@ -706,7 +734,7 @@ async function save(){
   try{
     const prev=editId&&orders.find(x=>x.id===editId);let nid=editId;
     if(editId)await db.doc("orders/"+editId).update(d);else nid=(await db.collection("orders").add(d)).id;
-    if(d.zm&&!(prev&&prev.zs)&&(W.fin||W.mst))await sendZm({...(prev||{}),...d,id:nid});
+    if((!editId||d.zm)&&!(prev&&prev.zs)&&(W.fin||W.mst))await sendZm({...(prev||{}),...d,id:nid}); /* новый заказ — сразу конверт в «Цех» (24.11.2026) */
     $("mO").classList.remove("on");
   }catch(e){alert("Не удалось сохранить: "+(e.message||e.code))}
 }
@@ -1263,6 +1291,72 @@ async function msLoad(){
   try{const r=await msDb().collection(c).get();msEvs=r.docs.map(d=>({id:d.id,...d.data()}))}catch(e){msEvs=[]}
   msPaint();
 }
+/* ===== «Мастера» v2 (24.11.2026): весь процесс цеха сейчас — кто, где, на каком этапе ===== */
+let mfeedD={};
+const LV_ST=[["rasp","Распил"],["skl","Склейка"],["obr","Обработка"],["gotov","Готово"]];
+const lvD=t=>{const d=new Date(t),n=new Date(),k=x=>x.getFullYear()+"-"+x.getMonth()+"-"+x.getDate();if(k(d)===k(n))return"сегодня "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");const y=new Date(n);y.setDate(y.getDate()-1);if(k(d)===k(y))return"вчера";return String(d.getDate()).padStart(2,"0")+"."+String(d.getMonth()+1).padStart(2,"0")};
+const lvDay=t=>{const a=new Date(t),b=new Date();a.setHours(0,0,0,0);b.setHours(0,0,0,0);return Math.round((b-a)/864e5)+1};
+function lvInfo(id){const st=mstg[id]||{},o=msO().find(x=>x.id===id)||{};return{no:o.no||st.no||"?",nm:((o.fn||"")+" "+(o.ln||"")).trim(),mt:o.mt||st.mt||"",sl:o.sl}}
+function lvGroup(st){const i=st.ins,s=st.stages||{};if(i&&i.status==="done")return"done";if(i&&i.status==="tails")return"tails";if(i&&i.status==="out")return"out";if(LV_ST.every(([k])=>s[k]))return"ready";if(st.start||LV_ST.some(([k])=>s[k]))return"work";return"given"}
+function lvTrack(st){
+  const s=st.stages||{},i=st.ins,cur=LV_ST.findIndex(([k])=>!s[k]);
+  const c=LV_ST.map(([k,n],x)=>{
+    if(s[k])return{c:"ok",t:n,s:lvD(s[k].ts)+" · "+msName(s[k].m)};
+    if(x===cur&&!i){if(x===0&&!st.start)return{c:"cur",t:n,s:"не начат"};const p=x?s[LV_ST[x-1][0]]:st.start;return{c:"cur",t:n,s:p?lvDay(p.ts)+"-й день":""}}
+    return{c:"",t:n,s:""};
+  });
+  let u={c:"",t:"Установка",s:""};
+  if(i&&i.status==="done"){const ts=Math.max(0,...Object.values(i.conf||{}).map(x=>x.ts||0));u={c:"ok",t:"Установка",s:ts?lvD(ts):""}}
+  else if(i&&i.status==="tails")u={c:"tl",t:"Установка",s:"не полностью"};
+  else if(i&&i.status==="out")u={c:"out",t:"Установка",s:Object.keys(i.out||{}).map(msName).join(", ")};
+  else if(cur<0)u={c:"cur",t:"Установка",s:"ждёт"};
+  const all=c.concat([u]),dn=all.filter(x=>x.c==="ok").length;
+  return`<div class="lvt"><div class="lvf" style="width:${Math.min(dn,4)/4*80}%"></div>${all.map((x,n)=>`<div class="lvs ${x.c}"><i>${x.c==="ok"?"✓":n+1}</i><b>${x.t}</b><small>${esc(x.s)||"&nbsp;"}</small></div>`).join("")}</div>`;
+}
+function lvStatus(st,g){
+  const s=st.stages||{},i=st.ins||{};
+  if(g==="given")return`Отдан мастеру <b>${esc(msName(st.to||(st.added||{}).m))}</b>${st.added?" · "+lvD(st.added.ts):""} · ещё не начал`;
+  if(g==="work"){const x=LV_ST.findIndex(([k])=>!s[k]),p=x?s[LV_ST[x-1][0]]:st.start,who=p?msName(p.m):"";return`Сейчас: <b>${LV_ST[x][1]}</b>${who?" · после "+esc(who):""}${p?" · "+lvDay(p.ts)+"-й день":""}`}
+  if(g==="ready")return`Готов ${lvD(s.gotov.ts)} · <b>ждёт установки</b>`;
+  if(g==="out"){const t=Math.min(...Object.values(i.out||{}).map(x=>x.ts||Date.now()));return`<b>На установке</b>: ${esc(Object.keys(i.out||{}).map(msName).join(", "))} · выехали ${lvD(t)}`}
+  if(g==="tails")return`<b>Хвосты</b>: ${esc(Object.entries(i.conf||{}).filter(([m,c])=>!c.full).map(([m,c])=>(c.note||"причина не указана")+" — "+msName(m)).join("; "))}`;
+  if(g==="done"){const e=Math.max(0,...Object.values(i.conf||{}).map(x=>x.ts||0)),a=(st.start||st.added||{}).ts;return`<b>Установлен</b> ${lvD(e)}${a?" · весь путь "+Math.max(1,Math.ceil((e-a)/864e5))+" дн.":""}`}
+  return"";
+}
+function lvCard(id,g){const st=mstg[id]||{},o=lvInfo(id);return`<div class="lvc g-${g}"><div class="lvh"><div><b>№${esc(o.no)}${o.nm?" · "+esc(o.nm):""}</b><span>${esc([o.mt,o.sl?o.sl+" слэб.":""].filter(Boolean).join(" · "))}</span></div><div class="lvst">${lvStatus(st,g)}</div></div>${lvTrack(st)}</div>`}
+function lvMasters(){
+  const n=new Date(),today=n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0");
+  const curMon=$("msMon").value===today.slice(0,7);
+  const ids=Object.keys(mstaffD).sort((a,b)=>(mstaffD[a].o||0)-(mstaffD[b].o||0));
+  return ids.map(m=>{
+    let cls="off",t="нет сегодня";
+    if(curMon){const ev=msEvs.filter(e=>e.m===m&&e.d===today&&["in","out","autoout","inst_out","inst_conf"].includes(e.ty)).sort((a,b)=>a.ts-b.ts),l=ev[ev.length-1];
+      const hh=x=>String(new Date(x).getHours()).padStart(2,"0")+":"+String(new Date(x).getMinutes()).padStart(2,"0");
+      if(l){if(l.ty==="in"){cls="in";t="в цеху с "+hh(ev.find(e=>e.ty==="in").ts)}else if(l.ty==="inst_out"){cls="ins";t="на установке"}else if(l.ty==="inst_conf"){cls="in";t="установка завершена"}else{cls="out";t="ушёл в "+hh(l.ts)}}}
+    else t="";
+    const work=Object.keys(mstg).filter(id=>{const st=mstg[id],g=lvGroup(st);if(g==="done")return false;if(g==="given")return (st.to||(st.added||{}).m)===m;if(g==="out")return st.ins&&st.ins.out&&st.ins.out[m];const s=st.stages||{},x=LV_ST.findIndex(([k])=>!s[k]),p=x>0?s[LV_ST[x-1][0]]:st.start;return p&&p.m===m}).map(id=>"№"+lvInfo(id).no);
+    return`<div class="lvm ${cls}"><b>${esc(msName(m))}</b>${t?`<span class="lvp">${t}</span>`:""}<small>${work.length?"Последний этап / выезд: "+esc(work.join(", ")):"&nbsp;"}</small></div>`;
+  }).join("");
+}
+const LV_G=[["wait","✉ Ждут начальника цеха"],["given","Отданы мастеру — не начаты"],["work","В работе"],["ready","Готовы — ждут установки"],["out","На установке"],["tails","Хвосты"]];
+function msLiveHtml(){
+  msAlias();
+  const by={};Object.keys(mstg).forEach(id=>{const g=lvGroup(mstg[id]);(by[g]=by[g]||[]).push(id)});
+  Object.values(by).forEach(a=>a.sort((x,y)=>(((mstg[y]||{}).added||{}).ts||0)-(((mstg[x]||{}).added||{}).ts||0)));
+  const wait=Object.keys(mfeedD).filter(k=>!mfeedD[k].to).sort((a,b)=>(mfeedD[b].ts||0)-(mfeedD[a].ts||0));
+  let h=`<h3>Мастера сегодня</h3><div class="lvms">${lvMasters()||'<div class="mstt">Мастеров нет — их добавляют в «Цехе» (⚙︎)</div>'}</div><h3>Заказы в цеху</h3>`;
+  let any=false;
+  LV_G.forEach(([g,t])=>{
+    if(g==="wait"){if(!wait.length)return;any=true;h+=`<div class="lvg g-wait">${t} <em>${wait.length}</em></div>`+wait.map(k=>{const e=mfeedD[k];return`<div class="lvc g-wait"><div class="lvh"><div><b>№${esc(e.no||"?")}${e.fn?" · "+esc(e.fn):""}</b><span>${esc([e.mt,e.ad].filter(Boolean).join(" · "))}</span></div><div class="lvst">Отправлен в цех ${lvD(e.ts)} · начальник цеха ещё не отдал мастеру</div></div></div>`}).join("");return}
+    const a=by[g]||[];if(!a.length)return;any=true;
+    h+=`<div class="lvg g-${g}">${t} <em>${a.length}</em></div>`+a.map(id=>lvCard(id,g)).join("");
+  });
+  if(!any)h+='<div class="mstt" style="margin:6px 0 10px">Сейчас в цеху заказов нет.</div>';
+  const dn=by.done||[];
+  if(dn.length)h+=`<details class="lvdone"><summary>✓ Завершённые <em>${dn.length}</em></summary>${dn.map(id=>lvCard(id,"done")).join("")}</details>`;
+  return h;
+}
+
 function msPaint(){
   const mon=$("msMon").value,per=msCalc(),ids=Object.keys(mstaffD);
   Object.keys(per).forEach(m=>{if(!ids.includes(m))ids.push(m)});
@@ -1273,11 +1367,12 @@ function msPaint(){
     const has=msEvs.some(x=>x.m===e.m&&x.d===e.d&&x.ty==="out"&&x.ts>e.ts-864e5&&x.ts>=msEvs.filter(y=>y.m===e.m&&y.d===e.d&&y.ty==="in").reduce((a,y)=>Math.min(a,y.ts),Infinity));
     fg.push({e,has});
   });
-  $("msBody").innerHTML=`<h3>Выходы и часы</h3><table class="ht"><tr><th>Мастер</th><th>Дней</th><th>Приход ~</th><th>Уход ~</th><th>Часов</th><th>Этапов</th><th>Выездов</th><th>Забыл</th></tr>
+  $("msBody").innerHTML=msLiveHtml()+`<details class="lvrep"${msState.rep?" open":""}><summary>📊 Отчёт за месяц: часы мастеров и сроки заказов</summary><h3>Выходы и часы</h3><table class="ht"><tr><th>Мастер</th><th>Дней</th><th>Приход ~</th><th>Уход ~</th><th>Часов</th><th>Этапов</th><th>Выездов</th><th>Забыл</th></tr>
   ${mrows.map(r=>`<tr><td>${esc(r.n)}</td><td>${r.days}${r.instDays?` <span class="mstt">+${r.instDays} уст.</span>`:""}</td><td>${msAvg(r.ins)}</td><td>${msAvg(r.outs)}</td><td>${msFmtH(r.ms)}</td><td>${r.stages}</td><td>${r.inst}</td><td class="${r.forgot?"fg":""}">${r.forgot}</td></tr>`).join("")||'<tr><td colspan="8">Нет данных за этот месяц</td></tr>'}</table>
   ${fg.filter(x=>!x.has).length?`<h3>Забыли отметить уход</h3><table><tr><th>Мастер</th><th>День</th><th>Время ухода</th><th></th></tr>${fg.filter(x=>!x.has).map(({e})=>`<tr><td>${esc(msName(e.m))}</td><td>${esc(e.d)}</td><td><input class="tm" type="time" data-ev="${e.id}"></td><td><button class="ok2" data-evs="${e.id}">Сохранить</button></td></tr>`).join("")}</table>`:""}
   <h3>Этапы заказов</h3><table class="ot"><tr><th>Заказ</th><th>Материал</th><th>Этапы</th><th>Всего</th></tr>
-  ${orows.map(r=>`<tr><td>№${esc(r.no)} ${esc(r.name)}</td><td>${esc(r.mt)}</td><td>${msChips(r.st,true,[r.dur[0],r.dur[1],r.dur[2],r.dur[3],r.inst],r.id)}</td><td><b>${esc(r.tot)}</b></td></tr>`).join("")||'<tr><td colspan="4">Нет заказов с этапами за этот месяц</td></tr>'}</table>`;
+  ${orows.map(r=>`<tr><td>№${esc(r.no)} ${esc(r.name)}</td><td>${esc(r.mt)}</td><td>${msChips(r.st,true,[r.dur[0],r.dur[1],r.dur[2],r.dur[3],r.inst],r.id)}</td><td><b>${esc(r.tot)}</b></td></tr>`).join("")||'<tr><td colspan="4">Нет заказов с этапами за этот месяц</td></tr>'}</table></details>`;
+  {const r=$("msBody").querySelector(".lvrep");if(r)r.ontoggle=()=>{msState.rep=r.open}}
   $("msBody").querySelectorAll("[data-evs]").forEach(b=>b.onclick=async()=>{
     const id=b.dataset.evs,v=$("msBody").querySelector('[data-ev="'+id+'"]').value;if(!v)return;
     const e=msEvs.find(x=>x.id===id);if(!e)return;
@@ -1344,8 +1439,8 @@ addEventListener("popstate",()=>{
   db.doc("settings/fin").onSnapshot(s=>{if(s.exists){fcfg=s.data();if($("mFin").classList.contains("on")&&fTab==="set")fRender()}});
   db.collection("stones").onSnapshot(s=>{stones=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(a.name).localeCompare(String(b.name),"ru"));kFill()});
   db.doc("settings/calc").onSnapshot(s=>{if(s.exists){calcP={fig:0,cut:0,rad:0,joint:0,ledge:0,...s.data()};kPrFill();kCalcRun()}});
-  if(W.fin){db.collection("mstage").onSnapshot(s=>{mstg={};s.docs.forEach(d=>mstg[d.id]=d.data());render()});db.collection("mstaff").onSnapshot(s=>{mstaffD={};s.docs.forEach(d=>mstaffD[d.id]=d.data());render()})}
-  else if(W.mst){msKey().then(t=>{if(!t)return;mdb=ghDb("chamsutdinov-bot/uchet-data",()=>t);mdb.collection("mstage").onSnapshot(s=>{mstg={};s.docs.forEach(d=>mstg[d.id]=d.data());if($("mMs").classList.contains("on"))msPaint()});mdb.collection("mstaff").onSnapshot(s=>{mstaffD={};s.docs.forEach(d=>mstaffD[d.id]=d.data());if($("mMs").classList.contains("on"))msPaint()});mdb.collection("orders").onSnapshot(s=>{mOrd=s.docs.map(d=>({id:d.id,...d.data()}))})})}
+  if(W.fin){db.collection("mfeed").onSnapshot(s=>{mfeedD={};s.docs.forEach(d=>mfeedD[d.id]=d.data());if($("mMs").classList.contains("on"))msPaint()});db.collection("mstage").onSnapshot(s=>{mstg={};s.docs.forEach(d=>mstg[d.id]=d.data());render();if($("mMs").classList.contains("on"))msPaint()});db.collection("mstaff").onSnapshot(s=>{mstaffD={};s.docs.forEach(d=>mstaffD[d.id]=d.data());render()})}
+  else if(W.mst){msKey().then(t=>{if(!t)return;mdb=ghDb("chamsutdinov-bot/uchet-data",()=>t);mdb.collection("mfeed").onSnapshot(s=>{mfeedD={};s.docs.forEach(d=>mfeedD[d.id]=d.data());if($("mMs").classList.contains("on"))msPaint()});mdb.collection("mstage").onSnapshot(s=>{mstg={};s.docs.forEach(d=>mstg[d.id]=d.data());if($("mMs").classList.contains("on"))msPaint()});mdb.collection("mstaff").onSnapshot(s=>{mstaffD={};s.docs.forEach(d=>mstaffD[d.id]=d.data());if($("mMs").classList.contains("on"))msPaint()});mdb.collection("orders").onSnapshot(s=>{mOrd=s.docs.map(d=>({id:d.id,...d.data()}))})})}
   db.collection("orders").onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>

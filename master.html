@@ -437,7 +437,7 @@ function actHtml(o){
     return`<button class="btn b" data-a="instone" data-o="${o}">🚚 Тоже выехал</button>`;
   }
   if(!cur)return`<button class="btn b" data-a="instone" data-o="${o}">🚚 Выехал на установку</button>`;
-  let h=(cur==="rasp"&&!st.start)?`<button class="btn a" data-a="qstart" data-o="${o}">Начать распил</button>`:`<button class="btn g" data-a="qstage" data-o="${o}" data-k="${cur}">${DONE_T[cur]}</button>`;
+  let h=(cur==="rasp"&&!st.start)?`<button class="btn a" data-a="qstart" data-o="${o}">▶ Начать заказ</button>`:`<button class="btn g" data-a="qstage" data-o="${o}" data-k="${cur}">${DONE_T[cur]}</button>`;
   const doneK=STAGES.filter(([k])=>sg[k]),last=doneK.length?doneK[doneK.length-1][0]:null;
   if(last&&Date.now()-sg[last].ts<6e5)h+=`<button class="aundo" data-a="qundo" data-o="${o}" data-k="${last}">Отменить «${SHORT[last]}»</button>`;
   return h;
