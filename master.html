@@ -153,9 +153,17 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height
 .cact .btn{width:100%;padding:16px 10px;font-size:clamp(16px,1.9vmax,21px);font-weight:700;border-radius:16px}
 .aundo{background:none;border:0;color:#a69f95;font-size:14px;text-decoration:underline;cursor:pointer;padding:2px}
 .anote{font-size:14px;color:#ffc39b}
+
+.trk .ts{background:none;border:0;padding:4px 0;font:inherit;color:inherit;cursor:default}
+.trk .ts.tap{cursor:pointer}.trk .ts.tap i{width:48px;height:48px;font-size:18px}.trk .ts:not(.tap) i{width:48px;height:48px;font-size:18px}
+.trk::before,.trkf{top:27px!important}
+.trk .ts.tap.cur i{box-shadow:0 0 0 0 rgba(214,163,106,.5);animation:tapP 2.2s ease-out infinite}
+.trk .ts.tap:active i{transform:scale(.9)}
+@keyframes tapP{0%{box-shadow:0 0 0 0 rgba(214,163,106,.45)}70%{box-shadow:0 0 0 10px rgba(214,163,106,0)}100%{box-shadow:0 0 0 0 rgba(214,163,106,0)}}
+.trk .ts:disabled{opacity:1}
 @media (max-width:900px){.cv2,.cv2.noact{grid-template-columns:auto minmax(0,1fr)}.cv2 .trk,.cv2 .cact{grid-column:1/-1}}
 </style>
-<script>var BUILD="20261124115000"</script>
+<script>var BUILD="20261124115500"</script>
 <script>
 try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null");}catch(e){}
 </script>
@@ -421,14 +429,17 @@ function trackHtml(o){
   else if(i&&i.status==="out")ins={c:"out",t:"Установка",s:Object.keys(i.out||{}).map(mn).filter(Boolean).join(", ")};
   else if(!cur)ins={c:"cur",t:"Установка",s:"ждёт"};
   const all=cells.concat([ins]),done=all.filter(x=>x.c==="ok").length;
-  return`<div class="trk"><div class="trkf" style="width:${Math.min(done,4)/4*80}%"></div>${all.map((x,n)=>`<div class="ts ${x.c}"><i>${x.c==="ok"?"✓":n+1}</i><b>${x.t}</b><small>${esc(x.s)||"&nbsp;"}</small></div>`).join("")}</div>`;
+  const lastDone=(()=>{let l=-1;STAGES.forEach(([k],n)=>{if(sg[k])l=n});return l})();
+  const tapA=n=>{if(n<4){if(i)return"";const k=STAGES[n][0];if(sg[k])return n===lastDone?`data-a="tap" data-o="${o}" data-k="${k}"`:"";return`data-a="tap" data-o="${o}" data-k="${k}"`}
+    if(!cur&&!i||(i&&i.status==="tails"))return`data-a="instone" data-o="${o}"`;return""};
+  return`<div class="trk"><div class="trkf" style="width:${Math.min(done,4)/4*80}%"></div>${all.map((x,n)=>{const a=tapA(n);return`<button type="button" class="ts ${x.c}${a?" tap":""}" ${a||"disabled"}><i>${x.c==="ok"?"✓":n+1}</i><b>${x.t}</b><small>${esc(x.s)||"&nbsp;"}</small></button>`}).join("")}</div>`;
 }
 function actHtml(o){
   const m=V.m,st=L.stage[o]||{},sg=st.stages||{},cur=curStage(o),i=st.ins,mn=id=>(L.staff[id]||{}).n||"";
   if(i&&i.status==="done")return"";
   if(i&&i.status==="tails"){
     const why=Object.entries(i.conf||{}).filter(([x,c])=>!c.full).map(([x,c])=>(c.note||"причина не указана")+" · "+mn(x)).join("; ");
-    return`<button class="btn b" data-a="instone" data-o="${o}">🚚 Выехал доделать</button><div class="anote">${esc(why)}</div>`;
+    return`<div class="anote">Что осталось: ${esc(why)}</div><button class="btn b" data-a="instone" data-o="${o}">🚚 Выехал доделать</button>`;
   }
   if(i&&i.status==="out"){
     const mine=i.out&&i.out[m],c=i.conf&&i.conf[m];
@@ -436,11 +447,8 @@ function actHtml(o){
     if(mine)return`<button class="btn g" data-a="conf" data-o="${o}">✓ Всё установлено</button><button class="btn o" data-a="tails" data-o="${o}">Не полностью…</button>`;
     return`<button class="btn b" data-a="instone" data-o="${o}">🚚 Тоже выехал</button>`;
   }
-  if(!cur)return`<button class="btn b" data-a="instone" data-o="${o}">🚚 Выехал на установку</button>`;
-  let h=(cur==="rasp"&&!st.start)?`<button class="btn a" data-a="qstart" data-o="${o}">▶ Начать заказ</button>`:`<button class="btn g" data-a="qstage" data-o="${o}" data-k="${cur}">${DONE_T[cur]}</button>`;
-  const doneK=STAGES.filter(([k])=>sg[k]),last=doneK.length?doneK[doneK.length-1][0]:null;
-  if(last&&Date.now()-sg[last].ts<6e5)h+=`<button class="aundo" data-a="qundo" data-o="${o}" data-k="${last}">Отменить «${SHORT[last]}»</button>`;
-  return h;
+  if(!cur)return"";
+  return"";
 }
 function cardV2(o){
   const st=L.stage[o]||{},isNw=st.to&&st.to===V.m&&!st.tk,x=L.orders[o]||{},nm=((x.fn||"")+" "+(x.ln||"")).trim();
@@ -461,6 +469,7 @@ function drawMaster(){
   $("app").innerHTML=`<div class="top"><div><div class="cap">${esc(stTxt)}</div><h1>${esc(m.n)}</h1></div>
   <div class="bar"><button class="btn glass" data-a="home">← Назад</button>${s.s==="in"?'<button class="btn r" data-a="leave">Я ушёл</button>':s.s!=="inst"&&s.s!=="idone"?'<button class="btn g" data-a="arrive">Я пришёл</button>':""}</div></div>
   <button class="btn a" data-a="addo" style="align-self:flex-start">＋ Добавить заказ</button>
+  <div class="hint" style="margin:0">Нажимайте на кружок этапа, который готов, — можно сразу несколько. Кружок «Установка» — когда выехали. Нажали по ошибке — нажмите тот же кружок ещё раз.</div>
   ${GRP.map(([g,t])=>sec(g,t)).join("")||(dn.length?"":'<div class="hint">Заказов пока нет.</div>')}
   ${GRP.every(([g])=>!(by[g]&&by[g].length))&&dn.length?'<div class="hint">Заказов в работе нет.</div>':""}
   ${dn.length?`<details class="gdone"${open}><summary>✓ Завершённые <em>${dn.length}</em></summary><div class="list">${dn.map(cardV2).join("")}</div></details>`:""}`;
@@ -595,6 +604,12 @@ function act(a,el){
     if(k==="rasp"&&!st.start)push(evOp({m,ty:"start",o}),evOp({m,ty:"stage",o,st:k}),{k:"ms",o,m:{start:{ts:t,m},stages:{[k]:{ts:t,m}}}});
     else push(evOp({m,ty:"stage",o,st:k}),{k:"ms",o,m:{stages:{[k]:{ts:t,m}}}});
     return}
+  if(a==="tap"){const o=el.dataset.o,k=el.dataset.k,st=L.stage[o]||{},sg=st.stages||{},t=Date.now(),n=STAGES.findIndex(x=>x[0]===k);
+    if(sg[k]){push(evOp({m,ty:"unstage",o,st:k}),{k:"ms",o,m:{stages:{[k]:null}}});return}
+    const ops=[],stg={};let first=!st.start;
+    if(first)ops.push(evOp({m,ty:"start",o}));
+    for(let x=0;x<=n;x++){const kk=STAGES[x][0];if(!sg[kk]){stg[kk]={ts:t,m};ops.push(evOp({m,ty:"stage",o,st:kk}))}}
+    ops.push({k:"ms",o,m:{...(first?{start:{ts:t,m}}:{}),stages:stg}});push(...ops);return}
   if(a==="qstart"){const o=el.dataset.o,t=Date.now();push(evOp({m,ty:"start",o}),{k:"ms",o,m:{start:{ts:t,m}}});return}
   if(a==="qundo"){const o=el.dataset.o,k=el.dataset.k;push(evOp({m,ty:"unstage",o,st:k}),{k:"ms",o,m:{stages:{[k]:null}}});return}
   if(a==="undo"){const o=V.o,k=el.dataset.k;push(evOp({m,ty:"unstage",o,st:k}),{k:"ms",o,m:{stages:{[k]:null}}});return}
