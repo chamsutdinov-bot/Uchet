@@ -3,7 +3,7 @@
 <head>
 <meta name="color-scheme" content="dark">
 <style>html{background:#141312}</style>
-<script>var BUILD="20261124220000";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){};try{Object.keys(localStorage).filter(function(k){return k.indexOf("bio_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){};try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null")||{bg:"#1c1a18",dark:true},_r=document.documentElement,_d=!!_t.dark;if(_t.bg){_r.style.setProperty("--bg",_t.bg);_r.style.backgroundColor=_t.bg;_r.dataset.theme=_d?"dark":"light";if(_d){var _v={"--surface":"#25221f","--text":"#f1ece5","--muted":"#a69f95","--line":"#3d3833","--accent":"#d6a36a","--accent-t":"#1b1713","--danger":"#f2a39e"};for(var _k in _v)_r.style.setProperty(_k,_v[_k]);_r.style.setProperty("--logo-f","none")}}if(_t.photo==="none"&&!_t.pn)delete _t.photo;if(_t.photo==="none")_r.style.setProperty("--bgimg","none");else if(_t.photo)_r.style.setProperty("--bgimg","url(\""+_t.photo+"\")");if(_t.font)_r.style.setProperty("--font",_t.font)}catch(e){}</script>
+<script>var BUILD="20261124221500";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){};try{Object.keys(localStorage).filter(function(k){return k.indexOf("bio_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){};try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null")||{bg:"#1c1a18",dark:true},_r=document.documentElement,_d=!!_t.dark;if(_t.bg){_r.style.setProperty("--bg",_t.bg);_r.style.backgroundColor=_t.bg;_r.dataset.theme=_d?"dark":"light";if(_d){var _v={"--surface":"#25221f","--text":"#f1ece5","--muted":"#a69f95","--line":"#3d3833","--accent":"#d6a36a","--accent-t":"#1b1713","--danger":"#f2a39e"};for(var _k in _v)_r.style.setProperty(_k,_v[_k]);_r.style.setProperty("--logo-f","none")}}if(_t.photo==="none"&&!_t.pn)delete _t.photo;if(_t.photo==="none")_r.style.setProperty("--bgimg","none");else if(_t.photo)_r.style.setProperty("--bgimg","url(\""+_t.photo+"\")");if(_t.font)_r.style.setProperty("--font",_t.font)}catch(e){}</script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -65,7 +65,7 @@ input,textarea{width:100%;border:1px solid var(--line);background:var(--surface)
 .stat b{display:block;font-size:18px}
 .stat span{font-size:12px;color:var(--muted)}
 .bar{display:flex;gap:8px;margin-bottom:12px}
-.card{background:color-mix(in srgb,var(--surface) 82%,transparent);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px}.card .row .nm{font-size:16px}.card .sum{font-size:16px}.card .ph{font-size:17px;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card .ph .m{font-size:12px}.card .chips{margin-top:8px}.card .chip{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:42px;gap:1px;line-height:1.15}.card .chip em{font-style:normal;font-size:13px;font-weight:600;color:var(--text)}.card .chip.on em{color:#4ec27f}.card .no{font-size:11px;font-weight:400;color:var(--muted);margin-right:4px}.card .sub{margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card .m{font-size:12px}
+.card{background:color-mix(in srgb,var(--surface) 82%,transparent);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px}.card .row .nm{font-size:16px}.card .lsm{display:block;height:13px;width:auto;margin:0 0 3px;opacity:.95}.card .sum{font-size:16px}.card .ph{font-size:17px;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card .ph .m{font-size:12px}.card .chips{margin-top:8px}.card .chip{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:42px;gap:1px;line-height:1.15}.card .chip em{font-style:normal;font-size:13px;font-weight:600;color:var(--text)}.card .chip.on em{color:#4ec27f}.card .no{font-size:11px;font-weight:400;color:var(--muted);margin-right:4px}.card .sub{margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card .m{font-size:12px}
 .row{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
 .row b{font-size:16px}
 .m{color:var(--muted);font-size:13px;margin-top:4px}
@@ -622,6 +622,7 @@ async function cuse(n){
 }
 const BGS=[["#ffffff","Белый",0],["#f4f1ec","Светлый",0],["#f3e6d0","Песочный",0],["#e6e6e6","Серый",0],["#e8eef4","Голубой",0],["#e9f0e6","Зеленый",0],["#f6e9ec","Розовый",0],["#eee9f6","Сиреневый",0],["#2a2d32","Графит",1],["#1c1a18","Темный",1],["#14213d","Темно-синий",1],["#14281f","Темно-зеленый",1],["#2b1418","Бордовый",1],["#000000","Черный",1]];
 const FONTS=[["system-ui,-apple-system,'Segoe UI',sans-serif","Обычный"],["Georgia,'Times New Roman',serif","С засечками"],["'Courier New',monospace","Моно"],["'Trebuchet MS',Verdana,sans-serif","Мягкий"]];
+let iOrd=[],lOrd=[],ldb=null;function mergeO(){orders=iOrd.concat(lOrd).sort((a,b)=>(b.ts||0)-(a.ts||0))}const dbFor=o=>o&&o._l&&ldb?ldb:db;/* заказы Liderstone в Interstone (24.11.2026) */
 let db=null,user=null,isAdmin=false,orders=[],editId=null,settings={},canAdmin=false,mode=null,clients=[],tab="all",curCl=null,editCl=null,fTp="r";
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -669,7 +670,7 @@ function askPw(H){return new Promise(res=>{const m=$("mPw"),i=$("pwIn"),e=$("pwE
   $("pwGo").onclick=go;$("pwNo").onclick=()=>done(false);i.onkeydown=ev=>{if(ev.key==="Enter")go()}})}
 function cardHtml(o){
   const rest=(o.s&&o.avs)?Math.max(0,o.s-o.avs):0,val={av:o.avs?fmt(o.avs):"",os:(o.s&&o.avs)?fmt(rest):""};
-  return `<div class="card"><div class="row"><b class="nm">${esc(o.fn)} ${esc(o.ln)}</b>${o.s?`<b class="sum">${fmt(o.s)}</b>`:""}</div>
+  return `<div class="card"><div class="row"><b class="nm">${o._l?`<img class="lsm" src="${LOGO_L}" alt="Liderstone">`:""}${esc(o.fn)} ${esc(o.ln)}</b>${o.s?`<b class="sum">${fmt(o.s)}</b>`:""}</div>
   <div class="m sub">№${esc(o.no)} · ${esc(o.date)}${o.tp==="w"&&!(tab==="w"&&curCl)?` · <span class="tag">Опт · ${esc(cn(o.cl))}</span>`:""}</div>
   ${msLine(o)}
   <div class="ph">📞 ${o.ph?`<a href="tel:${esc(o.ph)}">${esc(o.ph)}</a>`:"—"} <span class="m">· 📍 ${esc(o.ad)||"—"}</span></div>
@@ -734,7 +735,7 @@ async function save(){
   const d={no:$("fNo").value.trim(),date:$("fDate").value,fn:$("fFn").value.trim(),ph:$("fPh").value.trim(),ad:$("fAd").value.trim(),sl:+String($("fM").value).replace(",",".")||0,s:+$("fS").value||0,avs:+$("fAvS").value||0,nt:$("fNt").value.trim(),mt:$("fMt").value,tp:fTp,cl:fTp==="w"?$("fCl").value:"",av:$("cAv").checked,zm:$("cZm").checked,us:$("cUs").checked,os:$("cOs").checked,ts:Date.now()};
   try{
     const prev=editId&&orders.find(x=>x.id===editId);let nid=editId;
-    if(editId)await db.doc("orders/"+editId).update(d);else nid=(await db.collection("orders").add(d)).id;
+    if(editId)await dbFor(prev).doc("orders/"+editId).update(d);else nid=(await db.collection("orders").add(d)).id;
     if((!editId||d.zm)&&!(prev&&prev.zs)&&(W.fin||W.mst))await sendZm({...(prev||{}),...d,id:nid}); /* новый заказ — сразу конверт в «Цех» (24.11.2026) */
     $("mO").classList.remove("on");
   }catch(e){alert("Не удалось сохранить: "+(e.message||e.code))}
@@ -761,15 +762,15 @@ $("list").onclick=async e=>{
   if(b.dataset.ec){if(await askPw())openClient(b.dataset.ec);return}
   if(b.dataset.ac){openClient(null);return}
   if(b.dataset.e){if(await askPw())openForm(b.dataset.e);return}
-  if(b.dataset.t&&db){if(!(await askPw()))return;const o=orders.find(x=>x.id===b.dataset.t),k=b.dataset.k;if(o){o[k]=!o[k];render();try{await db.doc("orders/"+o.id).update({[k]:o[k]});if(k==="zm"&&o.zm&&!o.zs&&(W.fin||W.mst))await sendZm(o)}catch(x){o[k]=!o[k];render();try{await db.doc("orders/"+o.id).update({[k]:o[k]})}catch(y){}}}}
-  if(b.dataset.d&&isAdmin){if(!(await askPw()))return;try{await db.doc("orders/"+b.dataset.d).delete()}catch(x){}}
+  if(b.dataset.t&&db){if(!(await askPw()))return;const o=orders.find(x=>x.id===b.dataset.t),k=b.dataset.k;if(o){o[k]=!o[k];render();try{await dbFor(o).doc("orders/"+o.id).update({[k]:o[k]});if(k==="zm"&&o.zm&&!o.zs&&(W.fin||W.mst))await sendZm(o)}catch(x){o[k]=!o[k];render();try{await dbFor(o).doc("orders/"+o.id).update({[k]:o[k]})}catch(y){}}}}
+  if(b.dataset.d&&isAdmin){if(!(await askPw()))return;try{await dbFor(orders.find(x=>x.id===b.dataset.d)).doc("orders/"+b.dataset.d).delete()}catch(x){}}
 };
 $("bAdd").onclick=()=>openForm(null);
 $("oSave").onclick=save;
 async function sendZm(o){
   const t=Date.now(),md=msDb();if(!md)throw new Error("нет связи с цехом");
   await md.doc("mfeed/"+o.id).set({ts:t,oid:W.fin?o.id:"",no:o.no||"",mt:o.mt||"",ad:o.ad||"",ph:o.ph||""});
-  await db.doc("orders/"+o.id).update({zs:t});o.zs=t;
+  await dbFor(o).doc("orders/"+o.id).update({zs:t});o.zs=t;
 }$("oCancel").onclick=()=>$("mO").classList.remove("on");
 function readPhoto(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{let w=900,q=.62,out="";for(let t=0;t<6;t++){const sc=Math.min(1,w/im.width);const c=document.createElement("canvas");c.width=Math.round(im.width*sc);c.height=Math.round(im.height*sc);c.getContext("2d").drawImage(im,0,0,c.width,c.height);out=c.toDataURL("image/jpeg",q);if(out.length<180000)break;w=Math.round(w*.8);q=Math.max(.45,q-.05)}res(out)};im.onerror=rej;im.src=r.result};r.onerror=rej;r.readAsDataURL(f)})}
 $("phFile").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;try{const d=await readPhoto(f);settings={...settings,photo:d};applyTheme()}catch(x){}};
@@ -808,7 +809,7 @@ async function importFile(f){
       out.push(o);
     }
   }
-  const have=new Set(orders.map(keyOf));
+  const have=new Set(orders.filter(o=>!o._l).map(keyOf));
   const rows=[];for(const o of out){const k=keyOf(o);if(!have.has(k)){have.add(k);rows.push(o)}}
   if(!rows.length){say(out.length?"Все заказы из файла уже есть в приложении":"Не нашёл таблицу с заказами. Нужны колонки вроде: номер, имя, телефон, адрес, метры, сумма");return}
   pend=rows;
@@ -831,7 +832,7 @@ async function dedupe(){
   if(!db||!isAdmin){say("Убирать повторы может только учредитель");return}
   if(!(await askPw()))return;
   const seen=new Set(),del=[];
-  [...orders].sort((a,b)=>(a.ts||0)-(b.ts||0)).forEach(o=>{const k=keyOf(o);if(seen.has(k))del.push(o.id);else seen.add(k)});
+  [...orders.filter(o=>!o._l)].sort((a,b)=>(a.ts||0)-(b.ts||0)).forEach(o=>{const k=keyOf(o);if(seen.has(k))del.push(o.id);else seen.add(k)});
   if(!del.length){say("Повторов нет");return}
   say("Удаляю повторы: "+del.length+"…");
   let n=0;try{for(const id of del){await db.doc("orders/"+id).delete();n++}}catch(e){}
@@ -1153,7 +1154,7 @@ async function refresh(){
     if(db){
       const [o,t,cl]=await Promise.all([db.collection("orders").get(),db.doc("settings/theme").get(),db.collection("clients").get()]);
       clients=cl.docs.map(d=>({id:d.id,...d.data()}));
-      orders=o.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));
+      iOrd=o.docs.map(d=>({id:d.id,...d.data()}));mergeO();
       if(t.exists&&!loadTheme()){settings=t.data();applyTheme()}
       render();
     }
@@ -1442,7 +1443,8 @@ addEventListener("popstate",()=>{
   db.doc("settings/calc").onSnapshot(s=>{if(s.exists){calcP={fig:0,cut:0,rad:0,joint:0,ledge:0,...s.data()};kPrFill();kCalcRun()}});
   if(W.fin){db.collection("mfeed").onSnapshot(s=>{mfeedD={};s.docs.forEach(d=>mfeedD[d.id]=d.data());if($("mMs").classList.contains("on"))msPaint()});db.collection("mstage").onSnapshot(s=>{mstg={};s.docs.forEach(d=>mstg[d.id]=d.data());render();if($("mMs").classList.contains("on"))msPaint()});db.collection("mstaff").onSnapshot(s=>{mstaffD={};s.docs.forEach(d=>mstaffD[d.id]=d.data());render()})}
   else if(W.mst){msKey().then(t=>{if(!t)return;mdb=ghDb("chamsutdinov-bot/uchet-data",()=>t);mdb.collection("mfeed").onSnapshot(s=>{mfeedD={};s.docs.forEach(d=>mfeedD[d.id]=d.data());if($("mMs").classList.contains("on"))msPaint()});mdb.collection("mstage").onSnapshot(s=>{mstg={};s.docs.forEach(d=>mstg[d.id]=d.data());render();if($("mMs").classList.contains("on"))msPaint()});mdb.collection("mstaff").onSnapshot(s=>{mstaffD={};s.docs.forEach(d=>mstaffD[d.id]=d.data());render();if($("mMs").classList.contains("on"))msPaint()});mdb.collection("orders").onSnapshot(s=>{mOrd=s.docs.map(d=>({id:d.id,...d.data()}))})})}
-  db.collection("orders").onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts||0)-(a.ts||0));render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
+  if(W.fin)(async()=>{const cand=[];try{const a=localStorage.getItem("uchet_gh_l");if(a)cand.push(a)}catch(e){}const k=ghKey();if(k&&!cand.includes(k))cand.push(k);for(const t of cand){try{const r=await fetch("https://api.github.com/repos/chamsutdinov-bot/liderstone-data",{headers:{Authorization:"Bearer "+t,Accept:"application/vnd.github+json"},cache:"no-store"});if(!r.ok)continue;ldb=ghDb("chamsutdinov-bot/liderstone-data",()=>t);ldb.collection("orders").onSnapshot(s=>{lOrd=s.docs.map(d=>({id:d.id,...d.data(),_l:1}));mergeO();render()});return}catch(e){}}})();
+  db.collection("orders").onSnapshot(s=>{iOrd=s.docs.map(d=>({id:d.id,...d.data()}));mergeO();render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>
 
