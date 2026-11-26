@@ -3,7 +3,7 @@
 <head>
 <meta name="color-scheme" content="dark">
 <style>html{background:#141312}</style>
-<script>var BUILD="20261124223000";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){};try{Object.keys(localStorage).filter(function(k){return k.indexOf("bio_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){};try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null")||{bg:"#1c1a18",dark:true},_r=document.documentElement,_d=!!_t.dark;if(_t.bg){_r.style.setProperty("--bg",_t.bg);_r.style.backgroundColor=_t.bg;_r.dataset.theme=_d?"dark":"light";if(_d){var _v={"--surface":"#25221f","--text":"#f1ece5","--muted":"#a69f95","--line":"#3d3833","--accent":"#d6a36a","--accent-t":"#1b1713","--danger":"#f2a39e"};for(var _k in _v)_r.style.setProperty(_k,_v[_k]);_r.style.setProperty("--logo-f","none")}}if(_t.photo==="none"&&!_t.pn)delete _t.photo;if(_t.photo==="none")_r.style.setProperty("--bgimg","none");else if(_t.photo)_r.style.setProperty("--bgimg","url(\""+_t.photo+"\")");if(_t.font)_r.style.setProperty("--font",_t.font)}catch(e){}</script>
+<script>var BUILD="20261127021500";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){};try{Object.keys(localStorage).filter(function(k){return k.indexOf("bio_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){};try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null")||{bg:"#1c1a18",dark:true},_r=document.documentElement,_d=!!_t.dark;if(_t.bg){_r.style.setProperty("--bg",_t.bg);_r.style.backgroundColor=_t.bg;_r.dataset.theme=_d?"dark":"light";if(_d){var _v={"--surface":"#25221f","--text":"#f1ece5","--muted":"#a69f95","--line":"#3d3833","--accent":"#d6a36a","--accent-t":"#1b1713","--danger":"#f2a39e"};for(var _k in _v)_r.style.setProperty(_k,_v[_k]);_r.style.setProperty("--logo-f","none")}}if(_t.photo==="none"&&!_t.pn)delete _t.photo;if(_t.photo==="none")_r.style.setProperty("--bgimg","none");else if(_t.photo)_r.style.setProperty("--bgimg","url(\""+_t.photo+"\")");if(_t.font)_r.style.setProperty("--font",_t.font)}catch(e){}</script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -763,7 +763,7 @@ $("list").onclick=async e=>{
   if(b.dataset.ac){openClient(null);return}
   if(b.dataset.e){if(await askPw())openForm(b.dataset.e);return}
   if(b.dataset.t&&db){if(!(await askPw()))return;const o=orders.find(x=>x.id===b.dataset.t),k=b.dataset.k;if(o){o[k]=!o[k];render();try{await dbFor(o).doc("orders/"+o.id).update({[k]:o[k]});if(k==="zm"&&o.zm&&!o.zs&&(W.fin||W.mst))await sendZm(o)}catch(x){o[k]=!o[k];render();try{await dbFor(o).doc("orders/"+o.id).update({[k]:o[k]})}catch(y){}}}}
-  if(b.dataset.d&&isAdmin){if(!(await askPw()))return;try{await dbFor(orders.find(x=>x.id===b.dataset.d)).doc("orders/"+b.dataset.d).delete()}catch(x){}}
+  if(b.dataset.d&&isAdmin){if(!(await askPw()))return;try{await dbFor(orders.find(x=>x.id===b.dataset.d)).doc("orders/"+b.dataset.d).delete();fdDel(b.dataset.d)}catch(x){}}
 };
 $("bAdd").onclick=()=>openForm(null);
 $("oSave").onclick=save;
@@ -835,7 +835,7 @@ async function dedupe(){
   [...orders.filter(o=>!o._l)].sort((a,b)=>(a.ts||0)-(b.ts||0)).forEach(o=>{const k=keyOf(o);if(seen.has(k))del.push(o.id);else seen.add(k)});
   if(!del.length){say("Повторов нет");return}
   say("Удаляю повторы: "+del.length+"…");
-  let n=0;try{for(const id of del){await db.doc("orders/"+id).delete();n++}}catch(e){}
+  let n=0;try{for(const id of del){await db.doc("orders/"+id).delete();fdDel(id);n++}}catch(e){}
   say("Удалено повторов: "+n+" из "+del.length);
 }
 function say(t){$("fMsg").textContent=t;$("fGo").style.display="none"}
@@ -872,7 +872,7 @@ $("wipeGo").onclick=async()=>{
   if(!(await askPw()))return;
   const g=$("wipeGo");g.disabled=true;let n=0;
   try{const snap=await db.collection("orders").get();const ids=snap.docs.map(d=>d.id);
-    for(const id of ids){await db.doc("orders/"+id).delete();n++;g.textContent="Удаляю "+n+" / "+ids.length}
+    for(const id of ids){await db.doc("orders/"+id).delete();fdDel(id);n++;g.textContent="Удаляю "+n+" / "+ids.length}
     say("Готово: удалено заказов — "+n);
   }catch(e){say("Удалено "+n+". Ошибка: "+(e.message||e.code))}
   g.disabled=false;g.textContent="Удалить все заказы навсегда";$("wipeBox").style.display="none";
@@ -1182,6 +1182,7 @@ function chooseWs(){return new Promise(res=>{const m=$("mWs");let RS=null;try{RS
 /* ===== МАСТЕРА: стадии заказов и отчёт (данные пишет планшет master.html) ===== */
 let mstg={},mstaffD={},msLog={},msEvs=[],mdb=null,mOrd=[];
 const msO=()=>W.fin?orders:orders.concat(mOrd),/* Liderstone: свои заказы первыми — чтобы этапы цеха по номеру привязались к ним */msDb=()=>W.fin?db:mdb;
+/* удалили заказ — убираем и его сообщение в «Цех» (27.11.2026) */const fdDel=id=>{try{const m=msDb();if(m)Promise.resolve(m.doc("mfeed/"+id).delete()).catch(()=>{})}catch(e){}};
 async function msKey(){let t="";try{t=localStorage.getItem("uchet_gh_lm")||localStorage.getItem("uchet_gh")||""}catch(e){}if(t)return t;/* Liderstone: цех через ключ Liderstone или, если на устройстве есть вход в Interstone, через его ключ */try{const A=await (await fetch(W.acc,{cache:"no-store"})).json();if(A.m)t=await openAccess(A.m,_entryPw)||""}catch(e){}if(t)try{localStorage.setItem("uchet_gh_lm",t)}catch(e){}return t}
 const MS_ST=[["rasp","Распил"],["skl","Склейка"],["obr","Обработка"],["gotov","Готово к выдаче"]];
 const msName=id=>(mstaffD[id]||{}).n||"—";
