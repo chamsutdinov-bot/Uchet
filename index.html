@@ -3,7 +3,7 @@
 <head>
 <meta name="color-scheme" content="dark">
 <style>html{background:#141312}</style>
-<script>var BUILD="20261127021500";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){};try{Object.keys(localStorage).filter(function(k){return k.indexOf("bio_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){};try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null")||{bg:"#1c1a18",dark:true},_r=document.documentElement,_d=!!_t.dark;if(_t.bg){_r.style.setProperty("--bg",_t.bg);_r.style.backgroundColor=_t.bg;_r.dataset.theme=_d?"dark":"light";if(_d){var _v={"--surface":"#25221f","--text":"#f1ece5","--muted":"#a69f95","--line":"#3d3833","--accent":"#d6a36a","--accent-t":"#1b1713","--danger":"#f2a39e"};for(var _k in _v)_r.style.setProperty(_k,_v[_k]);_r.style.setProperty("--logo-f","none")}}if(_t.photo==="none"&&!_t.pn)delete _t.photo;if(_t.photo==="none")_r.style.setProperty("--bgimg","none");else if(_t.photo)_r.style.setProperty("--bgimg","url(\""+_t.photo+"\")");if(_t.font)_r.style.setProperty("--font",_t.font)}catch(e){}</script>
+<script>var BUILD="20261127023000";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){};try{Object.keys(localStorage).filter(function(k){return k.indexOf("bio_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){};try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null")||{bg:"#1c1a18",dark:true},_r=document.documentElement,_d=!!_t.dark;if(_t.bg){_r.style.setProperty("--bg",_t.bg);_r.style.backgroundColor=_t.bg;_r.dataset.theme=_d?"dark":"light";if(_d){var _v={"--surface":"#25221f","--text":"#f1ece5","--muted":"#a69f95","--line":"#3d3833","--accent":"#d6a36a","--accent-t":"#1b1713","--danger":"#f2a39e"};for(var _k in _v)_r.style.setProperty(_k,_v[_k]);_r.style.setProperty("--logo-f","none")}}if(_t.photo==="none"&&!_t.pn)delete _t.photo;if(_t.photo==="none")_r.style.setProperty("--bgimg","none");else if(_t.photo)_r.style.setProperty("--bgimg","url(\""+_t.photo+"\")");if(_t.font)_r.style.setProperty("--font",_t.font)}catch(e){}</script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -103,7 +103,8 @@ a{color:var(--text);font-weight:600;text-decoration:underline;text-decoration-co
 .bar2{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-bottom:8px}
 .bar2 select{grid-column:span 2;height:40px;padding:0 6px;border-radius:10px;font-size:13px;font-weight:600;text-align:center;text-align-last:center;color:var(--text);-webkit-appearance:none;appearance:none;border:1px solid color-mix(in srgb,var(--text) 22%,transparent);background:linear-gradient(180deg,color-mix(in srgb,var(--text) 16%,transparent),color-mix(in srgb,var(--text) 5%,transparent));-webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4);box-shadow:inset 0 1.5px 0 color-mix(in srgb,#fff 55%,transparent),inset 0 -2px 6px color-mix(in srgb,#000 12%,transparent),0 6px 14px -6px color-mix(in srgb,#000 38%,transparent);text-overflow:ellipsis}
 .bar2 select:active{transform:scale(.97)}
-#selS,#selMt{grid-column:span 3}
+#selS,#selMt{grid-column:span 2}
+/* «Архив» (27.11.2026): завершённые заказы — с галочкой «Остаток» */#bArch{grid-column:span 2;height:40px;border-radius:10px;font-size:13px;font-weight:700;color:#fff;background:#c62828;border:1px solid #c62828;white-space:nowrap;padding:0 6px}#bArch.on{background:transparent;color:#ff6b6b;border-color:#ff6b6b}.archh{font-weight:700;color:#ff6b6b;margin:4px 2px 10px}#oSave:disabled{opacity:.5}
 .gh{display:flex;justify-content:space-between;align-items:baseline;margin:16px 2px 8px;font-size:15px}
 .gh span{color:var(--muted);font-size:12px}
 #bg3d{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;perspective:900px;pointer-events:none;z-index:0;overflow:hidden}
@@ -277,6 +278,7 @@ html,body{transition:none}
   <select id="selM"><option value="all">Все месяцы</option><option value="1">Январь</option><option value="2">Февраль</option><option value="3">Март</option><option value="4">Апрель</option><option value="5">Май</option><option value="6">Июнь</option><option value="7">Июль</option><option value="8">Август</option><option value="9">Сентябрь</option><option value="10">Октябрь</option><option value="11">Ноябрь</option><option value="12">Декабрь</option></select>
   <select id="selS"><option value="all">Все статусы</option><option value="av">Нет аванса</option><option value="zm">Нет замера</option><option value="us">Нет установки</option><option value="os">Нет остатка</option></select>
   <select id="selMt"><option value="all">Все материалы</option><option value="Акрил">Акрил</option><option value="Кварц">Кварц</option></select>
+  <button type="button" id="bArch">Архив</button>
 </div>
 <div id="list"></div>
 <div class="note" id="who"></div>
@@ -683,10 +685,12 @@ function renderClients(t){
   const C=clients.filter(c=>!t||((c.name||"")+" "+(c.ct||"")+" "+(c.ph||"")).toLowerCase().includes(t)).sort((a,b)=>String(a.name).localeCompare(String(b.name),"ru"));
   $("list").innerHTML='<button class="g addcl" data-ac="1">+ Оптовик</button><div class="cgrid">'+C.map(c=>{const os=W.filter(o=>o.cl===c.id),open=os.filter(o=>!o.os).length;return `<button class="ctile" data-c="${c.id}"><span class="av">${esc((c.name||"?").trim().charAt(0).toUpperCase())}</span><b>${esc(c.name)}</b><small>${os.length} зак.${open?` · <i>ждёт остаток: ${open}</i>`:""}</small></button>`}).join("")+'</div>';
 }
+let arch=false;
 function render(){
   const t=$("q").value.trim().toLowerCase();
   $("selT").value=tab;
-  const lv=tab==="w"&&!curCl;["selY","selM","selS","selMt"].forEach(i=>$(i).style.display=lv?"none":"");
+  const lv=tab==="w"&&!curCl;["selY","selM","selS","selMt","bArch"].forEach(i=>$(i).style.display=lv?"none":"");
+  $("bArch").classList.toggle("on",arch);$("bArch").textContent=arch?"← Заказы":"Архив";
   if(lv){renderClients(t);return}
   const sy=$("selY");
   const years=[...new Set(orders.map(o=>ym(o)[0]).filter(Boolean))].sort((a,b)=>b-a);
@@ -698,9 +702,9 @@ function render(){
     sy.value=[...sy.options].some(x=>x.value===cur)?cur:"all";sy.dataset.k=yk;
   }
   const Y=sy.value,M=$("selM").value;
-  const L=orders.filter(o=>{if(tab==="r"&&o.tp==="w")return false;if(tab==="w"&&(o.tp!=="w"||o.cl!==curCl))return false;const[y,m]=ym(o);if(Y!=="all"&&String(y)!==Y)return false;if(M!=="all"&&String(m)!==M)return false;const S=$("selS").value;if(S!=="all"&&o[S])return false;const MT=$("selMt").value;if(MT!=="all"&&o.mt!==MT)return false;return !t||[o.no,o.fn,o.ln,o.ph,o.ad,o.nt].join(" ").toLowerCase().includes(t)});
+  const L=orders.filter(o=>{if(!!o.os!==arch)return false;/* архив: только с «Остатком»; в основном списке — без */if(tab==="r"&&o.tp==="w")return false;if(tab==="w"&&(o.tp!=="w"||o.cl!==curCl))return false;const[y,m]=ym(o);if(Y!=="all"&&String(y)!==Y)return false;if(M!=="all"&&String(m)!==M)return false;const S=$("selS").value;if(S!=="all"&&o[S])return false;const MT=$("selMt").value;if(MT!=="all"&&o.mt!==MT)return false;return !t||[o.no,o.fn,o.ln,o.ph,o.ad,o.nt].join(" ").toLowerCase().includes(t)});
   const cc=tab==="w"&&curCl?clients.find(x=>x.id===curCl):null;
-  const head=(tab==="w"&&curCl)?`<div class="chead"><button data-back="1">←</button><div><b>${esc(cc?cc.name:"")}</b><div class="m">${esc(cc?[cc.ct,cc.ph].filter(Boolean).join(" · "):"")}</div></div><button data-ec="${curCl}">Изменить</button></div>`:"";
+  const head=(arch?`<div class="archh">Архив — завершённые заказы (остаток получен)</div>`:"")+((tab==="w"&&curCl)?`<div class="chead"><button data-back="1">←</button><div><b>${esc(cc?cc.name:"")}</b><div class="m">${esc(cc?[cc.ct,cc.ph].filter(Boolean).join(" · "):"")}</div></div><button data-ec="${curCl}">Изменить</button></div>`:"");
   if(!L.length){$("list").innerHTML=head+`<div class="empty">${db?"":"Загрузка…"}</div>`;return}
   const G={};L.forEach(o=>{const[y,m]=ym(o);(G[y?y*100+m:0]=G[y?y*100+m:0]||[]).push(o)});
   $("list").innerHTML=head+Object.keys(G).map(Number).sort((a,b)=>b-a).map(k=>{
@@ -728,7 +732,12 @@ function openForm(id){
   setMt(o.mt||"");$("fM").value=o.sl??"";$("fS").value=o.s??"";$("fAvS").value=o.avs??"";$("fNt").value=o.nt||"";$("cAv").checked=!!o.av;$("cZm").checked=!!o.zm;$("cUs").checked=!!o.us;$("cOs").checked=!!o.os;ostCalc();
   $("mO").classList.add("on");
 }
+/* защита от второго нажатия «Сохранить», пока идёт сохранение (27.11.2026) */let saving=false;
 async function save(){
+  if(saving)return;saving=true;$("oSave").disabled=true;
+  try{await save0()}finally{saving=false;$("oSave").disabled=false}
+}
+async function save0(){
   if(!db)return;
   if(fTp==="w"&&!$("fCl").value){$("fCl").style.borderColor="var(--danger)";return}
   if(!editId&&!(await askPw()))return;
@@ -766,6 +775,7 @@ $("list").onclick=async e=>{
   if(b.dataset.d&&isAdmin){if(!(await askPw()))return;try{await dbFor(orders.find(x=>x.id===b.dataset.d)).doc("orders/"+b.dataset.d).delete();fdDel(b.dataset.d)}catch(x){}}
 };
 $("bAdd").onclick=()=>openForm(null);
+$("bArch").onclick=()=>{arch=!arch;render();scrollTo(0,0)};
 $("oSave").onclick=save;
 async function sendZm(o){
   const t=Date.now(),md=msDb();if(!md)throw new Error("нет связи с цехом");
