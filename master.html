@@ -163,7 +163,7 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height
 .trk .ts:disabled{opacity:1}
 @media (max-width:900px){.cv2,.cv2.noact{grid-template-columns:auto minmax(0,1fr)}.cv2 .trk,.cv2 .cact{grid-column:1/-1}}
 </style>
-<script>var BUILD="20261127025500"</script>
+<script>var BUILD="20261127030000"</script>
 <script>
 try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null");}catch(e){}
 </script>
@@ -254,7 +254,7 @@ async function flush(){
     while(pend.length){
       const op=pend[0];
       if(op.k==="ev")await mutate("mlog_"+op.ym,o=>{o[op.id]={...(o[op.id]||{}),...op.d}});
-      else if(op.k==="ms")await mutate("mstage",o=>{deepMerge(o[op.o]||(o[op.o]={}),op.m)});
+      else if(op.k==="ms")await mutate("mstage",o=>{if(!o[op.o]&&!op.m.added&&!op.m.to)return;/* заказ уже убрали из цеха (удалён в учёте или цех обнулён) — не возвращаем его старой записью с планшета (27.11.2026) */deepMerge(o[op.o]||(o[op.o]={}),op.m)});
       else if(op.k==="ms0")await mutate("mstage",o=>{delete o[op.o]});
       else if(op.k==="st")await mutate("mstaff",o=>{if(op.d===null)delete o[op.id];else o[op.id]=op.d});
       else if(op.k==="fd")await mutate("mfeed",o=>{o[op.id]={...(o[op.id]||{}),...op.d}});
