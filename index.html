@@ -9,7 +9,7 @@ header button,#bAdd,.bar2 select,#bArch{color:#fff!important;border:1px solid rg
 #bArch.on{color:#ffb3b3!important;background:linear-gradient(180deg,rgba(255,120,120,.30),rgba(205,25,35,.16))!important}
 .bar2 select option{color:#000}
 </style>
-<script>var BUILD="20261127100000";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){};try{Object.keys(localStorage).filter(function(k){return k.indexOf("bio_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){};try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null")||{bg:"#1c1a18",dark:true},_r=document.documentElement,_d=!!_t.dark;if(_t.bg){_r.style.setProperty("--bg",_t.bg);_r.style.backgroundColor=_t.bg;_r.dataset.theme=_d?"dark":"light";if(_d){var _v={"--surface":"#25221f","--text":"#f1ece5","--muted":"#a69f95","--line":"#3d3833","--accent":"#d6a36a","--accent-t":"#1b1713","--danger":"#f2a39e"};for(var _k in _v)_r.style.setProperty(_k,_v[_k]);_r.style.setProperty("--logo-f","none")}}if(_t.photo==="none"&&!_t.pn)delete _t.photo;if(_t.photo==="none")_r.style.setProperty("--bgimg","none");else if(_t.photo)_r.style.setProperty("--bgimg","url(\""+_t.photo+"\")");if(_t.font)_r.style.setProperty("--font",_t.font)}catch(e){}</script>
+<script>var BUILD="20261127104000";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){};try{Object.keys(localStorage).filter(function(k){return k.indexOf("bio_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){};try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null")||{bg:"#1c1a18",dark:true},_r=document.documentElement,_d=!!_t.dark;if(_t.bg){_r.style.setProperty("--bg",_t.bg);_r.style.backgroundColor=_t.bg;_r.dataset.theme=_d?"dark":"light";if(_d){var _v={"--surface":"#25221f","--text":"#f1ece5","--muted":"#a69f95","--line":"#3d3833","--accent":"#d6a36a","--accent-t":"#1b1713","--danger":"#f2a39e"};for(var _k in _v)_r.style.setProperty(_k,_v[_k]);_r.style.setProperty("--logo-f","none")}}if(_t.photo==="none"&&!_t.pn)delete _t.photo;if(_t.photo==="none")_r.style.setProperty("--bgimg","none");else if(_t.photo)_r.style.setProperty("--bgimg","url(\""+_t.photo+"\")");if(_t.font)_r.style.setProperty("--font",_t.font)}catch(e){}</script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -293,6 +293,7 @@ html,body{transition:none}
   <h2 id="mT">Новый заказ</h2>
   <div class="seg" id="tpSeg"><button type="button" data-tp="r" class="on">Розница</button><button type="button" data-tp="w">Опт</button></div>
   <div class="seg" id="mtSeg" style="margin-top:8px"><button type="button" data-mt="Акрил">Акрил</button><button type="button" data-mt="Кварц">Кварц</button></div><input type="hidden" id="fMt">
+  <div style="margin:8px 0 10px"><label>Название камня</label><input id="fKn" placeholder="например, Grandex A-411"></div>
   <div id="clRow" style="display:none;margin-bottom:10px"><label>Оптовик</label><select id="fCl"></select></div>
   <div class="form">
     <div><label>№ заказа</label><input id="fNo"></div>
@@ -727,7 +728,7 @@ function openForm(id){
   $("mT").textContent=id?"Изменить заказ":"Новый заказ";setTp(o.tp||(id?"r":(tab==="w"?"w":"r")),o.cl||(id?"":(curCl||"")));
   $("fNo").value=o.no||"";$("fDate").value=o.date||new Date().toISOString().slice(0,10);
   $("fFn").value=o.fn||"";$("fPh").value=o.ph||"";$("fAd").value=o.ad||"";
-  setMt(o.mt||"");$("fM").value=o.sl??"";$("fS").value=o.s??"";$("fAvS").value=o.avs??"";$("fNt").value=o.nt||"";$("cAv").checked=!!o.av;$("cZm").checked=!!o.zm;$("cUs").checked=!!o.us;$("cOs").checked=!!o.os;ostCalc();
+  setMt(o.mt||"");$("fKn").value=o.kn||"";$("fM").value=o.sl??"";$("fS").value=o.s??"";$("fAvS").value=o.avs??"";$("fNt").value=o.nt||"";$("cAv").checked=!!o.av;$("cZm").checked=!!o.zm;$("cUs").checked=!!o.us;$("cOs").checked=!!o.os;ostCalc();
   $("mO").classList.add("on");
 }
 /* защита от второго нажатия «Сохранить», пока идёт сохранение (27.11.2026) */let saving=false;
@@ -739,7 +740,7 @@ async function save0(){
   if(!db)return;
   if(fTp==="w"&&!$("fCl").value){$("fCl").style.borderColor="var(--danger)";return}
   if(!editId&&!(await askPw()))return;
-  const d={no:$("fNo").value.trim(),date:$("fDate").value,fn:$("fFn").value.trim(),ph:$("fPh").value.trim(),ad:$("fAd").value.trim(),sl:+String($("fM").value).replace(",",".")||0,s:+$("fS").value||0,avs:+$("fAvS").value||0,nt:$("fNt").value.trim(),mt:$("fMt").value,tp:fTp,cl:fTp==="w"?$("fCl").value:"",av:$("cAv").checked,zm:$("cZm").checked,us:$("cUs").checked,os:$("cOs").checked,ts:Date.now()};
+  const d={no:$("fNo").value.trim(),date:$("fDate").value,fn:$("fFn").value.trim(),ph:$("fPh").value.trim(),ad:$("fAd").value.trim(),sl:+String($("fM").value).replace(",",".")||0,s:+$("fS").value||0,avs:+$("fAvS").value||0,nt:$("fNt").value.trim(),mt:$("fMt").value,kn:$("fKn").value.trim(),tp:fTp,cl:fTp==="w"?$("fCl").value:"",av:$("cAv").checked,zm:$("cZm").checked,us:$("cUs").checked,os:$("cOs").checked,ts:Date.now()};
   try{
     const prev=editId&&orders.find(x=>x.id===editId);let nid=editId;
     if(editId)await dbFor(prev).doc("orders/"+editId).update(d);else nid=(await db.collection("orders").add(d)).id;
