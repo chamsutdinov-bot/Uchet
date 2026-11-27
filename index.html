@@ -9,7 +9,7 @@ header button,#bAdd,.bar2 select,#bArch{color:#fff!important;border:1px solid rg
 #bArch.on{color:#ffb3b3!important;background:linear-gradient(180deg,rgba(255,120,120,.30),rgba(205,25,35,.16))!important}
 .bar2 select option{color:#000}
 </style>
-<script>var BUILD="20261127031000";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){};try{Object.keys(localStorage).filter(function(k){return k.indexOf("bio_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){};try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null")||{bg:"#1c1a18",dark:true},_r=document.documentElement,_d=!!_t.dark;if(_t.bg){_r.style.setProperty("--bg",_t.bg);_r.style.backgroundColor=_t.bg;_r.dataset.theme=_d?"dark":"light";if(_d){var _v={"--surface":"#25221f","--text":"#f1ece5","--muted":"#a69f95","--line":"#3d3833","--accent":"#d6a36a","--accent-t":"#1b1713","--danger":"#f2a39e"};for(var _k in _v)_r.style.setProperty(_k,_v[_k]);_r.style.setProperty("--logo-f","none")}}if(_t.photo==="none"&&!_t.pn)delete _t.photo;if(_t.photo==="none")_r.style.setProperty("--bgimg","none");else if(_t.photo)_r.style.setProperty("--bgimg","url(\""+_t.photo+"\")");if(_t.font)_r.style.setProperty("--font",_t.font)}catch(e){}</script>
+<script>var BUILD="20261127090000";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){};try{Object.keys(localStorage).filter(function(k){return k.indexOf("bio_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){};try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null")||{bg:"#1c1a18",dark:true},_r=document.documentElement,_d=!!_t.dark;if(_t.bg){_r.style.setProperty("--bg",_t.bg);_r.style.backgroundColor=_t.bg;_r.dataset.theme=_d?"dark":"light";if(_d){var _v={"--surface":"#25221f","--text":"#f1ece5","--muted":"#a69f95","--line":"#3d3833","--accent":"#d6a36a","--accent-t":"#1b1713","--danger":"#f2a39e"};for(var _k in _v)_r.style.setProperty(_k,_v[_k]);_r.style.setProperty("--logo-f","none")}}if(_t.photo==="none"&&!_t.pn)delete _t.photo;if(_t.photo==="none")_r.style.setProperty("--bgimg","none");else if(_t.photo)_r.style.setProperty("--bgimg","url(\""+_t.photo+"\")");if(_t.font)_r.style.setProperty("--font",_t.font)}catch(e){}</script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -136,7 +136,7 @@ body>*:not(#bg3d):not(#ptr):not(.modal){position:relative;z-index:1}
 .cgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
 .ctile{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:14px;border-radius:14px;background:color-mix(in srgb,var(--surface) 82%,transparent);min-width:0}
 .ctile b{font-size:15px;overflow-wrap:anywhere}
-.ctile small{color:var(--muted);font-size:12px}
+.ctile small{color:var(--muted);font-size:12px}.ctile .lsm{display:block;height:13px;width:auto;opacity:.95}
 .ctile small i{color:#c77d1a;font-style:normal}
 .av{width:38px;height:38px;border-radius:50%;background:var(--accent);color:var(--accent-t);display:flex;align-items:center;justify-content:center;font-weight:700}
 .addcl{width:100%}
@@ -619,7 +619,7 @@ async function cuse(n){
 }
 const BGS=[["#ffffff","Белый",0],["#f4f1ec","Светлый",0],["#f3e6d0","Песочный",0],["#e6e6e6","Серый",0],["#e8eef4","Голубой",0],["#e9f0e6","Зеленый",0],["#f6e9ec","Розовый",0],["#eee9f6","Сиреневый",0],["#2a2d32","Графит",1],["#1c1a18","Темный",1],["#14213d","Темно-синий",1],["#14281f","Темно-зеленый",1],["#2b1418","Бордовый",1],["#000000","Черный",1]];
 const FONTS=[["system-ui,-apple-system,'Segoe UI',sans-serif","Обычный"],["Georgia,'Times New Roman',serif","С засечками"],["'Courier New',monospace","Моно"],["'Trebuchet MS',Verdana,sans-serif","Мягкий"]];
-let iOrd=[],lOrd=[],ldb=null;function mergeO(){orders=iOrd.concat(lOrd).sort((a,b)=>(b.ts||0)-(a.ts||0))}const dbFor=o=>o&&o._l&&ldb?ldb:db;/* заказы Liderstone в Interstone (24.11.2026) */
+let iOrd=[],lOrd=[],ldb=null;function mergeO(){orders=iOrd.concat(lOrd).sort((a,b)=>(b.ts||0)-(a.ts||0))}/* оптовики: у каждой фирмы свои; Interstone видит и оптовиков Liderstone (27.11.2026) */let iCl=[],lCl=[];function mergeC(){clients=iCl.concat(lCl)}const dbForC=c=>c&&c._l&&ldb?ldb:db;const dbFor=o=>o&&o._l&&ldb?ldb:db;/* заказы Liderstone в Interstone (24.11.2026) */
 let db=null,user=null,isAdmin=false,orders=[],editId=null,settings={},canAdmin=false,mode=null,clients=[],tab="all",curCl=null,editCl=null,fTp="r";
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -679,7 +679,7 @@ const cn=id=>{const c=clients.find(x=>x.id===id);return c?c.name:"—"};
 function renderClients(t){
   const W=orders.filter(o=>o.tp==="w");
   const C=clients.filter(c=>!t||((c.name||"")+" "+(c.ct||"")+" "+(c.ph||"")).toLowerCase().includes(t)).sort((a,b)=>String(a.name).localeCompare(String(b.name),"ru"));
-  $("list").innerHTML='<button class="g addcl" data-ac="1">+ Оптовик</button><div class="cgrid">'+C.map(c=>{const os=W.filter(o=>o.cl===c.id),open=os.filter(o=>!o.os).length;return `<button class="ctile" data-c="${c.id}"><span class="av">${esc((c.name||"?").trim().charAt(0).toUpperCase())}</span><b>${esc(c.name)}</b><small>${os.length} зак.${open?` · <i>ждёт остаток: ${open}</i>`:""}</small></button>`}).join("")+'</div>';
+  $("list").innerHTML='<button class="g addcl" data-ac="1">+ Оптовик</button><div class="cgrid">'+C.map(c=>{const os=W.filter(o=>o.cl===c.id),open=os.filter(o=>!o.os).length;return `<button class="ctile" data-c="${c.id}">${c._l?`<img class="lsm" src="${LOGO_L}" alt="Liderstone">`:""}<span class="av">${esc((c.name||"?").trim().charAt(0).toUpperCase())}</span><b>${esc(c.name)}</b><small>${os.length} зак.${open?` · <i>ждёт остаток: ${open}</i>`:""}</small></button>`}).join("")+'</div>';
 }
 let arch=false;
 function render(){
@@ -715,7 +715,8 @@ function setTp(tp,cl){
   document.querySelectorAll("#tpSeg button").forEach(b=>b.classList.toggle("on",b.dataset.tp===tp));
   $("clRow").style.display=tp==="w"?"block":"none";
   const f=$("fCl");
-  f.innerHTML='<option value="">'+(clients.length?"Выберите оптовика":"Нет оптовиков: добавьте на вкладке «Опт»")+'</option>'+clients.slice().sort((a,b)=>String(a.name).localeCompare(String(b.name),"ru")).map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join("");
+  const eo=editId&&orders.find(x=>x.id===editId),CL=clients.filter(c=>!!c._l===!!(eo&&eo._l));/* заказ Interstone — оптовики Interstone, заказ Liderstone — оптовики Liderstone */
+  f.innerHTML='<option value="">'+(CL.length?"Выберите оптовика":"Нет оптовиков: добавьте на вкладке «Опт»")+'</option>'+CL.slice().sort((a,b)=>String(a.name).localeCompare(String(b.name),"ru")).map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join("");
   f.value=cl||"";f.style.borderColor="";
 }
 function ostCalc(){const t=+$("fS").value||0,a=+$("fAvS").value||0;$("fOst").value=(t&&a)?fmt(Math.max(0,t-a)):""}
@@ -836,13 +837,13 @@ $("cSave").onclick=async()=>{
   if(!db)return;
   if(!editCl&&!(await askPw()))return;
   const d={name,ct:$("cCt").value.trim(),ph:$("cPh").value.trim(),nt:$("cNt").value.trim(),ts:Date.now()};
-  try{if(editCl)await db.doc("clients/"+editCl).update(d);else await db.collection("clients").add(d);$("mC").classList.remove("on")}catch(e){}
+  try{if(editCl)await dbForC(clients.find(x=>x.id===editCl)).doc("clients/"+editCl).update(d);else await db.collection("clients").add(d);$("mC").classList.remove("on")}catch(e){$("cT").textContent="Не сохранилось: "+(e&&e.message||"ошибка")+" — попробуйте ещё раз"}
 };
 $("cCancel").onclick=()=>$("mC").classList.remove("on");
 $("cDel").onclick=async()=>{
   if(!isAdmin||!editCl||!db)return;
   if(!(await askPw()))return;
-  try{await db.doc("clients/"+editCl).delete()}catch(e){}
+  try{await dbForC(clients.find(x=>x.id===editCl)).doc("clients/"+editCl).delete()}catch(e){}
   $("mC").classList.remove("on");curCl=null;render();
 };
 function setMt(v){$("fMt").value=v;$("fMl").textContent=(v==="Акрил"?"Листов":"Слэбов")+" (1 или 0,5)";/* акрил — листы, кварц — слэбы (27.11.2026) */document.querySelectorAll("#mtSeg button").forEach(b=>b.classList.toggle("on",b.dataset.mt===v))}
@@ -1138,7 +1139,7 @@ async function refresh(){
     try{const vr=await fetch("version.json?t="+Date.now(),{cache:"no-store"}),vj=await vr.json();if(vj&&vj.b&&vj.b!==BUILD){ptr.textContent="Новая версия…";try{const k=Object.keys(WS).find(x=>WS[x]===W);if(k)sessionStorage.setItem("uchet_resume",JSON.stringify({w:k,pw:_entryPw}))}catch(e){}location.replace(location.pathname+"?v="+vj.b);return}}catch(e){}
     if(db){
       const [o,t,cl]=await Promise.all([db.collection("orders").get(),db.doc("settings/theme").get(),db.collection("clients").get()]);
-      clients=cl.docs.map(d=>({id:d.id,...d.data()}));
+      iCl=cl.docs.map(d=>({id:d.id,...d.data()}));mergeC();
       iOrd=o.docs.map(d=>({id:d.id,...d.data()}));mergeO();
       if(t.exists&&!loadTheme()){settings=t.data();applyTheme()}
       render();
@@ -1423,14 +1424,14 @@ addEventListener("popstate",()=>{
   db=await cuse("db");if(LOCAL&&SRV)$("who").textContent="Общая база: данные видны на всех устройствах";
   if(!db){$("list").innerHTML='<div class="empty">Войдите в аккаунт, чтобы увидеть данные</div>';return}
   db.doc("settings/theme").onSnapshot(s=>{if(s.exists&&!loadTheme()){settings=s.data();applyTheme()}});
-  db.collection("clients").onSnapshot(s=>{clients=s.docs.map(d=>({id:d.id,...d.data()}));render()});
+  db.collection("clients").onSnapshot(s=>{iCl=s.docs.map(d=>({id:d.id,...d.data()}));mergeC();render()});
   db.collection("fin").onSnapshot(s=>{fin=s.docs.map(d=>({id:d.id,...d.data()}));if($("mFin").classList.contains("on")&&!(document.activeElement&&document.activeElement.closest&&document.activeElement.closest("#fBody")&&/INPUT|SELECT/.test(document.activeElement.tagName)))fRender()});
   db.doc("settings/fin").onSnapshot(s=>{if(s.exists){fcfg=s.data();if($("mFin").classList.contains("on")&&fTab==="set")fRender()}});
   db.collection("stones").onSnapshot(s=>{stones=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(a.name).localeCompare(String(b.name),"ru"));kFill()});
   db.doc("settings/calc").onSnapshot(s=>{if(s.exists){calcP={fig:0,cut:0,rad:0,joint:0,ledge:0,...s.data()};kPrFill();kCalcRun()}});
   if(W.fin){db.collection("mfeed").onSnapshot(s=>{mfeedD={};s.docs.forEach(d=>mfeedD[d.id]=d.data());if($("mMs").classList.contains("on"))msPaint()});db.collection("mstage").onSnapshot(s=>{mstg={};s.docs.forEach(d=>mstg[d.id]=d.data());render();if($("mMs").classList.contains("on"))msPaint()});db.collection("mstaff").onSnapshot(s=>{mstaffD={};s.docs.forEach(d=>mstaffD[d.id]=d.data());render()})}
   else if(W.mst){msKey().then(t=>{if(!t)return;mdb=ghDb("chamsutdinov-bot/uchet-data",()=>t);mdb.collection("mfeed").onSnapshot(s=>{mfeedD={};s.docs.forEach(d=>mfeedD[d.id]=d.data());if($("mMs").classList.contains("on"))msPaint()});mdb.collection("mstage").onSnapshot(s=>{mstg={};s.docs.forEach(d=>mstg[d.id]=d.data());render();if($("mMs").classList.contains("on"))msPaint()});mdb.collection("mstaff").onSnapshot(s=>{mstaffD={};s.docs.forEach(d=>mstaffD[d.id]=d.data());render();if($("mMs").classList.contains("on"))msPaint()});mdb.collection("orders").onSnapshot(s=>{mOrd=s.docs.map(d=>({id:d.id,...d.data()}))})})}
-  if(W.fin)(async()=>{const cand=[];try{const a=localStorage.getItem("uchet_gh_l");if(a)cand.push(a)}catch(e){}const k=ghKey();if(k&&!cand.includes(k))cand.push(k);for(const t of cand){try{const r=await fetch("https://api.github.com/repos/chamsutdinov-bot/liderstone-data",{headers:{Authorization:"Bearer "+t,Accept:"application/vnd.github+json"},cache:"no-store"});if(!r.ok)continue;ldb=ghDb("chamsutdinov-bot/liderstone-data",()=>t);ldb.collection("orders").onSnapshot(s=>{lOrd=s.docs.map(d=>({id:d.id,...d.data(),_l:1}));mergeO();render()});return}catch(e){}}})();
+  if(W.fin)(async()=>{const cand=[];try{const a=localStorage.getItem("uchet_gh_l");if(a)cand.push(a)}catch(e){}const k=ghKey();if(k&&!cand.includes(k))cand.push(k);for(const t of cand){try{const r=await fetch("https://api.github.com/repos/chamsutdinov-bot/liderstone-data",{headers:{Authorization:"Bearer "+t,Accept:"application/vnd.github+json"},cache:"no-store"});if(!r.ok)continue;ldb=ghDb("chamsutdinov-bot/liderstone-data",()=>t);ldb.collection("orders").onSnapshot(s=>{lOrd=s.docs.map(d=>({id:d.id,...d.data(),_l:1}));mergeO();render()});ldb.collection("clients").onSnapshot(s=>{lCl=s.docs.map(d=>({id:d.id,...d.data(),_l:1}));mergeC();render()});return}catch(e){}}})();
   db.collection("orders").onSnapshot(s=>{iOrd=s.docs.map(d=>({id:d.id,...d.data()}));mergeO();render()},e=>{$("list").innerHTML='<div class="empty">Нет доступа к данным</div>'});
 })();
 </script>
