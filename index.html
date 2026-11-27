@@ -9,7 +9,7 @@ header button,#bAdd,.bar2 select,#bArch{color:#fff!important;border:1px solid rg
 #bArch.on{color:#ffb3b3!important;background:linear-gradient(180deg,rgba(255,120,120,.30),rgba(205,25,35,.16))!important}
 .bar2 select option{color:#000}
 </style>
-<script>var BUILD="20261127125000";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){};try{Object.keys(localStorage).filter(function(k){return k.indexOf("bio_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){};try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null")||{bg:"#1c1a18",dark:true},_r=document.documentElement,_d=!!_t.dark;if(_t.bg){_r.style.setProperty("--bg",_t.bg);_r.style.backgroundColor=_t.bg;_r.dataset.theme=_d?"dark":"light";if(_d){var _v={"--surface":"#25221f","--text":"#f1ece5","--muted":"#a69f95","--line":"#3d3833","--accent":"#d6a36a","--accent-t":"#1b1713","--danger":"#f2a39e"};for(var _k in _v)_r.style.setProperty(_k,_v[_k]);_r.style.setProperty("--logo-f","none")}}if(_t.photo==="none"&&!_t.pn)delete _t.photo;if(_t.photo==="none")_r.style.setProperty("--bgimg","none");else if(_t.photo)_r.style.setProperty("--bgimg","url(\""+_t.photo+"\")");if(_t.font)_r.style.setProperty("--font",_t.font)}catch(e){}</script>
+<script>var BUILD="20261127130000";(function(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.b&&j.b!=BUILD){var t=null;try{t=sessionStorage.getItem("uchet_try")}catch(e){}if(t!=j.b&&!document.querySelector("#mPw.on")){try{sessionStorage.setItem("uchet_try",j.b)}catch(e){}location.replace(location.pathname+"?v="+j.b)}}}).catch(function(){})}catch(e){}})();try{if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){};try{Object.keys(localStorage).filter(function(k){return k.indexOf("bio_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){};try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null")||{bg:"#1c1a18",dark:true},_r=document.documentElement,_d=!!_t.dark;if(_t.bg){_r.style.setProperty("--bg",_t.bg);_r.style.backgroundColor=_t.bg;_r.dataset.theme=_d?"dark":"light";if(_d){var _v={"--surface":"#25221f","--text":"#f1ece5","--muted":"#a69f95","--line":"#3d3833","--accent":"#d6a36a","--accent-t":"#1b1713","--danger":"#f2a39e"};for(var _k in _v)_r.style.setProperty(_k,_v[_k]);_r.style.setProperty("--logo-f","none")}}if(_t.photo==="none"&&!_t.pn)delete _t.photo;if(_t.photo==="none")_r.style.setProperty("--bgimg","none");else if(_t.photo)_r.style.setProperty("--bgimg","url(\""+_t.photo+"\")");if(_t.font)_r.style.setProperty("--font",_t.font)}catch(e){}</script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -769,7 +769,7 @@ $("bArch").onclick=()=>{arch=!arch;render();scrollTo(0,0)};
 $("oSave").onclick=save;
 async function sendZm(o){
   const t=Date.now(),md=msDb();if(!md)throw new Error("нет связи с цехом");
-  await md.doc("mfeed/"+o.id).set({ts:t,oid:W.fin?o.id:"",no:o.no||"",mt:o.mt||"",ad:o.ad||"",ph:o.ph||""});
+  await md.doc("mfeed/"+o.id).set({ts:t,f:W.fin?"i":"l",oid:W.fin?o.id:"",no:o.no||"",mt:o.mt||"",ad:o.ad||"",ph:o.ph||""});
   await dbFor(o).doc("orders/"+o.id).update({zs:t});o.zs=t;
 }$("oCancel").onclick=()=>$("mO").classList.remove("on");
 $("bExp").onclick=exportCsv;$("q").oninput=render;$("selY").onchange=render;$("selM").onchange=render;$("selS").onchange=render;$("selMt").onchange=render;
@@ -1169,7 +1169,7 @@ function chooseWs(){return new Promise(res=>{const m=$("mWs");let RS=null;try{RS
 
 /* ===== МАСТЕРА: стадии заказов и отчёт (данные пишет планшет master.html) ===== */
 let mstg={},mstaffD={},msLog={},msEvs=[],mdb=null,mOrd=[];
-const msO=()=>W.fin?orders:orders.concat(mOrd),/* Liderstone: свои заказы первыми — чтобы этапы цеха по номеру привязались к ним */msDb=()=>W.fin?db:mdb;
+const msO=()=>orders,/* 27.11.2026: цех тоже раздельно — каждая фирма видит только свои заказы */msMine=id=>orders.some(x=>x.id===id),fdMine=e=>e.f?e.f===(W.fin?"i":"l"):(W.fin?!!e.oid:!e.oid),/* Liderstone: свои заказы первыми — чтобы этапы цеха по номеру привязались к ним */msDb=()=>W.fin?db:mdb;
 /* заказ Liderstone добавлен/изменён — толкаем новость в Telegram (метка в uchet-data запускает рассылку) 27.11.2026 */let lsPT=null;function lsPing(){clearTimeout(lsPT);lsPT=setTimeout(()=>{try{const m=W.fin?db:mdb;if(m)Promise.resolve(m.doc("lsping/p").set({ts:Date.now()})).catch(()=>{})}catch(e){}},1500)}
 /* удалили заказ — убираем и его сообщение в «Цех» (27.11.2026) */const fdDel=id=>{try{const m=msDb();if(!m)return;const o=msO().find(x=>x.id===id),no=o&&String(o.no||"").trim().toLowerCase(),alone=no&&!msO().some(x=>x.id!==id&&String(x.no||"").trim().toLowerCase()===no);Promise.resolve(m.doc("mfeed/"+id).delete()).catch(()=>{});/* и его этапы в «Цехе» */if(mstg[id])Promise.resolve(m.doc("mstage/"+id).delete()).catch(()=>{});if(alone&&mstg["n"+no])Promise.resolve(m.doc("mstage/n"+no).delete()).catch(()=>{})}catch(e){}};
 async function msKey(){let t="";try{t=localStorage.getItem("uchet_gh_lm")||localStorage.getItem("uchet_gh")||""}catch(e){}if(t)return t;/* Liderstone: цех через ключ Liderstone или, если на устройстве есть вход в Interstone, через его ключ */try{const A=await (await fetch(W.acc,{cache:"no-store"})).json();if(A.m)t=await openAccess(A.m,_entryPw)||""}catch(e){}if(t)try{localStorage.setItem("uchet_gh_lm",t)}catch(e){}return t}
@@ -1260,7 +1260,7 @@ const msAvg=a=>{if(!a.length)return"—";const m=Math.round(a.reduce((x,y)=>x+y,
 function msOrdersRows(mon){
   msAlias();
   const [Y,M]=mon.split("-").map(Number),a=new Date(Y,M-1,1).getTime(),b=new Date(Y,M,1).getTime(),rows=[];
-  Object.keys(mstg).forEach(id=>{
+  Object.keys(mstg).filter(msMine).forEach(id=>{
     const st=mstg[id],s=st.stages||{},i=st.ins,ts=[];
     Object.values(s).forEach(x=>ts.push(x.ts));if(st.start)ts.push(st.start.ts);
     if(i)Object.values(i.conf||{}).forEach(c=>ts.push(c.ts));
@@ -1327,16 +1327,16 @@ function lvMasters(){
       const hh=x=>String(new Date(x).getHours()).padStart(2,"0")+":"+String(new Date(x).getMinutes()).padStart(2,"0");
       if(l){if(l.ty==="in"){cls="in";t="в цеху с "+hh(ev.find(e=>e.ty==="in").ts)}else if(l.ty==="inst_out"){cls="ins";t="на установке"}else if(l.ty==="inst_conf"){cls="in";t="установка завершена"}else{cls="out";t="ушёл в "+hh(l.ts)}}}
     else t="";
-    const work=Object.keys(mstg).filter(id=>{const st=mstg[id],g=lvGroup(st);if(g==="done")return false;if(g==="given")return (st.to||(st.added||{}).m)===m;if(g==="out")return st.ins&&st.ins.out&&st.ins.out[m];const s=st.stages||{},x=LV_ST.findIndex(([k])=>!s[k]),p=x>0?s[LV_ST[x-1][0]]:st.start;return p&&p.m===m}).map(id=>"№"+lvInfo(id).no);
+    const work=Object.keys(mstg).filter(msMine).filter(id=>{const st=mstg[id],g=lvGroup(st);if(g==="done")return false;if(g==="given")return (st.to||(st.added||{}).m)===m;if(g==="out")return st.ins&&st.ins.out&&st.ins.out[m];const s=st.stages||{},x=LV_ST.findIndex(([k])=>!s[k]),p=x>0?s[LV_ST[x-1][0]]:st.start;return p&&p.m===m}).map(id=>"№"+lvInfo(id).no);
     return`<div class="lvm ${cls}"><b>${esc(msName(m))}</b>${t?`<span class="lvp">${t}</span>`:""}<small>${work.length?"Последний этап / выезд: "+esc(work.join(", ")):"&nbsp;"}</small></div>`;
   }).join("");
 }
 const LV_G=[["wait","✉ Ждут начальника цеха"],["given","Отданы мастеру — не начаты"],["work","В работе"],["ready","Готовы — ждут установки"],["out","На установке"],["tails","Хвосты"]];
 function msLiveHtml(){
   msAlias();
-  const by={};Object.keys(mstg).forEach(id=>{const g=lvGroup(mstg[id]);(by[g]=by[g]||[]).push(id)});
+  const by={};Object.keys(mstg).filter(msMine).forEach(id=>{const g=lvGroup(mstg[id]);(by[g]=by[g]||[]).push(id)});
   Object.values(by).forEach(a=>a.sort((x,y)=>(((mstg[y]||{}).added||{}).ts||0)-(((mstg[x]||{}).added||{}).ts||0)));
-  const wait=Object.keys(mfeedD).filter(k=>!mfeedD[k].to).sort((a,b)=>(mfeedD[b].ts||0)-(mfeedD[a].ts||0));
+  const wait=Object.keys(mfeedD).filter(k=>!mfeedD[k].to&&fdMine(mfeedD[k])).sort((a,b)=>(mfeedD[b].ts||0)-(mfeedD[a].ts||0));
   let h=`<h3>Мастера сегодня</h3><div class="lvms">${lvMasters()||'<div class="mstt">Мастеров нет — их добавляют в «Цехе» (⚙︎)</div>'}</div><h3>Заказы в цеху</h3>`;
   let any=false;
   LV_G.forEach(([g,t])=>{
