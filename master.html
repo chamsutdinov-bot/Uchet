@@ -163,7 +163,7 @@ h1{margin:4px 0 0;font-size:clamp(28px,4.6vmax,56px);font-weight:700;line-height
 .trk .ts:disabled{opacity:1}
 @media (max-width:900px){.cv2,.cv2.noact{grid-template-columns:auto minmax(0,1fr)}.cv2 .trk,.cv2 .cact{grid-column:1/-1}}
 </style>
-<script>var BUILD="20261127141000"</script>
+<script>var BUILD="20261127143000"</script>
 <script>
 try{var _t=JSON.parse(localStorage.getItem("uchet_theme")||"null");}catch(e){}
 </script>
@@ -514,17 +514,27 @@ function drawInst(){
   const qi=$("q");qi.oninput=()=>{q=qi.value;clearTimeout(qi._t);qi._t=setTimeout(()=>{$("il").innerHTML=instList(openOrders(q).slice(0,40),V.sel)},250)};
 }
 const instList=(list,sel)=>list.map(o=>`<div class="card glass sel ${sel[o]?"on":""}" data-a="pick" data-o="${o}"><div class="ck">${sel[o]?"✓":""}</div><div class="no">${esc((L.orders[o]||{}).no||"")}</div><div class="tx"><b>${esc(ordName(o).replace(/^№[^·]*· /,""))}</b><div>${esc(ordSub(o))}</div></div><span class="chip ${statusOf(o)[1]}">${statusOf(o)[0]}</span></div>`).join("")||'<div class="hint">Заказов не найдено</div>';
-function showEnv(sel){
+function showEnv(sel,pick){
   const ids=pendFeed();if(!ids.length){$("ov").innerHTML="";draw();return}
-  const id=ids[0],e=L.feed[id],ms=Object.keys(L.staff).sort((a,b)=>(L.staff[a].o||0)-(L.staff[b].o||0));
+  /* 27.11.2026: несколько конвертов — сначала список всех, начальник цеха нажимает на заказ и выбирает мастера; остальные ждут (камень может ещё не приехать) */
+  if(pick&&!ids.includes(pick))pick=null;
+  if(!pick&&ids.length>=2){
+    $("ov").innerHTML=`<div class="ov" style="background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);overflow:auto"><div class="box" style="width:min(94vw,880px);padding:26px;border-radius:28px;background:#25221f;border:1px solid rgba(255,255,255,.22);box-shadow:0 30px 80px rgba(0,0,0,.6);text-align:left"><h1 style="font-size:clamp(24px,3.4vmax,40px)">✉ Новые заказы: ${ids.length}</h1><div style="color:#a69f95;margin:0 0 10px">Нажмите на заказ, чтобы отдать мастеру. Остальные подождут.</div>
+    ${ids.map(k=>{const f=L.feed[k];return`<button class="glass" data-po="${k}" style="display:block;width:100%;text-align:left;padding:14px 18px;margin:0 0 10px;border-radius:18px;font-size:clamp(16px,2vmax,24px)"><b>№${esc(f.no||"?")}</b>${f.mt?" · "+esc(f.mt):""}${f.ad?`<div style="color:#a69f95;font-size:.8em;margin-top:2px">${esc(f.ad)}</div>`:""}</button>`}).join("")}
+    <div class="bar" style="gap:12px;margin-top:6px"><button class="btn glass" id="eclose">Закрыть</button></div></div></div>`;
+    $("ov").querySelectorAll("[data-po]").forEach(b=>b.onclick=()=>showEnv(null,b.dataset.po));
+    $("eclose").onclick=()=>{$("ov").innerHTML="";draw()};
+    return;
+  }
+  const id=pick||ids[0],e=L.feed[id],ms=Object.keys(L.staff).sort((a,b)=>(L.staff[a].o||0)-(L.staff[b].o||0));
   const row=(t,v)=>v?`<div style="margin:4px 0"><span style="color:#a69f95">${t}</span> ${esc(v)}</div>`:"";
   $("ov").innerHTML=`<div class="ov" style="background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);overflow:auto"><div class="box" style="width:min(94vw,880px);padding:26px;border-radius:28px;background:#25221f;border:1px solid rgba(255,255,255,.22);box-shadow:0 30px 80px rgba(0,0,0,.6);text-align:left"><h1 style="font-size:clamp(24px,3.4vmax,40px)">✉ Заказ №${esc(e.no||"?")}</h1>
-  <div style="font-size:clamp(16px,2vmax,24px);line-height:1.5">${row("Камень:",e.mt)}${row("Адрес:",e.ad)}${row("Телефон:",e.ph)}${ids.length>1?`<div style="margin-top:8px;color:#a69f95">Ещё конвертов: ${ids.length-1}</div>`:""}</div>
+  <div style="font-size:clamp(16px,2vmax,24px);line-height:1.5">${row("Камень:",e.mt)}${row("Адрес:",e.ad)}${row("Телефон:",e.ph)}</div>
   <div style="color:#a69f95;margin-top:6px">Кому отдать</div>
   <div class="evm">${ms.map(m=>`<button class="glass${sel===m?" on":""}" data-pm="${m}">${esc(L.staff[m].n)}</button>`).join("")||'<span style="color:#a69f95">Мастеров нет — добавьте в ⚙︎</span>'}</div>
-  <div class="bar" style="gap:12px;margin-top:6px"><button class="btn g" id="egive" ${sel?"":"disabled"}>${sel?"Отдать мастеру "+esc(L.staff[sel].n):"Выберите мастера"}</button><button class="btn glass" id="eclose">Закрыть</button></div></div></div>`;
-  $("ov").querySelectorAll("[data-pm]").forEach(b=>b.onclick=()=>showEnv(b.dataset.pm));
-  $("eclose").onclick=()=>{$("ov").innerHTML="";draw()};
+  <div class="bar" style="gap:12px;margin-top:6px"><button class="btn g" id="egive" ${sel?"":"disabled"}>${sel?"Отдать мастеру "+esc(L.staff[sel].n):"Выберите мастера"}</button><button class="btn glass" id="eclose">${ids.length>=2?"← Ко всем заказам":"Закрыть"}</button></div></div></div>`;
+  $("ov").querySelectorAll("[data-pm]").forEach(b=>b.onclick=()=>showEnv(b.dataset.pm,id));
+  $("eclose").onclick=()=>{if(ids.length>=2){showEnv();return}$("ov").innerHTML="";draw()};
   $("egive").onclick=()=>{if(!sel)return;
     const oid=e.oid,t=Date.now(),ops=[{k:"fd",id,d:{to:sel,at:t}}];
     if(oid&&L.orders[oid])ops.push({k:"ms",o:oid,m:{to:sel,...(L.stage[oid]?{}:{added:{ts:t,m:sel}})}});
